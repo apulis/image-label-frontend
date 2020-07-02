@@ -1,0 +1,52 @@
+.dataSetModalFormWrap {
+  .idWrap {
+    font-size: 14px;
+    font-weight: 500;
+    padding-left: 12px;
+    p {
+      display: inline-block;
+      width: 108px;
+    }
+  }
+  ul .selectedCategory {
+    display: flex;
+    max-height: 200px;
+    overflow-y: auto;
+    flex-wrap: wrap;
+    > li {
+      border: 1px solid #ddd;
+      margin-right: 10px;
+      margin-bottom: 6px;
+      padding: 2px 6px;
+      > span {
+        display: inline-block;
+        margin-right: 6px;
+      }
+    } 
+  }
+  .diyWrap {
+    display: flex;
+    margin: 20px 0;
+  }
+  .speItem {
+    display: inline-block;
+    margin-right: 4px;
+    margin-bottom: 0;
+    :global {
+      .ant-form-item-control {
+        width: 142px;
+      }
+    }
+  }
+  :global {
+    .ant-form-item-label {
+      text-align: left !important;
+      width: 120px;
+      vertical-align: top;
+    }
+    .ant-form-item-control {
+      display: inline-block;
+      width: 78%;
+    }
+  }
+}

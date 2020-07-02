@@ -1,0 +1,82 @@
+.sidebarWrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 340px;
+  border-right: 1px solid #ccc;
+  height: calc(100vh - 100px);
+  background: #fff;
+  padding: 10px;
+  h2 {
+    padding-right: 16px;
+    span {
+      float: right;
+      margin-top: 4px;
+    }
+  }
+  .slectWrap {
+    :global {
+      .ant-select {
+        width: 236px;
+        margin: 10px 0;
+      }
+    }
+    button {
+      margin-left: 16px;
+    }
+  }
+  .btnWrap {
+    margin: 28px 0 10px;
+    text-align: center;
+    button {
+      margin: 0 20px 10px 0 !important;
+      width: 88px;
+    }
+  }
+  .childName {
+    max-width: 150px;
+    overflow: hidden;
+    display: inline-block;
+    font-size: 14px !important;
+  }
+  .iconWrap, .NodeIconWrap {
+    font-size: 16px;
+    float: right;
+    span {
+      float: right;
+      margin: 4px;
+    }
+  }
+  .NodeIconWrap {
+    font-size: 18px;
+  }
+  .iconWrap {
+    span {
+      margin-right: 6px;
+    }
+  }
+  .tree_max_width {
+    max-width: 170px;
+    display: inline-block;
+  }
+  :global {
+    .ant-tree {
+      margin-top: 10px;
+      .ant-tree-switcher, .ant-tree-node-content-wrapper {
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .ant-tree-node-content-wrapper, .ant-tree-title {
+        width: 100%;
+        display: block;
+      }
+      .ant-tree-child-tree .ant-tree-switcher {
+        font-size: 14px !important;
+      }
+      .anticon-file {
+        font-size: 14px;
+      }
+    }
+  }
+}
+

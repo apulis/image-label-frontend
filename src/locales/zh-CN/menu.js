@@ -1,0 +1,17 @@
+export default {
+  'menu.home': '首页',
+  'menu.Project': '标注管理',
+  'menu.Project.myProject': '我的项目',
+  'menu.Project.dataSetList': '数据集列表',
+  'menu.Project.taskList': '任务列表',
+  'menu.Project.detail': '详情',
+  'menu.login': '登录',
+  'menu.exception.403': '403',
+  'menu.exception.404': '404',
+  'menu.exception.500': '500',
+  'menu.account': '个人页',
+  'menu.account.center': '个人中心',
+  'menu.account.settings': '个人设置',
+  'menu.account.trigger': '触发报错',
+  'menu.account.logout': '退出登录',
+};
