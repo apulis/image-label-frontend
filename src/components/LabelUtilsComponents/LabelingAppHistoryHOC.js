@@ -91,7 +91,7 @@ export default function withHistory(Comp) {
           }),
           ...stateChange(state),
         }),
-        cb
+        cb && cb()
       );
     }
 

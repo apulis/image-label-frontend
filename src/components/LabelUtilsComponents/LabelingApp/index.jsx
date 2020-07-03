@@ -63,25 +63,24 @@ class LabelingApp extends Component {
     const { labels, labelData, figures } = this.props;
     const { isOCR, selectedFigureId } = this.state;
     let selectedFigure = null, allFigures = [];
-
     labels.forEach(label => {
       const { id, type } = label;
       figures[id] && figures[id].forEach((figure, i) => {
         if (toggles[id]) {
           const { children, allShow } = toggles[id];
           if ((allShow && children[i].show) && (type === 'bbox' || type === 'polygon')) {
-            const { points, id, type, tracingOptions, popupText } = figure;
+            const { points, type, tracingOptions, popupText } = figure;
             let obj = {
               color: colors[i],
               points: points,
-              id: id,
+              id: figure.id,
               type: type,
-              fId: label.id,
+              fId: id,
               tracingOptions: tracingOptions
             }
             if (isOCR) obj.popupText = popupText;
             allFigures.push(obj);
-            if (id === selectedFigureId) {
+            if (figure.id === selectedFigureId) {
               selectedFigure = { ...figure, color: colors[i] };
             }
           }
@@ -110,6 +109,12 @@ class LabelingApp extends Component {
       newT[val] = { allShow: true, children: [] };
     } else {
       newT[val].allShow = true;
+      // newT[val].children.push({
+      //   id: genId(),
+      //   type: figures[val][0].type,
+      //   points: [],
+      //   show: true
+      // })
     }
     if (popupShow) return;
     if (!val || val === selected) {

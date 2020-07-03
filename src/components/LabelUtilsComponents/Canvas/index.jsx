@@ -303,7 +303,7 @@ class Canvas extends Component {
             </div>
           </Popup>}
           {unfinishedDrawingDOM}
-          {renderedTrace}
+          {/* {renderedTrace} */}
           {figuresDOM}
           {hotkeysDOM}
         </Map>

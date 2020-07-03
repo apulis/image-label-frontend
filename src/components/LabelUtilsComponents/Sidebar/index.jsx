@@ -59,6 +59,7 @@ class Sidebar extends PureComponent {
     const { chnageLabelAppState, changCanvasState } = this.props;
     chnageLabelAppState('selectedTreeKey', key);
     if (key.length) {
+      console.log('sssssl', key[0].split('-')[1])
       chnageLabelAppState('selectedFigureId', key[0].split('-')[1], true);
       changCanvasState('selectedFigureId', key[0].split('-')[1]);
     }
@@ -91,7 +92,8 @@ class Sidebar extends PureComponent {
             </div>
           </React.Fragment>
         ),
-        children: this.getTreeDataChildren(id, name)
+        children: this.getTreeDataChildren(id, name),
+        selectable: false
       }
     });
   }
@@ -103,7 +105,7 @@ class Sidebar extends PureComponent {
       return data.children.map((item, i) => {
         const { id, type, show } = item;
         return {
-          key: `${fId}-${i}`,
+          key: `${fId}-${id}`,
           title: (
             <React.Fragment>
               <span className={styles.childName}>{name}{i+1}</span>

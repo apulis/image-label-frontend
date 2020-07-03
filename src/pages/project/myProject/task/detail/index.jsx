@@ -9,10 +9,6 @@ import { getPageQuery } from '@/utils/utils';
 import { history } from 'umi';
 import { PageLoading } from '@ant-design/pro-layout';
 
-const projectId = getPageQuery().projectId;
-const dataSetId = getPageQuery().dataSetId;
-const taskId = getPageQuery().taskId;
-
 @connect(({ global }) => ({ global }))
 class TaskDetail extends React.Component {
   constructor(props) {
@@ -23,13 +19,17 @@ class TaskDetail extends React.Component {
       project: null,
       image: null,
       imageInfo: {},
-      isOCR: false
+      isOCR: false,
+      projectId: getPageQuery().projectId,
+      dataSetId: getPageQuery().dataSetId,
+      taskId: getPageQuery().taskId
     };
   }
 
   async componentDidMount() {
     const { dispatch, global } = this.props;
     const { labels, l_projectId, l_datasetId } = global.Labels;
+    const { projectId, dataSetId, taskId } = this.state;
     dispatch({
       type: 'global/changeLayoutCollapsed',
       payload: {
@@ -55,6 +55,7 @@ class TaskDetail extends React.Component {
 
   getNext = async (prev) => {
     const taskId = prev;
+    const { projectId, dataSetId } = this.state;
     const res = await getNextData(projectId, dataSetId, taskId);
     const { successful, data } = res;
     if (successful === 'true') {
@@ -66,6 +67,7 @@ class TaskDetail extends React.Component {
 
   getData = async () => {
     const { labels } = this.props.global.Labels;
+    const { projectId, dataSetId, taskId } = this.state;
     let _this = this;
     const res = await getAnnotations(projectId, dataSetId, taskId);
     const { successful, annotations, msg } = res;
@@ -135,6 +137,7 @@ class TaskDetail extends React.Component {
   }
 
   pushUpdate = (labelData) => {
+    const { dataSetId, taskId } = this.state;
     let imageInfo = this.state.imageInfo;
     if (imageInfo) {
       imageInfo["height"] = labelData.height;
@@ -156,6 +159,7 @@ class TaskDetail extends React.Component {
   }
 
   refetch = async () => {
+    const { dataSetId, taskId } = this.state;
     this.setState({
       isLoaded: false,
       error: null,
@@ -179,6 +183,7 @@ class TaskDetail extends React.Component {
   }
 
   markComplete = async () => {
+    const { projectId, dataSetId, taskId } = this.state;
     const res = await submitDetail(projectId, dataSetId, taskId, this.tansformToCocoFormat());
     res.success && this.getNext(taskId);
   }
@@ -216,7 +221,7 @@ class TaskDetail extends React.Component {
   render() {
     const title = `Image Label Tool`;
     const { global } = this.props;
-    const { project, image, isOCR, loading } = this.state;
+    const { project, image, isOCR, loading, projectId, dataSetId, taskId } = this.state;
     const props = {
       onBack: () => {
         history.goBack();
