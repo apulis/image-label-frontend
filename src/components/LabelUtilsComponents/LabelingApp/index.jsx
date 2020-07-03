@@ -135,7 +135,6 @@ class LabelingApp extends Component {
   }
 
   handleSelectionChange = (figureId, selectedFigureData) => {
-    console.log('selectedFigureData.points',selectedFigureData)
     const { labels, isOCR } = this.props;
     const { popupText } = this.state;
     if (figureId) {

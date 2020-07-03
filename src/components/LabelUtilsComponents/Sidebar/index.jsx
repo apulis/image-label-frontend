@@ -44,32 +44,6 @@ class Sidebar extends PureComponent {
     chnageState('labels', newProject);
   }
 
-  getTreeChildren = (fId, name) => {
-      const { toggles } = this.props;
-      if (toggles && Object.keys(toggles).length && toggles[fId]) {
-        return toggles[fId].children.map((item, i) => {
-          const { id, type, show } = item;
-          return (
-            <TreeNode selectable key={`${fId}-${i}`}
-              title={(
-                <React.Fragment>
-                  <span className={styles.childName}>{name}{i+1}</span>
-                  <span className={styles.iconWrap}>
-                    {/* {iconType ? (
-                      <Icon type={iconType} onClick={() => console.log('3333')}/>
-                    ) : null} */}
-                    {show ? <EyeOutlined onClick={e => this.onIconClick(e, 1, fId, i)} /> : <EyeInvisibleOutlined onClick={e => this.onIconClick(e, 1, fId, i)} />}
-                    <DeleteOutlined onClick={e => this.onIconClick(e, 0, fId, i)} />
-                  </span>
-                </React.Fragment>
-              )}
-            />
-          )})
-      } else {
-        return null;
-      }
-  }
-
   onIconClick = (e, type, fId, index, isAll) => {
     const { onToggle, deleteEvent, onSelect, chnageLabelAppState } = this.props;
     e.stopPropagation();
@@ -80,27 +54,6 @@ class Sidebar extends PureComponent {
       deleteEvent(fId, index);
     }
   }
-
-  getTreeNode = (label) => {
-    const { name, id, type } = label;
-    const { toggles } = this.props;
-    const allShow = toggles[id] && toggles[id].allShow;
-    return (
-      <TreeNode key={id} key={id}
-        title={(
-          <div>
-            <span className="textEllipsis tree_max_width">{name}({type})</span>
-            <div className={styles.NodeIconWrap}>
-              {allShow ? <EyeOutlined onClick={e => this.onIconClick(e, 1, id, undefined, true)} /> : <EyeInvisibleOutlined onClick={e => this.onIconClick(e, 1, id, undefined, true)} />}
-              <DeleteOutlined onClick={e => this.onIconClick(e, 0, id, undefined)} />
-              <PlusOutlined onClick={e => this.onIconClick(e, 2, id)} />
-            </div>
-          </div>
-        )} >
-        {this.getTreeChildren(id, name)}
-      </TreeNode>
-    );
-  } 
 
   onSelectNode = (key) => {
     const { chnageLabelAppState, changCanvasState } = this.props;
@@ -117,6 +70,52 @@ class Sidebar extends PureComponent {
       return labels.map(i => (<Option key={i.id} value={i.id}>{i.name}</Option>));
     } else {
       return null;
+    }
+  }
+
+  getTreeData = () => {
+    const { toggles, labels } = this.props;
+    return labels.map(item => {
+      const { name, id, type } = item;
+      const allShow = toggles[id] && toggles[id].allShow;
+      const children = this.getTreeDataChildren(id, name);
+      return {
+        key: `${id}`,
+        title: (
+          <React.Fragment>
+            <span className="textEllipsis tree_max_width">{name}({type})</span>
+            <div className={styles.NodeIconWrap}>
+              {allShow ? <EyeOutlined onClick={e => this.onIconClick(e, 1, id, undefined, true)} /> : <EyeInvisibleOutlined onClick={e => this.onIconClick(e, 1, id, undefined, true)} />}
+              <DeleteOutlined onClick={e => this.onIconClick(e, 0, id, undefined)} />
+              <PlusOutlined onClick={e => this.onIconClick(e, 2, id)} />
+            </div>
+          </React.Fragment>
+        ),
+        children: this.getTreeDataChildren(id, name)
+      }
+    });
+  }
+
+  getTreeDataChildren = (fId, name) => {
+    const { toggles } = this.props;
+    const data = toggles[fId];
+    if (toggles && Object.keys(toggles).length && data) {
+      return data.children.map((item, i) => {
+        const { id, type, show } = item;
+        return {
+          key: `${fId}-${i}`,
+          title: (
+            <React.Fragment>
+              <span className={styles.childName}>{name}{i+1}</span>
+              <span className={styles.iconWrap}>
+                {show ? <EyeOutlined onClick={e => this.onIconClick(e, 1, fId, i)} /> : <EyeInvisibleOutlined onClick={e => this.onIconClick(e, 1, fId, i)} />}
+                <DeleteOutlined onClick={e => this.onIconClick(e, 0, fId, i)} />
+              </span>
+            </React.Fragment>
+          ),
+          selectable: true,
+        }
+      })
     }
   }
 
@@ -158,10 +157,8 @@ class Sidebar extends PureComponent {
           expandedKeys={expandedKeys}
           selectedKeys={selectedTreeKey}
           onExpand={(k) => this.setState({ expandedKeys: k })}
-        >
-          {labels.map((label, i) => label && this.getTreeNode(label))}
-          {/* <Hotkeys keyName="esc" onKeyDown={() => onSelect(null)} /> */}
-        </Tree>}
+          treeData={this.getTreeData()}
+        />}
         <div className={styles.btnWrap}>
           <div>
             <Button onClick={onBack}>上一张</Button>
