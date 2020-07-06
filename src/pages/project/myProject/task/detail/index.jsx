@@ -9,6 +9,9 @@ import { getPageQuery } from '@/utils/utils';
 import { history } from 'umi';
 import { PageLoading } from '@ant-design/pro-layout';
 
+const projectId = getPageQuery().projectId;
+const dataSetId = getPageQuery().dataSetId
+
 @connect(({ global }) => ({ global }))
 class TaskDetail extends React.Component {
   constructor(props) {
@@ -20,16 +23,13 @@ class TaskDetail extends React.Component {
       image: null,
       imageInfo: {},
       isOCR: false,
-      projectId: getPageQuery().projectId,
-      dataSetId: getPageQuery().dataSetId,
-      taskId: getPageQuery().taskId
+      btnLoading: false
     };
   }
 
   async componentDidMount() {
     const { dispatch, global } = this.props;
     const { labels, l_projectId, l_datasetId } = global.Labels;
-    const { projectId, dataSetId, taskId } = this.state;
     dispatch({
       type: 'global/changeLayoutCollapsed',
       payload: {
@@ -47,27 +47,26 @@ class TaskDetail extends React.Component {
     this.getData();
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.match.params.taskId !== this.props.match.params.taskId) {
-  //     this.refetch();
-  //   }
-  // }
+  componentDidUpdate(prevProps) {
+    const { taskId } = this.props.match.params;
+    if (prevProps.match.params.taskId !== taskId) {
+      this.refetch(taskId);
+    }
+  }
 
-  getNext = async (prev) => {
-    const taskId = prev;
-    const { projectId, dataSetId } = this.state;
+  getNext = async (taskId) => {
     const res = await getNextData(projectId, dataSetId, taskId);
-    const { successful, data } = res;
+    const { successful, next } = res;
     if (successful === 'true') {
      history.push(
-        `/image_label/project/dataSet/taskList/detail?projectId=${projectId}&dataSetId=${dataSetId}&taskId=${data.next.id}`
+        `/image_label/project/dataSet/taskList/detail/${next.id}?projectId=${projectId}&dataSetId=${dataSetId}`
       );
     }
   }
 
   getData = async () => {
     const { labels } = this.props.global.Labels;
-    const { projectId, dataSetId, taskId } = this.state;
+    const { taskId } = this.props.match.params;
     let _this = this;
     const res = await getAnnotations(projectId, dataSetId, taskId);
     const { successful, annotations, msg } = res;
@@ -81,7 +80,7 @@ class TaskDetail extends React.Component {
         ann.map((one, index) => {
           const { category_id, segmentation, bbox, text } = one;
           this.setState({ isOCR: text !== undefined });
-          let a = category_id, points = [], obj = { id: index.toString(), type: "polygon", points };
+          let a = category_id, points = [], obj = { id: '0', type: "polygon", points };
           if (text) obj.popupText = text;
           if (segmentation && segmentation.length && segmentation[0].length) {
             segmentation.forEach(element => {
@@ -91,6 +90,9 @@ class TaskDetail extends React.Component {
               if (!formParts.hasOwnProperty(a)) {
                 formParts[a] = [obj];
               } else {
+                let temp = formParts[a];
+                let _id = Number(temp[temp.length - 1].id) + 1
+                obj.id = _id.toString();
                 formParts[a].push(obj);
               }
             });
@@ -137,7 +139,7 @@ class TaskDetail extends React.Component {
   }
 
   pushUpdate = (labelData) => {
-    const { dataSetId, taskId } = this.state;
+    const { taskId } = this.props.match.params;
     let imageInfo = this.state.imageInfo;
     if (imageInfo) {
       imageInfo["height"] = labelData.height;
@@ -154,14 +156,13 @@ class TaskDetail extends React.Component {
     });
   }
 
-  async fetch(...args) {
+  fetch = async (...args) => {
     return await fetch(...args);
   }
 
-  refetch = async () => {
-    const { dataSetId, taskId } = this.state;
+  refetch = async (taskId) => {
     this.setState({
-      isLoaded: false,
+      loading: true,
       error: null,
       project: null,
       image: null
@@ -169,27 +170,30 @@ class TaskDetail extends React.Component {
 
     try {
       if (!taskId) {
-        history.replace(`/taskList/${dataSetId}`);
+        history.replace(`/image_label/project/dataSet/taskList?projectId=${projectId}&&dataSetId=${dataSetId}`);
         return;
       }
-      history.replace(`/taskDetail/${dataSetId}/${taskId}`);
+      history.replace(`/image_label/project/dataSet/taskList/detail/${taskId}?projectId=${projectId}&dataSetId=${dataSetId}`);
       this.getData();
     } catch (error) {
       this.setState({
-        isLoaded: true,
+        loading: true,
         error,
       });
     }
   }
 
   markComplete = async () => {
-    const { projectId, dataSetId, taskId } = this.state;
+    const { taskId } = this.props.match.params;
+    this.setState({ btnLoading: true });
     const res = await submitDetail(projectId, dataSetId, taskId, this.tansformToCocoFormat());
-    res.success && this.getNext(taskId);
+    res.successful === 'true' && this.getNext(taskId);
+    this.setState({ btnLoading: false });
   }
 
   tansformToCocoFormat() {
     const { imageInfo, image, isOCR } = this.state;
+    const { taskId } = this.props.match.params;
     let sendData = { images: imageInfo, annotations: [], id: taskId }, data = image.labelData.labels;
     for (let one in data) {
       data[one].map((o) => {
@@ -221,7 +225,8 @@ class TaskDetail extends React.Component {
   render() {
     const title = `Image Label Tool`;
     const { global } = this.props;
-    const { project, image, isOCR, loading, projectId, dataSetId, taskId } = this.state;
+    const { project, image, isOCR, loading, btnLoading } = this.state;
+    const { taskId } = this.props.match.params;
     const props = {
       onBack: () => {
         history.goBack();
@@ -238,11 +243,11 @@ class TaskDetail extends React.Component {
         )
       },
       onLabelChange: this.pushUpdate,
-      isDetail: true
+      isDetail: true,
+      btnLoading: btnLoading
     };
 
     if (loading) return (<PageLoading />)
-
     return (
       <div>
         <DocumentMeta title={title}>
@@ -251,7 +256,7 @@ class TaskDetail extends React.Component {
             // reference={{ referenceLink, referenceText }}
             labelData={image.labelData.labels || {}}
             imageUrl={image.link}
-            fetch={this.fetch.bind(this)}
+            fetch={this.fetch}
             project={project}
             chnageState={this.chnageState}
             isOCR={isOCR}

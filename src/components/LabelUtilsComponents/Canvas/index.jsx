@@ -28,14 +28,19 @@ class Canvas extends Component {
     this.mapRef = React.createRef();
   }
 
-  componentDidUpdate(prevProps) {
+  // componentDidUpdate(prevProps) {
+  //   const { onSelectionChange, figures } = this.props;
+  //   const { selectedFigureId } = this.state;
+
+  //   if (this.prevSelectedFigureId !== selectedFigureId && onSelectionChange) {
+  //     this.prevSelectedFigureId = selectedFigureId;
+  //     onSelectionChange(selectedFigureId, figures.find(f => f.id === selectedFigureId));
+  //   }
+  // }
+  componentDidMount() {
     const { onSelectionChange, figures } = this.props;
     const { selectedFigureId } = this.state;
-
-    if (this.prevSelectedFigureId !== selectedFigureId && onSelectionChange) {
-      this.prevSelectedFigureId = selectedFigureId;
-      onSelectionChange(selectedFigureId, figures.find(f => f.id === selectedFigureId));
-    }
+    onSelectionChange(selectedFigureId, figures.find(f => f.id === selectedFigureId));
   }
 
   getSelectedFigure() {
@@ -47,6 +52,10 @@ class Canvas extends Component {
   handleChange = (eventType, { point, pos, figure, points }) => {
     const { onChange, unfinishedFigure } = this.props;
     const drawing = !!unfinishedFigure;
+    console.log('cccccccceventType', eventType)
+    console.log('drawing', drawing)
+    console.log('unfinishedFigure', unfinishedFigure)
+
     switch (eventType) {
       case 'add':
         if (drawing) {
@@ -173,7 +182,7 @@ class Canvas extends Component {
         vertexColor: colorMapping[f.color],
         onSelect: () => {
           const { chnageLabelAppState } = this.props;
-          this.setState({ selectedFigureId: f.id })
+          this.setState({ selectedFigureId: `${f.fId}-${f.id}` })
           chnageLabelAppState('selectedTreeKey', [`${f.fId}-${f.id}`]);
         },
         onChange: this.handleChange,

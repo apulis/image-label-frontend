@@ -46,10 +46,10 @@ class Sidebar extends PureComponent {
 
   onIconClick = (e, type, fId, index, isAll) => {
     const { onToggle, deleteEvent, onSelect, chnageLabelAppState } = this.props;
-    e.stopPropagation();
-    chnageLabelAppState('selectedTreeKey', index === undefined ? [`${fId}`] : [`${fId}-${index}`]);
+    // e.stopPropagation();
+    index !== undefined && chnageLabelAppState('selectedTreeKey',  [`${fId}-${index}`]);
     if (type) {
-      type == 1 ? onToggle(fId, index, isAll) : onSelect(fId);
+      type === 1 ? onToggle(fId, index, isAll) : onSelect(fId, true);
     } else {
       deleteEvent(fId, index);
     }
@@ -58,11 +58,9 @@ class Sidebar extends PureComponent {
   onSelectNode = (key) => {
     const { chnageLabelAppState, changCanvasState } = this.props;
     chnageLabelAppState('selectedTreeKey', key);
-    if (key.length) {
-      console.log('sssssl', key[0].split('-')[1])
-      chnageLabelAppState('selectedFigureId', key[0].split('-')[1], true);
-      changCanvasState('selectedFigureId', key[0].split('-')[1]);
-    }
+    chnageLabelAppState('selected', key);
+    chnageLabelAppState('selectedFigureId', key.length ? key[0] : null, true);
+    changCanvasState('selectedFigureId', key.length ? key[0] : null);
   }
 
   getSelectTypeChildren = () => {
@@ -88,7 +86,7 @@ class Sidebar extends PureComponent {
             <div className={styles.NodeIconWrap}>
               {allShow ? <EyeOutlined onClick={e => this.onIconClick(e, 1, id, undefined, true)} /> : <EyeInvisibleOutlined onClick={e => this.onIconClick(e, 1, id, undefined, true)} />}
               <DeleteOutlined onClick={e => this.onIconClick(e, 0, id, undefined)} />
-              <PlusOutlined onClick={e => this.onIconClick(e, 2, id)} />
+              <PlusOutlined onClick={e => this.onIconClick(e, 2, id, undefined)} />
             </div>
           </React.Fragment>
         ),
@@ -105,7 +103,7 @@ class Sidebar extends PureComponent {
       return data.children.map((item, i) => {
         const { id, type, show } = item;
         return {
-          key: `${fId}-${id}`,
+          key: `${id}`,
           title: (
             <React.Fragment>
               <span className={styles.childName}>{name}{i+1}</span>
@@ -133,7 +131,8 @@ class Sidebar extends PureComponent {
       onSkip,
       onSubmit,
       selectedTreeKey,
-      chnageLabelAppState
+      chnageLabelAppState,
+      btnLoading
     } = this.props;
     const { expandedKeys, selectType }= this.state;
     return (
@@ -167,7 +166,7 @@ class Sidebar extends PureComponent {
             <Button type="primary" onClick={onSkip}>下一张</Button>
           </div>
           <Button onClick={onBackTasks}>返回列表</Button>
-          <Button type="primary" onClick={onSubmit}>提交</Button>
+          <Button type="primary" onClick={onSubmit} loading={btnLoading}>提交</Button>
         </div>
       </div>
     );

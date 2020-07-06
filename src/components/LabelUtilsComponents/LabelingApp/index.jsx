@@ -46,7 +46,7 @@ class LabelingApp extends Component {
     labels.forEach(label => {
       const { id, type } = label;
       let children = [];
-      children = labelData[id].map(item => ({ ...item, show: true }));
+      children = labelData[id].map(item => ({ ...item, id: `${id}-${item.id}`, show: true }));
       toggles[id] = {
         allShow: true, 
         children: children
@@ -73,15 +73,15 @@ class LabelingApp extends Component {
             let obj = {
               color: colors[i],
               points: points,
-              id: figure.id,
+              id: `${id}-${figure.id}`,
               type: type,
               fId: id,
               tracingOptions: tracingOptions
             }
             if (isOCR) obj.popupText = popupText;
             allFigures.push(obj);
-            if (figure.id === selectedFigureId) {
-              selectedFigure = { ...figure, color: colors[i] };
+            if (`${id}-${figure.id}` === selectedFigureId) {
+              selectedFigure = { ...figure, id: `${id}-${figure.id}`, color: colors[i] };
             }
           }
         }
@@ -96,11 +96,12 @@ class LabelingApp extends Component {
     this.setState({ selectedFigure, allFigures });
   }
 
-  handleSelected = (v) => {
+  handleSelected = (v, isAdd) => {
     const val = v.toString();
     const { selected, popupShow, toggles } = this.state;
     const { pushState, labels, figures, chnageHOCState } = this.props;
     let newF = cloneDeep(figures), newT = cloneDeep(toggles);
+    const idx = labels.findIndex(i => i.id == val)
     if (Object.keys(figures).indexOf(val) == -1) {
       newF[val] = [];
       chnageHOCState('figures', newF);
@@ -109,12 +110,21 @@ class LabelingApp extends Component {
       newT[val] = { allShow: true, children: [] };
     } else {
       newT[val].allShow = true;
-      // newT[val].children.push({
-      //   id: genId(),
-      //   type: figures[val][0].type,
-      //   points: [],
-      //   show: true
-      // })
+      let child = {
+        id: `${val}-0`,
+        type: figures[val][0].type,
+        points: [],
+        show: true,
+        color: colors[idx]
+      }
+      if (newT[val].children) {
+        let temp = newT[val].children, len = temp.length;
+        let _id = Number(temp[len - 1].id.split('-')[1]) + 1;
+        child.id = `${val}-${_id}`;
+        newT[val].children.push(child);
+      } else {
+        newT[val].children = [child];
+      }
     }
     if (popupShow) return;
     if (!val || val === selected) {
@@ -123,7 +133,6 @@ class LabelingApp extends Component {
       );
       return;
     }
-    const idx = labels.findIndex(i => i.id == val)
     const { type, id } = labels.find(i => i.id == val);
     pushState(
       state => ({
@@ -134,7 +143,7 @@ class LabelingApp extends Component {
           points: [],
         },
       }),
-      () => this.setState({ selected: val })
+      // () => this.setState({ selected: isAdd ? null : val })
     );
     this.setState({ toggles: newT })
   }
@@ -143,7 +152,7 @@ class LabelingApp extends Component {
     const { labels, isOCR } = this.props;
     const { popupText } = this.state;
     if (figureId) {
-      const { color, fId } = selectedFigureData;
+      const { fId } = selectedFigureData;
       if (isOCR) {
         this.canvasRef.current.changeState('text', selectedFigureData.popupText || popupText);
         this.setState({
@@ -157,7 +166,7 @@ class LabelingApp extends Component {
           eventType: 'replace'
         });
       }
-      this.setState({ selectedFigureId: figureId });
+      this.setState({ selectedFigureId: `${fId}-${figureId}` });
     } else {
       this.setState({
         reassigning: { status: false, type: null },
@@ -171,17 +180,24 @@ class LabelingApp extends Component {
     const { labels, figures, pushState, isOCR } = this.props;
     const label = labels[labels.findIndex(i => i.id == id)];
     this.setState({ eventType });
+    let childId = 0;
+    if (figures[id] && figures[id].length) {
+      let temp = figures[id], len = figures[id].length;
+      childId = Number(temp[len - 1].id) + 1;
+    }
+    console.log('eventTypeeventType',eventType)
+    console.log('changefigure',figure)
     switch (eventType) {
       case 'new':
         const obj = {
-          id: genId(),
+          id: childId.toString(),
           type: type,
           points: points,
           show: true
         }
         pushState(state => ({
           figures: update(state.figures, {
-            [this.state.selected]: {
+            [id]: {
               $push: [obj],   
             },
           }),
@@ -200,19 +216,31 @@ class LabelingApp extends Component {
               popupText: null
             });
           }
-          const { selected } = this.state;
+          // const { selected } = this.state;
           let toggles = cloneDeep(this.state.toggles);
-          toggles[selected].children.push(obj);
+          //     selectIds = selected ? selected[0].split('-')[0] : 0;
+          // if (toggles[selectIds] && toggles[selectIds].children) {
+          //   toggles[selectIds].children.push(obj);
+          // } else {
+          //   toggles[selectIds].children = [];
+          // }
           this.getAllFigures(toggles);
-          this.setState({ selected: null, toggles, selectedTreeKey: [] });
+          // this.setState({ selected: null, toggles, selectedTreeKey: [] });
+          this.setState({ selected: null, selectedTreeKey: [] });
           this.canvasRef.current.changeState('selectedFigureId', null);
         });
         break;
 
       case 'replace':
-        this.replaceEvent(fId, id, figure);
+        console.log('replace-fId', fId)
+        console.log('replace-Id', id.split('-')[1])
+        console.log('replace-fId', fId)
+        console.log('replace-points11', points[1])
+        console.log('replace-points22', points[2])
+        this.replaceEvent(fId, id.split('-')[1], figure);
         let toggles = cloneDeep(this.state.toggles);
-        toggles[fId].children.splice(id, 1, { ...toggles[fId].children[id], points: points });
+        toggles[fId].children.splice(id.split('-')[1], 1, { ...toggles[fId].children[id.split('-')[1]], points: points });
+        console.log('replace-toggles-after', toggles)
         this.getAllFigures(toggles);
         this.setState({
           toggles,
@@ -498,7 +526,8 @@ class LabelingApp extends Component {
       project,
       chnageState,
       isOCR,
-      figures
+      figures,
+      btnLoading
     } = this.props;
     const { hotkeysPanel, popupPoint, popupShow, popupText, allFigures, selectedFigureId, selectedTreeKey } = this.state;
     const forwardedProps = {
@@ -530,6 +559,7 @@ class LabelingApp extends Component {
               selectedTreeKey={selectedTreeKey}
               chnageLabelAppState={this.chnageLabelAppState}
               changCanvasState={this.changCanvasState}
+              btnLoading={btnLoading}
             />
             {hotkeysPanelDOM}
             <div className={styles.flexWrap}>

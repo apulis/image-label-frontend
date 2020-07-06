@@ -65,7 +65,7 @@ const TaskList = () => {
             return (
               <Card hoverable
                 cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}.jpg`} />} key={i}
-                onClick={() => history.push(`/image_label/project/dataSet/taskList/detail?projectId=${projectId}&dataSetId=${dataSetId}&taskId=${id}`)}
+                onClick={() => history.push(`/image_label/project/dataSet/taskList/detail/${id}?projectId=${projectId}&dataSetId=${dataSetId}`)}
               >
                 <Meta title={`第${i + 1}张 ${id}.jpg`} />
               </Card>
