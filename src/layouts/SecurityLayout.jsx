@@ -15,9 +15,9 @@ class SecurityLayout extends React.Component {
     this.setState({
       isReady: true,
     });
-    this.props.dispatch({
-      type: 'user/fetchCurrent',
-    });
+    // this.props.dispatch({
+    //   type: 'user/fetchCurrent',
+    // });
     const { location } = this.props;
     if (location && location.query && location.query.token) {
       localStorage.setItem('token', location.query.token);

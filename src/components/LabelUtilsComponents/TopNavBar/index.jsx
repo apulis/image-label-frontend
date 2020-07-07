@@ -10,9 +10,9 @@ class TopNavBar extends Component {
   
   componentDidMount() {
     const { dispatch } = this.props
-    dispatch({
-      type: 'account/getUserInfo'
-    })
+    // dispatch({
+    //   type: 'account/getUserInfo'
+    // })
   }
 
   toIndexPage = () => {

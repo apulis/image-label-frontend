@@ -55,7 +55,7 @@ const TaskList = () => {
     return (
       <PageHeader
         ghost={false}
-        onBack={() => history.goBack()}
+        onBack={() => history.push(`/image_label/project/dataSetList?projectId=${projectId}`)}
         title="任务列表"
       >
         <div className={styles.taskList}>

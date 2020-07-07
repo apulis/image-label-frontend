@@ -52,10 +52,6 @@ class Canvas extends Component {
   handleChange = (eventType, { point, pos, figure, points }) => {
     const { onChange, unfinishedFigure } = this.props;
     const drawing = !!unfinishedFigure;
-    console.log('cccccccceventType', eventType)
-    console.log('drawing', drawing)
-    console.log('unfinishedFigure', unfinishedFigure)
-
     switch (eventType) {
       case 'add':
         if (drawing) {
@@ -105,6 +101,7 @@ class Canvas extends Component {
   handleClick = (e) => {
     const { unfinishedFigure } = this.props;
     const drawing = !!unfinishedFigure;
+    console.log('drawing',drawing)
     if (this.skipNextClickEvent) {
       this.skipNextClickEvent = false;
       return;
@@ -182,8 +179,8 @@ class Canvas extends Component {
         vertexColor: colorMapping[f.color],
         onSelect: () => {
           const { chnageLabelAppState } = this.props;
-          this.setState({ selectedFigureId: `${f.fId}-${f.id}` })
-          chnageLabelAppState('selectedTreeKey', [`${f.fId}-${f.id}`]);
+          this.setState({ selectedFigureId: `${f.id}` })
+          chnageLabelAppState('selectedTreeKey', [`${f.id}`]);
         },
         onChange: this.handleChange,
         calcDistance,
@@ -262,14 +259,7 @@ class Canvas extends Component {
     }
 
     return (
-      <div
-        style={{
-          cursor: drawing ? 'crosshair' : 'grab',
-          height: '100%',
-          flex: 1
-        }}
-        className={styles.canvasContentWrap}
-      >
+      <div style={{ height: '100%', flex: 1 }} className={styles.canvasContentWrap}>
         <Map
           crs={CRS.Simple}
           zoom={zoom}
@@ -285,6 +275,7 @@ class Canvas extends Component {
           onZoom={e => this.setState({ zoom: e.target.getZoom() })}
           onMousemove={e => this.setState({ cursorPos: e.latlng })}
           ref={this.mapRef}
+          className={drawing ? 'Crosshair' : 'Grab'}
         >
           <ZoomControl position="bottomright" />
           <Control className="leaflet-bar" position="bottomright">

@@ -68,7 +68,7 @@ class LabelingApp extends Component {
       figures[id] && figures[id].forEach((figure, i) => {
         if (toggles[id]) {
           const { children, allShow } = toggles[id];
-          if ((allShow && children[i].show) && (type === 'bbox' || type === 'polygon')) {
+          if ((allShow && children[i] && children[i].show) && (type === 'bbox' || type === 'polygon')) {
             const { points, type, tracingOptions, popupText } = figure;
             let obj = {
               color: colors[i],
@@ -96,27 +96,28 @@ class LabelingApp extends Component {
     this.setState({ selectedFigure, allFigures });
   }
 
-  handleSelected = (v, isAdd) => {
+  handleSelected = v => {
     const val = v.toString();
     const { selected, popupShow, toggles } = this.state;
     const { pushState, labels, figures, chnageHOCState } = this.props;
-    let newF = cloneDeep(figures), newT = cloneDeep(toggles);
-    const idx = labels.findIndex(i => i.id == val)
-    if (Object.keys(figures).indexOf(val) == -1) {
+    const idx = labels.findIndex(i => i.id == val);
+    let newF = cloneDeep(figures), newT = cloneDeep(toggles),
+        child = {
+          id: `${val}-0`,
+          points: [],
+          show: true,
+          color: colors[idx]
+        }
+    if (Object.keys(figures).indexOf(val) === -1) {
       newF[val] = [];
       chnageHOCState('figures', newF);
     }
-    if (Object.keys(toggles).indexOf(val) == -1) {
-      newT[val] = { allShow: true, children: [] };
+    if (Object.keys(toggles).indexOf(val) === -1) {
+      child.type = labels.find(i => i.id === v).type;
+      newT[val] = { allShow: true, children: [child] };
     } else {
       newT[val].allShow = true;
-      let child = {
-        id: `${val}-0`,
-        type: figures[val][0].type,
-        points: [],
-        show: true,
-        color: colors[idx]
-      }
+      child.type = figures[val][0].type;
       if (newT[val].children) {
         let temp = newT[val].children, len = temp.length;
         let _id = Number(temp[len - 1].id.split('-')[1]) + 1;
@@ -142,10 +143,13 @@ class LabelingApp extends Component {
           type,
           points: [],
         },
-      }),
-      // () => this.setState({ selected: isAdd ? null : val })
+      })
     );
-    this.setState({ toggles: newT })
+    const { changeState, state } = this.siderBarChild;
+    let keys = state.expandedKeys;
+    keys.push(val);
+    changeState('expandedKeys', Array.from(new Set(keys)));
+    this.setState({ toggles: newT, selectedTreeKey: [child.id] });
   }
 
   handleSelectionChange = (figureId, selectedFigureData) => {
@@ -185,8 +189,7 @@ class LabelingApp extends Component {
       let temp = figures[id], len = figures[id].length;
       childId = Number(temp[len - 1].id) + 1;
     }
-    console.log('eventTypeeventType',eventType)
-    console.log('changefigure',figure)
+
     switch (eventType) {
       case 'new':
         const obj = {
@@ -216,31 +219,17 @@ class LabelingApp extends Component {
               popupText: null
             });
           }
-          // const { selected } = this.state;
           let toggles = cloneDeep(this.state.toggles);
-          //     selectIds = selected ? selected[0].split('-')[0] : 0;
-          // if (toggles[selectIds] && toggles[selectIds].children) {
-          //   toggles[selectIds].children.push(obj);
-          // } else {
-          //   toggles[selectIds].children = [];
-          // }
           this.getAllFigures(toggles);
-          // this.setState({ selected: null, toggles, selectedTreeKey: [] });
           this.setState({ selected: null, selectedTreeKey: [] });
           this.canvasRef.current.changeState('selectedFigureId', null);
         });
         break;
 
       case 'replace':
-        console.log('replace-fId', fId)
-        console.log('replace-Id', id.split('-')[1])
-        console.log('replace-fId', fId)
-        console.log('replace-points11', points[1])
-        console.log('replace-points22', points[2])
         this.replaceEvent(fId, id.split('-')[1], figure);
         let toggles = cloneDeep(this.state.toggles);
         toggles[fId].children.splice(id.split('-')[1], 1, { ...toggles[fId].children[id.split('-')[1]], points: points });
-        console.log('replace-toggles-after', toggles)
         this.getAllFigures(toggles);
         this.setState({
           toggles,
@@ -384,7 +373,7 @@ class LabelingApp extends Component {
           if (idx === undefined) this.removeEmptyLabels(fId);
           let toggles = cloneDeep(this.state.toggles);
           idx === undefined ? delete toggles[fId] : toggles[fId].children.splice(idx, 1);
-          this.setState({ toggles });
+          this.setState({ toggles, selectedFigureId: null, selectedTreeKey: [] });
           this.getAllFigures(toggles);
         }); 
       },
@@ -509,6 +498,10 @@ class LabelingApp extends Component {
     this.canvasRef.current.changeState(key, val);
   }
 
+  onRef = (ref) => {
+    this.siderBarChild = ref;
+  }
+
   render() {
     const {
       labels,
@@ -560,6 +553,7 @@ class LabelingApp extends Component {
               chnageLabelAppState={this.chnageLabelAppState}
               changCanvasState={this.changCanvasState}
               btnLoading={btnLoading}
+              onRef={this.onRef}
             />
             {hotkeysPanelDOM}
             <div className={styles.flexWrap}>

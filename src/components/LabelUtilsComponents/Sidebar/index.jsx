@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, forwardRef } from 'react';
 import { Tree, Button, Select } from 'antd';
 import { shortcuts, colors } from '../utils';
 import Hotkeys from 'react-hot-keys';
@@ -15,21 +15,24 @@ class Sidebar extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      expandedKeys: props.global.Labels.labels.map(i => i.id.toString()),
+      expandedKeys: props.labels.map(i => i.id.toString()),
       selectType: undefined
     };
-    this.canvasRef = React.createRef();
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.labels.length !== prevState.expandedKeys.length) {
-      return {
-        expandedKeys: nextProps.labels.map(i => i.id.toString())
-      }
-    } else {
-      return null;
-    }
+  componentDidMount() {
+    this.props.onRef(this);
   }
+
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   if (nextProps.labels.length !== prevState.expandedKeys.length) {
+  //     return {
+  //       expandedKeys: nextProps.labels.map(i => i.id.toString())
+  //     }
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
   addLabel = async () => {
     const { project, chnageState, labels, global } = this.props;
@@ -41,7 +44,7 @@ class Sidebar extends PureComponent {
     }
     let newProject = project;
     newProject.form.formParts.push({ id: id, type: type, name: name });
-    chnageState('labels', newProject);
+    chnageState('project', newProject);
   }
 
   onIconClick = (e, type, fId, index, isAll) => {
@@ -49,7 +52,7 @@ class Sidebar extends PureComponent {
     // e.stopPropagation();
     index !== undefined && chnageLabelAppState('selectedTreeKey',  [`${fId}-${index}`]);
     if (type) {
-      type === 1 ? onToggle(fId, index, isAll) : onSelect(fId, true);
+      type === 1 ? onToggle(fId, index, isAll) : onSelect(fId);
     } else {
       deleteEvent(fId, index);
     }
@@ -119,6 +122,10 @@ class Sidebar extends PureComponent {
     }
   }
 
+  changeState = (key, val) => {
+    this.setState({ [key]: val });
+  }
+
   render() {
     const {
       title,
@@ -157,7 +164,7 @@ class Sidebar extends PureComponent {
           onSelect={this.onSelectNode}
           expandedKeys={expandedKeys}
           selectedKeys={selectedTreeKey}
-          onExpand={(k) => this.setState({ expandedKeys: k })}
+          onExpand={k => this.setState({ expandedKeys: k })}
           treeData={this.getTreeData()}
         />}
         <div className={styles.btnWrap}>
@@ -169,7 +176,7 @@ class Sidebar extends PureComponent {
           <Button type="primary" onClick={onSubmit} loading={btnLoading}>提交</Button>
         </div>
       </div>
-    );
+    )
   }
 }
 

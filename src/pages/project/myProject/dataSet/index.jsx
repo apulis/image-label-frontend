@@ -170,7 +170,7 @@ const DataSetTable = (props) => {
     <div className={styles.dataSetList}>
        <PageHeader
         ghost={false}
-        onBack={() => history.goBack()}
+        onBack={() => history.push(`/image_label/project?projectId=${projectId}`)}
         title={
           <div>数据集列表
             <Button type="primary" style={{ float: 'right' }}
