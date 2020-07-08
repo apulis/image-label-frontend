@@ -14,6 +14,13 @@ export default {
         '^': '',
       },
     },
+    '/ai_arts/api/': {
+      target: 'http://10.31.3.120:9000',
+      changeOrigin: true,
+      pathRewrite: {
+        '^': '',
+      },
+    },
   },
   test: {
     '/api/': {
@@ -33,4 +40,4 @@ export default {
       },
     },
   },
-};
+}

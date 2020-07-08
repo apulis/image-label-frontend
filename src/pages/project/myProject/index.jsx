@@ -76,13 +76,13 @@ const ProjectTable = () => {
 
   const columns = [
     {
-      title: '项目Id',
+      title: '项目ID',
       dataIndex: 'ProjectId',
       width: 300,
       render: id => <Link to={`/image_label/project/dataSetList?projectId=${id}`}>{id}</Link>
     },
     {
-      title: '项目名词',
+      title: '项目名称',
       dataIndex: 'Name',
     },
     {
@@ -139,7 +139,7 @@ const ProjectTable = () => {
         <Table 
           columns={columns} 
           dataSource={project.data}
-          rowKey={(r, i) => `${i}`}
+          rowKey={r => r.ProjectId}
           pagination={{
             total: project.total,
             showQuickJumper: true,
@@ -155,7 +155,7 @@ const ProjectTable = () => {
           visible={modalFlag}
           onOk={onSubmit}
           onCancel={() => resetModal(false)}
-          okText="Submit"
+          okText="提交"
           destroyOnClose
         >
           <Form form={form} className={styles.projectModal}>

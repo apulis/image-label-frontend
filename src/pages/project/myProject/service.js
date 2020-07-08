@@ -90,3 +90,9 @@ export function submitDetail(projectId, dataSetId, taskId, data) {
     data: data
   })
 }
+
+export async function getDatasetsOptions(params) {
+  return request('/ai_arts/api/datasets', {
+    params: { ...params },
+  });
+}

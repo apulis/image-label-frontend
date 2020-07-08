@@ -181,7 +181,7 @@ const DataSetTable = (props) => {
         <Table 
           columns={columns} 
           dataSource={dataset.data}
-          rowKey={(r, i) => `${i}`}
+          rowKey={r => r.dataSetId}
           pagination={{
             total: dataset.total, 
             showQuickJumper: true,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useImperativeHandle, forwardRef } from "react";
 import { Form, Select, Checkbox, Row, Col, Input, Cascader, message, Button } from "antd";
 import { useSelector } from 'umi';
-import { getDataSetDetail } from '../../../service';
+import { getDataSetDetail, getDatasetsOptions } from '../../../service';
 import styles from './index.less';
 import { CloseOutlined } from '@ant-design/icons';
 import _ from 'lodash';
@@ -15,6 +15,7 @@ const DataSetModalForm = (props, ref) => {
   const [selectedCategoryList, setSelectedCategoryList] = useState([]);
   const [detail, setDetail] = useState({});
   const [plainOptions, setPlainOptions] = useState([]);
+  const [sourceOptions, setSourceOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const { cascaderOptions, dataSetId, projectId } = props;
   const Labels = useSelector(({ global }) => global.Labels);
@@ -42,6 +43,14 @@ const DataSetModalForm = (props, ref) => {
         setDetail(info);
         setSelectedCategoryList(info.labels);
         setLoading(false);
+      }
+    } else {
+      const res = await getDatasetsOptions({page: 1, count: 999});
+      const { data, code, msg } = res;
+      if (code === 0) {
+        setSourceOptions(data.datasets);
+      } else {
+        message.error(msg);
       }
     }
     setCheckedList(dataSetId ? [1] : []);
@@ -88,7 +97,7 @@ const DataSetModalForm = (props, ref) => {
   return (
     <div className={styles.dataSetModalFormWrap}>
       <div className={styles.idWrap}>
-        <p>项目ID：</p><span>{projectId}</span>
+        <p>项目 ID：</p><span>{projectId}</span>
         {!!dataSetId && <div><p>数据集 Id：</p><span>{dataSetId}</span></div>}
       </div>
       {((dataSetId && !loading) || !dataSetId) && <Form form={form} initialValues={{
@@ -99,15 +108,21 @@ const DataSetModalForm = (props, ref) => {
         labelType1: 'polygon',
       }}>
         <Form.Item label="数据集名称" name="name" 
-          rules={[{ required: true, message: '需要填写数据集名称' }]}> 
-          <Input placeholder="请填写数据集名称" />
+          rules={[{ required: true, message: '请输入数据集名称！' }]}> 
+          <Input placeholder="请输入数据集名称" />
         </Form.Item>
         <Form.Item label="数据集简介" name="info"
-          rules={[{ required: true, message: '需要填写数据集简介' }]}>
-          <Input.TextArea  placeholder="请填写数据集简介" />
+          rules={[{ required: true, message: '请输入数据集简介！' }]}>
+          <Input.TextArea  placeholder="请填输入数据集简介" />
+        </Form.Item>
+        <Form.Item label="数据源" name="source"
+          rules={[{ required: true, message: '请选择数据源！' }]}>
+          <Select placeholder="请选择数据源">
+            {sourceOptions.length > 0 && sourceOptions.map(i => <Option value={i.id}>{i.name}</Option>)}
+          </Select>
         </Form.Item>
         <Form.Item label="数据集类型" name="type"
-          rules={[{ required: true, message: '需要填写数据集类型' }]}>
+          rules={[{ required: true, message: '请选择数据集类型！' }]}>
           <Select placeholder="请选择数据集类型" style={{ width: 180 }}>
             <Option value="image">图片</Option>
             <Option value="video">视频</Option>
@@ -122,7 +137,7 @@ const DataSetModalForm = (props, ref) => {
         {!!dataSetId &&
         <div className={styles.diyWrap}>
           <Form.Item label="选择对象类型" name="category2" className={styles.speItem}
-            rules={[{ required: true, message: '需要填写数据集类型' }]}>
+            rules={[{ required: true, message: '请选择对象类型！' }]}>
               <Cascader
                 options={cascaderOptions}
                 placeholder="请选择对象类型"
@@ -140,15 +155,15 @@ const DataSetModalForm = (props, ref) => {
         {checkedList.indexOf(2) > -1 && 
         <div className={styles.diyWrap}>
           <Form.Item label="自定义对象类型" name="fatherType" className={styles.speItem}
-            rules={[{ required: true, message: '请填写对象父类型' }]}>
+            rules={[{ required: true, message: '请填写对象父类型！' }]}>
             <Input style={{ width: 140 }} placeholder="请填写对象父类型" />
           </Form.Item>
           <Form.Item className={styles.speItem} name="category1"
-            rules={[{ required: true, message: '请填写对象类型' }]}>
+            rules={[{ required: true, message: '请填写对象类型！' }]}>
             <Input style={{ width: 140 }} placeholder="请填写对象类型" />
           </Form.Item>
           <Form.Item className={styles.speItem} name="labelType1"
-            rules={[{ required: true, message: '请选择' }]}>
+            rules={[{ required: true, message: '请选择！' }]}>
             <Select style={{ width: 100 }}>
               <Option value="polygon">polygon</Option>
               <Option value="bbox">bbox</Option>

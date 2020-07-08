@@ -6,6 +6,8 @@ import { extend } from 'umi-request';
 import { notification, message } from 'antd';
 import { history } from 'umi';
 
+const prefix = '/api';
+
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -77,7 +79,7 @@ request.interceptors.request.use(async (url, options) => {
 })
 
 request.interceptors.response.use((response, options) => {
-  if (options.method === 'DELETE' && response.status === 200) message.success('Deleted successfully！');
+  if (options.method === 'DELETE' && response.status === 200) message.success('删除成功！');
   return response;
 })
 
