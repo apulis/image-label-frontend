@@ -1,5 +1,5 @@
-import request from '@/utils/request';
+import request from '@/utils/request-user';
 
 export async function getUserInfo() {
-  return await request('/api/userinfo')
+  return await request('/auth/currentUser');
 }

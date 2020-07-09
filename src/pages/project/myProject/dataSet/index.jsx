@@ -105,8 +105,8 @@ const DataSetTable = (props) => {
   }
 
   const onSubmit = () => {
-    const { form, selectedCategoryList } = dataSetModalFormRef.current;
-    form.validateFields(['name', 'info', 'type']).then(async (values) => {
+    const { form, selectedCategoryList, sourceOptions } = dataSetModalFormRef.current;
+    form.validateFields(['name', 'info', 'type', 'sourceId']).then(async (values) => {
       setBtnLoading(true);
       if (dataSetModalType == 2 && !selectedCategoryList.length) {
         message.error('请确定选择的对象类型！');
@@ -114,6 +114,12 @@ const DataSetTable = (props) => {
         return;
       }
       values.labels = selectedCategoryList;
+      const { sourceId } = values;
+      if (sourceId) {
+        values.dataSetBindId = sourceId;
+        values.dataSetPath = sourceOptions.find(i => i.id === sourceId).path;
+        delete values.sourceId;
+      }
       const res = dataSetModalType == 1 ? await addDataSet(projectId, values) : await submitDataSet(projectId, clickDataSetId, values);
       if (res && res.successful === 'true') {
         setDataSetFormModal(false);

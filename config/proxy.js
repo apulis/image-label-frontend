@@ -21,6 +21,13 @@ export default {
         '^': '',
       },
     },
+    '/custom-user-dashboard-backend/': {
+      target: 'http://sandbox2-master.sigsus.cn:52080/',
+      changeOrigin: true,
+      pathRewrite: {
+        '^': '',
+      },
+    },
   },
   test: {
     '/api/': {

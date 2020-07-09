@@ -22,7 +22,8 @@ const DataSetModalForm = (props, ref) => {
 
   useImperativeHandle(ref, () => ({
     form: form,
-    selectedCategoryList: selectedCategoryList
+    selectedCategoryList: selectedCategoryList,
+    sourceOptions: sourceOptions
   }));
 
   useEffect(() => {
@@ -98,7 +99,7 @@ const DataSetModalForm = (props, ref) => {
     <div className={styles.dataSetModalFormWrap}>
       <div className={styles.idWrap}>
         <p>项目 ID：</p><span>{projectId}</span>
-        {!!dataSetId && <div><p>数据集 Id：</p><span>{dataSetId}</span></div>}
+        {dataSetId && <div><p>数据集 Id：</p><span>{dataSetId}</span></div>}
       </div>
       {((dataSetId && !loading) || !dataSetId) && <Form form={form} initialValues={{
         name: detail.name || undefined,
@@ -115,12 +116,12 @@ const DataSetModalForm = (props, ref) => {
           rules={[{ required: true, message: '请输入数据集简介！' }]}>
           <Input.TextArea  placeholder="请填输入数据集简介" />
         </Form.Item>
-        <Form.Item label="数据源" name="source"
+        {!dataSetId && <Form.Item label="数据源" name="sourceId"
           rules={[{ required: true, message: '请选择数据源！' }]}>
           <Select placeholder="请选择数据源">
-            {sourceOptions.length > 0 && sourceOptions.map(i => <Option value={i.id}>{i.name}</Option>)}
+            {sourceOptions.length > 0 ? sourceOptions.map(i => <Option value={i.id}>{i.name}</Option>) : null}
           </Select>
-        </Form.Item>
+        </Form.Item>}
         <Form.Item label="数据集类型" name="type"
           rules={[{ required: true, message: '请选择数据集类型！' }]}>
           <Select placeholder="请选择数据集类型" style={{ width: 180 }}>
@@ -129,12 +130,7 @@ const DataSetModalForm = (props, ref) => {
             <Option value="text">文字</Option>
           </Select>
         </Form.Item>
-        <div style={{ marginBottom: 10 }}>
-          <CheckboxGroup options={plainOptions} value={checkedList}
-            onChange={ checkedList => setCheckedList(checkedList) }
-          />
-        </div>
-        {!!dataSetId &&
+        {dataSetId &&
         <div className={styles.diyWrap}>
           <Form.Item label="选择对象类型" name="category2" className={styles.speItem}
             rules={[{ required: true, message: '请选择对象类型！' }]}>
@@ -152,6 +148,11 @@ const DataSetModalForm = (props, ref) => {
           </Form.Item>
           <Button onClick={onSelectDataSetCategory}>确定</Button>
         </div>}
+        <div style={{ marginBottom: 10 }}>
+          <CheckboxGroup options={plainOptions} value={checkedList}
+            onChange={ checkedList => setCheckedList(checkedList) }
+          />
+        </div>
         {checkedList.indexOf(2) > -1 && 
         <div className={styles.diyWrap}>
           <Form.Item label="自定义对象类型" name="fatherType" className={styles.speItem}
@@ -172,7 +173,7 @@ const DataSetModalForm = (props, ref) => {
           <Button onClick={addNewDataSetCategory}>确定</Button>
         </div>}
         <ul>
-          <p>{!!dataSetId ? '已有对象类型' : checkedList.indexOf(2) > -1 ? '已自定义对象类型' : ''}</p>
+          <p>{dataSetId ? '已有对象类型' : checkedList.indexOf(2) > -1 ? '已自定义对象类型' : ''}</p>
           <ul className={styles.selectedCategory}>
             {selectedCategoryList.map(list => (
               <li key={list.name}>

@@ -48,13 +48,13 @@ const BasicLayout = props => {
    * constructor
    */
 
-  // useEffect(() => {
-  //   if (dispatch) {
-  //     dispatch({
-  //       type: 'user/fetchCurrent',
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (dispatch) {
+      dispatch({
+        type: 'user/fetchCurrent',
+      });
+    }
+  }, []);
   /**
    * init variables
    */

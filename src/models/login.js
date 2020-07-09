@@ -1,6 +1,7 @@
 import { stringify } from 'querystring';
-import { history } from 'umi';
 import { getPageQuery } from '@/utils/utils';
+import { USER_DASHBOARD_PATH } from '@/utils/const';
+import { userLogout } from '@/services/login'; 
 
 const Model = {
   namespace: 'login',
@@ -8,21 +9,16 @@ const Model = {
     status: undefined,
   },
   effects: {
-    logout() {
-      const { redirect } = getPageQuery(); // Note: There may be security issues, please note
-      if (window.location.pathname !== '/image_label/user/login' && !redirect) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userLevel');
-        history.replace({
-          pathname: '/image_label/user/login',
-          search: stringify({
-            redirect: window.location.href,
-          }),
-        });
-      }
+    * logout(_, { call }) {
+      const { redirect } = getPageQuery();
+      yield call(userLogout);
+      localStorage.removeItem('token');
+      const queryString = stringify({
+        redirect: encodeURIComponent(redirect || window.location.href),
+      });
+      window.location.href = USER_DASHBOARD_PATH + '?' + queryString
     },
   },
-  reducers: {
-  },
+  reducers: {},
 };
 export default Model;

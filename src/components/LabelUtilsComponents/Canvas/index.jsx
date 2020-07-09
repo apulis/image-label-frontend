@@ -98,10 +98,10 @@ class Canvas extends Component {
     }
   }
 
-  handleClick = (e) => {
-    const { unfinishedFigure } = this.props;
+  handleClick = e => {
+    const { unfinishedFigure, chnageLabelAppState } = this.props;
     const drawing = !!unfinishedFigure;
-    console.log('drawing',drawing)
+    console.log('selectedFigureId', this.state.selectedFigureId)
     if (this.skipNextClickEvent) {
       this.skipNextClickEvent = false;
       return;
@@ -111,7 +111,7 @@ class Canvas extends Component {
       return;
     }
     if (!drawing) {
-      this.setState({ selectedFigureId: null });
+      this.chnageLabelAppState('selectedTreeKey', this.state.selectedFigureId);
       return;
     }
   }

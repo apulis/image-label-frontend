@@ -5,6 +5,7 @@
 import { extend } from 'umi-request';
 import { notification, message } from 'antd';
 import { history } from 'umi';
+import { USER_DASHBOARD_PATH } from '@/utils/const';
 
 const prefix = '/api';
 
@@ -30,14 +31,19 @@ const codeMessage = {
  * 异常处理程序
  */
 
-const errorHandler = error => {
+export const errorHandler = error => {
   const { response } = error;
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
     if (status === 401) {
       const href = window.location.href;
-      if (!/\/login/.test(href)) history.push('/image_label/user/login');
+      if (!/localhost/.test(href)) {
+        const queryString = stringify({
+          redirect: encodeURIComponent(window.location.href),
+        });
+        window.location.href = `${USER_DASHBOARD_PATH}/user/login?` + queryString;
+      }
     }
     notification.error({
       message: `请求错误 ${status}: ${url}`,

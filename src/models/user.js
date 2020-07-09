@@ -3,22 +3,30 @@ import { getUserInfo } from '@/services/user';
 const UserModel = {
   namespace: 'user',
   state: {
-    currentUser: {},
+    currentUser: {
+      userName: 'User',
+      id: undefined,
+      permissionList: [],
+      nickName: undefined,
+      phone: '',
+      email: '',
+    },
   },
   effects: {
     *fetchCurrent(_, { call, put }) {
       const res = yield call(getUserInfo);
-      const { userInfo, successful } = res;
-      if (successful === 'true') {
-        const { role, isAdmin } = userInfo;
-        let userLevel = isAdmin ? 3 : 1;
-        localStorage.userLevel = userLevel;
+      const { code } = res;
+      if (code === 0) {
         yield put({
           type: 'updateState',
           payload: {
             currentUser: {
-              ...userInfo,
-              userLevel
+              userName: res.userName,
+              id: res.id,
+              permissionList: res.permissionList,
+              nickName: res.nickName,
+              phone: res.phone,
+              email: res.email
             }
           }
         })
@@ -29,9 +37,9 @@ const UserModel = {
     updateState(state, { payload }) {
       return {
         ...state,
-        ...payload
-      }
-    }
+        ...payload,
+      };
+    },
   },
 };
 export default UserModel;

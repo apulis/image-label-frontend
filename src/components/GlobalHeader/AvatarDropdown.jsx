@@ -7,7 +7,7 @@ import styles from './index.less';
 import { AVATAR } from '../../const.js';
 
 class AvatarDropdown extends React.Component {
-  onMenuClick = event => {
+  onMenuClick = (event) => {
     const { key } = event;
 
     if (key === 'logout') {
@@ -28,7 +28,7 @@ class AvatarDropdown extends React.Component {
   render() {
     const {
       currentUser = {
-        name: '',
+        name: 'User',
       },
       menu,
     } = this.props;
@@ -40,13 +40,13 @@ class AvatarDropdown extends React.Component {
             个人中心
           </Menu.Item>
         )} */}
-        {menu && (
+        {/* {menu && (
           <Menu.Item key="settings">
             <SettingOutlined />
             个人信息
           </Menu.Item>
         )}
-        {menu && <Menu.Divider />}
+        {menu && <Menu.Divider />} */}
 
         <Menu.Item key="logout">
           <LogoutOutlined />
@@ -54,11 +54,11 @@ class AvatarDropdown extends React.Component {
         </Menu.Item>
       </Menu>
     );
-    return currentUser && currentUser.name ? (
+    return currentUser && currentUser.userName ? (
       <HeaderDropdown overlay={menuHeaderDropdown} placement="bottomCenter">
         <span className={`${styles.action} ${styles.account}`}>
           <Avatar size="small" className={styles.avatar} src={AVATAR} alt="avatar" />
-          <span className={styles.name}>{currentUser.name}</span>
+          <span className={styles.name}>{currentUser.userName}</span>
         </span>
       </HeaderDropdown>
     ) : (
