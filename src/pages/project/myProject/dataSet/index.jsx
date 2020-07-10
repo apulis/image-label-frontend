@@ -75,7 +75,7 @@ const DataSetTable = (props) => {
         return (
           <div className={styles.actions}>
             {/* <Link to={`/image_label/project/dataSet-tasks?projectId=${id}`}>Explorer</Link> */}
-            <a onClick={() => { setMapModal(true); setClickDataSetId(dataSetId); }}>mAP</a>
+            {/* <a onClick={() => { setMapModal(true); setClickDataSetId(dataSetId); }}>mAP</a> */}
             <a onClick={() => onClickDataSetModal(2, dataSetId)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => delDataSet(dataSetId) }>删除</a>
           </div>

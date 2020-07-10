@@ -28,15 +28,16 @@ class Canvas extends Component {
     this.mapRef = React.createRef();
   }
 
-  // componentDidUpdate(prevProps) {
-  //   const { onSelectionChange, figures } = this.props;
-  //   const { selectedFigureId } = this.state;
+  componentDidUpdate(prevProps) {
+    const { onSelectionChange, figures } = this.props;
+    const { selectedFigureId } = this.state;
 
-  //   if (this.prevSelectedFigureId !== selectedFigureId && onSelectionChange) {
-  //     this.prevSelectedFigureId = selectedFigureId;
-  //     onSelectionChange(selectedFigureId, figures.find(f => f.id === selectedFigureId));
-  //   }
-  // }
+    if (this.prevSelectedFigureId !== selectedFigureId && onSelectionChange) {
+      this.prevSelectedFigureId = selectedFigureId;
+      onSelectionChange(selectedFigureId, figures.find(f => f.id === selectedFigureId));
+    }
+  }
+
   componentDidMount() {
     const { onSelectionChange, figures } = this.props;
     const { selectedFigureId } = this.state;
@@ -101,7 +102,6 @@ class Canvas extends Component {
   handleClick = e => {
     const { unfinishedFigure, chnageLabelAppState } = this.props;
     const drawing = !!unfinishedFigure;
-    console.log('selectedFigureId', this.state.selectedFigureId)
     if (this.skipNextClickEvent) {
       this.skipNextClickEvent = false;
       return;
@@ -111,7 +111,7 @@ class Canvas extends Component {
       return;
     }
     if (!drawing) {
-      this.chnageLabelAppState('selectedTreeKey', this.state.selectedFigureId);
+      chnageLabelAppState('selectedTreeKey', this.state.selectedFigureId);
       return;
     }
   }

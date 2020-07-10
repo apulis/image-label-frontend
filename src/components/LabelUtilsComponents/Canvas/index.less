@@ -1,11 +1,4 @@
 .canvasContentWrap {
-  .leaflet-popup-content {
-    width: 180px;
-    .popupBtnWrap {
-      margin-top: 10px;
-      text-align: right;
-    }
-  }
   :global {
     .Crosshair {
       cursor: crosshair !important;
@@ -16,5 +9,16 @@
     .Grab {
       cursor: grab !important;
     }
+    .leaflet-popup-content {
+      width: 180px !important;
+      .contentText {
+        font-size: 18px;
+        text-align: center;
+      }
+    }
+  }
+  .popupBtnWrap {
+    margin-top: 10px;
+    text-align: center;
   }
 }

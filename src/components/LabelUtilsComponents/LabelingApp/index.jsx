@@ -41,7 +41,7 @@ class LabelingApp extends Component {
 
   componentDidMount() {
     const { labels, labelData, figures } = this.props;
-    const { isOCR, selectedFigureId } = this.state;
+    const { selectedFigureId } = this.state;
     let toggles = {}, selectedFigure = null, allFigures = [];
     labels.forEach(label => {
       const { id, type } = label;
@@ -60,8 +60,8 @@ class LabelingApp extends Component {
   }
 
   getAllFigures = (toggles) => {
-    const { labels, labelData, figures } = this.props;
-    const { isOCR, selectedFigureId } = this.state;
+    const { labels, labelData, figures, isOCR } = this.props;
+    const { selectedFigureId } = this.state;
     let selectedFigure = null, allFigures = [];
     labels.forEach(label => {
       const { id, type } = label;
@@ -153,6 +153,7 @@ class LabelingApp extends Component {
   }
 
   handleSelectionChange = (figureId, selectedFigureData) => {
+    console.log('-------')
     const { labels, isOCR } = this.props;
     const { popupText } = this.state;
     if (figureId) {
@@ -170,7 +171,7 @@ class LabelingApp extends Component {
           eventType: 'replace'
         });
       }
-      this.setState({ selectedFigureId: `${fId}-${figureId}` });
+      this.setState({ selectedFigureId: `${figureId}` });
     } else {
       this.setState({
         reassigning: { status: false, type: null },
@@ -284,9 +285,9 @@ class LabelingApp extends Component {
   onPopupChange = (clickType, text) => {
     const { popupText, popupChangeData, eventType } = this.state;
     const { figures } = this.props;
-    const { label, figure } = popupChangeData;
-    const { id } = label;
-    const idx = (figures[id] || []).findIndex(f => f.id === figure.id);
+    const { figure } = popupChangeData;
+    const { fId, id } = figure;
+    const idx = id.split('-')[1];
     if (clickType == 1) {
       if (!text) {
         message.confirm('请输入标注文本！');
@@ -294,24 +295,24 @@ class LabelingApp extends Component {
       }
       if ((text !== popupText && eventType === 'replace') || eventType === 'new') {
         this.setState({ popupText: text }, () => {
-          this.replaceEvent(id, idx, figure);
+          this.replaceEvent(fId, idx, figure);
         });
       } 
     } else if (!clickType) {
-      this.deleteEvent(id, idx);
-      this.setState({ popupText: '' });
+      this.deleteEvent(fId, idx);
+      this.setState({
+        popupPoint: {},
+        popupShow: false,
+        popupChangeData: {},
+        popupText: ''
+      });
     }
-    this.setState({
-      popupPoint: {},
-      popupShow: false,
-      popupChangeData: {}
-    });
   }
 
   replaceEvent = (_id, idx, figure, text) => {
     const { id, type, points } = figure;
     const { pushState, height, width, imageData, isOCR } = this.props;
-    const { popupText } = this.state;
+    const { popupText, toggles } = this.state;
     pushState(state => {
       let { tracingOptions } = figure;
       if (tracingOptions && tracingOptions.enabled) {
@@ -328,7 +329,7 @@ class LabelingApp extends Component {
         tracingOptions = { ...tracingOptions, trace: [] };
       }
       let obj = {
-        id: id,
+        id: idx,
         type: type,
         points: points,
         tracingOptions
@@ -341,6 +342,16 @@ class LabelingApp extends Component {
           },
         }),
       };
+    }, () => {
+      this.setState({
+        popupPoint: {},
+        popupShow: false,
+        popupChangeData: {},
+        selectedFigureId: null,
+        selectedTreeKey: []
+      });
+      this.canvasRef.current.changeState('selectedFigureId', null);
+      this.getAllFigures(toggles);
     });
   }
 
@@ -531,6 +542,7 @@ class LabelingApp extends Component {
       models,
       makePrediction
     };
+    console.log('figures--------',figures)
     const hotkeysPanelDOM = hotkeysPanel ? (
       <HotkeysPanel
         labels={labels.map(label => label.name)}

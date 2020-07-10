@@ -116,7 +116,6 @@ class Figure extends Component {
 
     const guideLines = this.makeGuides();
     const PolyComp = this.leafletComponent();
-
     return (
       <Fragment key={id}>
         <PolyComp
@@ -143,7 +142,7 @@ class Figure extends Component {
             }
           }}
         >
-          {isOCR && <Popup position={popupPoint} closeButton={false}>{popupText}</Popup>}
+          {/* {isOCR && <Popup position={popupPoint} closeButton={false}><p className="contentText">{popupText}</p></Popup>} */}
           {/* sticky 跟随鼠标移动 */}
           {/* <Tooltip className="popup" sticky>{popupText}</Tooltip>} */}
         </PolyComp>
