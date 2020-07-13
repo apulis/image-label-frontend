@@ -7,15 +7,8 @@
  */
 export default {
   dev: {
-    '/api/': {
-      target: 'https://apulis-test.sigsus1.cn:51443',
-      changeOrigin: true,
-      pathRewrite: {
-        '^': '',
-      },
-    },
     '/ai_arts/api/': {
-      target: 'http://10.31.3.120:9000',
+      target: 'http://huawei-proxy01.sigsus.cn:49000/',
       changeOrigin: true,
       pathRewrite: {
         '^': '',

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Select } from 'antd';
+import { Table, Select, message } from 'antd';
 import styles from './index.less';
 import { getMap } from '../../../service';
 import { PAGEPARAMS } from '../../../../../../const';
@@ -24,12 +24,14 @@ const MapTable = (props) => {
   const getData = async () => {
     const { dataSetId, projectId } = props;
     const res = await getMap(projectId, dataSetId, { ...pageParmas }); 
-    const { success, data } = res;
-    const allData = data.data;
-    if (success && allData) {
+    const { code, data, msg } = res;
+    if (code === 0) {
+      const allData = data.data;
       setAllData({ data: allData, totalCount: data.totalCount });
       setIouOptions(allData.map(i => ({ iouThr: i.iouThr, mean_ap: i.mean_ap })));
       setTableDataSource(allData);
+    } else {
+      message.error(msg);
     }
   }
 

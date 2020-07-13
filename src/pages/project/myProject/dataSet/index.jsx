@@ -15,7 +15,7 @@ const DataSetTable = (props) => {
   const [dataset, setDataSet] = useState({ data: [], total: 0 });
   const [mapModal, setMapModal] = useState(false);
   const [dataSetFormModal, setDataSetFormModal] = useState(false);
-  const [clickDataSetId, setClickDataSetId] = useState('');
+  const [clickData, setClickData] = useState('');
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [dataSetModalType, setDataSetModalType] = useState(1);
   const [btnLoading, setBtnLoading] = useState(false);
@@ -32,13 +32,16 @@ const DataSetTable = (props) => {
   
   const getData = async () => {
     const { page, size } = pageParams;
-    const { successful, datasets, msg, totalCount } = await getDataSet(projectId, page, size);
-    if (successful === 'true') {
+    const { code, data, msg } = await getDataSet(projectId, page, size);
+    if (code === 0) {
+      const { datasets, totalCount } = data;
       setDataSet({
-        data: datasets,
+        data:datasets,
         total: totalCount
       });
       setLoading(false);
+    } else {
+      message.error(msg);
     }
   }
 
@@ -55,16 +58,16 @@ const DataSetTable = (props) => {
     },
     {
       title: '数据集名称',
-      dataIndex: 'Name',
+      dataIndex: 'name',
     },
     {
       title: '数据集类型',
-      dataIndex: 'Type',
+      dataIndex: 'type',
       render: type => <span>{type}</span>
     },  
     {
       title: '简介',
-      dataIndex: 'Info',
+      dataIndex: 'info',
       ellipsis: true,
       width: 350
     },
@@ -76,7 +79,7 @@ const DataSetTable = (props) => {
           <div className={styles.actions}>
             {/* <Link to={`/image_label/project/dataSet-tasks?projectId=${id}`}>Explorer</Link> */}
             {/* <a onClick={() => { setMapModal(true); setClickDataSetId(dataSetId); }}>mAP</a> */}
-            <a onClick={() => onClickDataSetModal(2, dataSetId)}>编辑</a>
+            <a onClick={() => onClickDataSetModal(2, item)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => delDataSet(dataSetId) }>删除</a>
           </div>
         )
@@ -120,8 +123,12 @@ const DataSetTable = (props) => {
         values.dataSetPath = sourceOptions.find(i => i.id === sourceId).path;
         delete values.sourceId;
       }
-      const res = dataSetModalType == 1 ? await addDataSet(projectId, values) : await submitDataSet(projectId, clickDataSetId, values);
-      if (res && res.successful === 'true') {
+      if (dataSetModalType == 2) {
+        values.dataSetBindId = clickData.dataSetBindId;
+        values.dataSetPath = clickData.dataSetPath;
+      }
+      const res = dataSetModalType == 1 ? await addDataSet(projectId, values) : await submitDataSet(projectId, clickData.dataSetId, values);
+      if (res && res.code === 0) {
         setDataSetFormModal(false);
         getData();
       }
@@ -129,23 +136,24 @@ const DataSetTable = (props) => {
     })
   }
 
-  const onClickDataSetModal = async (type, dataSetId) => {
+  const onClickDataSetModal = async (type, clickData) => {
     setDataSetModalType(type);
-    setClickDataSetId(dataSetId);
+    clickData && setClickData(clickData);
     setDataSetFormModal(true);
     if (type == 2) {
       const { Labels, l_projectId, l_datasetId } = global;
-      if (Labels && Labels.length && l_projectId == projectId && l_datasetId == dataSetId) {
+      if (Labels && Labels.length && l_projectId == projectId && l_datasetId == clickData.dataSetId) {
         getSupercategory(Labels);
       } else {
         const res = await dispatch({
           type: 'global/getLabels',
           payload: {
-            projectId, dataSetId
+            projectId, 
+            dataSetId: clickData.dataSetId
           }
         });
-        const { successful, annotations } = res;
-        successful === 'true' && getSupercategory(annotations || []);
+        const { code, data } = res;
+        code === 0 && getSupercategory(data.annotations || []);
       }
     }
   }
@@ -208,7 +216,7 @@ const DataSetTable = (props) => {
           <Button onClick={() => setMapModal(false)}>关闭</Button>
         ]}
       >
-        <MapTable dataSetId={clickDataSetId} projectId={projectId} />
+        <MapTable dataSetId={clickData.dataSetId} projectId={projectId} />
       </Modal>}
       {dataSetFormModal && <Modal
         visible={dataSetFormModal}
@@ -226,7 +234,7 @@ const DataSetTable = (props) => {
         <DataSetModalForm
           ref={dataSetModalFormRef}
           dataSetModalType={dataSetModalType}
-          dataSetId={clickDataSetId}
+          dataSetId={clickData.dataSetId}
           projectId={projectId}
           cascaderOptions={cascaderOptions} />
       </Modal>}

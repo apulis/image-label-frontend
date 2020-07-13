@@ -10,7 +10,7 @@ import { PageLoading } from '@ant-design/pro-layout';
 const { confirm } = Modal;
 
 const ProjectTable = () => {
-  const emptyValue = {Name: '', Info: ''};
+  const emptyValue = {name: '', info: ''};
   const [project, setProject] = useState({ data: [], total: 0 });
   const [modalFlag, setModalFlag] = useState(false);
   const [modalType, setModalType] = useState('');
@@ -25,13 +25,16 @@ const ProjectTable = () => {
 
   const getData = async () => {
     const { page, size } = pageParams;
-    const { successful, projects, msg, totalCount } = await getProject(page, size);
-    if (successful === 'true') {
+    const { code, data, msg } = await getProject(page, size);
+    if (code === 0) {
+      const { projects, totalCount } = data;
       setProject({
         data: projects,
         total: totalCount
       });
       setLoading(false);
+    } else {
+      message.error(msg);
     }
   }
 
@@ -44,9 +47,11 @@ const ProjectTable = () => {
       cancelText: '取消',
       onOk: async () => {
         const res = await deleteProject(id);
-        const { successful, msg } = res;
-        if (successful === 'true') {
+        const { code, msg } = res;
+        if (code === 0) {
           getData();
+        } else {
+          message.error(msg);
         }
       },
       onCancel() {}
@@ -77,13 +82,13 @@ const ProjectTable = () => {
   const columns = [
     {
       title: '项目ID',
-      dataIndex: 'ProjectId',
+      dataIndex: 'projectId',
       width: 300,
       render: id => <Link to={`/image_label/project/dataSetList?projectId=${id}`}>{id}</Link>
     },
     {
       title: '项目名称',
-      dataIndex: 'Name',
+      dataIndex: 'name',
     },
     {
       title: '类型',
@@ -92,7 +97,7 @@ const ProjectTable = () => {
     },  
     {
       title: '简介',
-      dataIndex: 'Info',
+      dataIndex: 'info',
       ellipsis: true,
       width: 350
     },
@@ -102,7 +107,7 @@ const ProjectTable = () => {
         return (
           <div>
             <a onClick={() => onEditClick(item)}>编辑</a>
-            <a style={{ color: 'red', marginLeft: 10 }} onClick={() => handleRemove(item.ProjectId)}>删除</a>
+            <a style={{ color: 'red', marginLeft: 10 }} onClick={() => handleRemove(item.projectId)}>删除</a>
           </div>
         )
       }
@@ -111,7 +116,7 @@ const ProjectTable = () => {
 
   const onEditClick = item => {
     form.setFieldsValue(item);
-    setEditProjectId(item.ProjectId);
+    setEditProjectId(item.projectId);
     setModalType('edit');
     setModalFlag(true);
   }
@@ -139,7 +144,7 @@ const ProjectTable = () => {
         <Table 
           columns={columns} 
           dataSource={project.data}
-          rowKey={r => r.ProjectId}
+          rowKey={r => r.projectId}
           pagination={{
             total: project.total,
             showQuickJumper: true,
@@ -159,10 +164,10 @@ const ProjectTable = () => {
           destroyOnClose
         >
           <Form form={form} className={styles.projectModal}>
-            <Form.Item label="项目名称" name="Name" rules={[{ required: true, message: '请输入项目名称！' }]}>
+            <Form.Item label="项目名称" name="name" rules={[{ required: true, message: '请输入项目名称！' }]}>
               <Input placeholder="请输入项目名称" />
             </Form.Item>
-            <Form.Item label="简介" name="Info" 
+            <Form.Item label="简介" name="info" 
               rules={[{ required: true, message: '请输入简介！' }, { min: 10 }]}>
               <Input.TextArea placeholder="请输入简介" autoSize={{ minRows: 4 }} />
             </Form.Item>

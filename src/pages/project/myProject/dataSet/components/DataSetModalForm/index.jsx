@@ -39,11 +39,14 @@ const DataSetModalForm = (props, ref) => {
     if (dataSetModalType == 2 && dataSetId) {
       setLoading(true);
       const res = await getDataSetDetail(projectId, dataSetId);
-      const { successful, info } = res;
-      if (successful === 'true' && info) {
+      const { code, data, msg } = res;
+      if (code === 0) {
+        const { info } = data;
         setDetail(info);
         setSelectedCategoryList(info.labels);
         setLoading(false);
+      } else {
+        message.error(msg);
       }
     } else {
       const res = await getDatasetsOptions({page: 1, count: 999});
@@ -66,8 +69,10 @@ const DataSetModalForm = (props, ref) => {
         message.warning(`已经含有 ${category1}了`);
         return;
       }
+      const idArr = selectedCategoryList.map(i => i.id);
       let _selectedCategoryList = _.cloneDeep(selectedCategoryList);
       _selectedCategoryList.push({
+        id: Math.max(...idArr) + 1,
         name: category1,
         type: labelType1,
         supercategory: fatherType
@@ -94,7 +99,6 @@ const DataSetModalForm = (props, ref) => {
       setSelectedCategoryList(_selectedCategoryList);
     });
   }
-  
   return (
     <div className={styles.dataSetModalFormWrap}>
       <div className={styles.idWrap}>

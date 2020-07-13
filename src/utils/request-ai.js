@@ -7,7 +7,7 @@ import { notification, message } from 'antd';
 import { history } from 'umi';
 import { USER_DASHBOARD_PATH } from '@/utils/const';
 
-const prefix = '/ai_arts/api/annotations';
+const prefix = '/ai_arts/api/';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',

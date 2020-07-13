@@ -11,4 +11,4 @@ export const TYPE = {
   text: '文字'
 }
 
-export const IMAGE_BASE_URL = "https://apulis-test.sigsus1.cn:51443/api/nfs/public/tasks/";
+export const IMAGE_BASE_URL = "https://huawei-proxy01.sigsus.cn/api/nfs/public/tasks/";

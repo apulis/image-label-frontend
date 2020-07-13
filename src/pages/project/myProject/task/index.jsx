@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Pagination, Card, Empty, PageHeader } from 'antd';
+import { Pagination, Card, Empty, PageHeader, message } from 'antd';
 import LazyLoad from 'react-lazyload';
 import { PAGEPARAMS, IMAGE_BASE_URL } from '../../../../const';
 import { getTasks } from '../service';
@@ -24,12 +24,15 @@ const TaskList = () => {
 
   const getData = async () => {
     const { page, size } = pageParams;
-    const { successful, taskList, msg, totalCount } = await getTasks(projectId, dataSetId, page, size);
-    if (successful === 'true') {
+    const { code, data, msg } = await getTasks(projectId, dataSetId, page, size);
+    if (code === 0) {
+      const { taskList, totalCount } = data;
       setTasks({
         data: taskList,
         total: totalCount
       });
+    } else {
+      message.error(msg);
     }
     setLoading(false);
   }

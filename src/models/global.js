@@ -14,13 +14,13 @@ const GlobalModel = {
   effects: {
     * getLabels({ payload }, { call, put }) {
       const res = yield call(getLabels, payload);
-      const { successful, annotations } = res;
-      if (successful === 'true') {
+      const { code, data } = res;
+      if (code === 0) {
         yield put({
           type: 'updateState',
           payload: {
             Labels: {
-              labels: annotations,
+              labels: data.annotations,
               l_projectId: payload.projectId,
               l_datasetId: payload.dataSetId
             }

@@ -49,7 +49,7 @@ class Sidebar extends PureComponent {
 
   onIconClick = (e, type, fId, index, isAll) => {
     const { onToggle, deleteEvent, onSelect, chnageLabelAppState } = this.props;
-    // e.stopPropagation();
+    e.stopPropagation();
     index !== undefined && chnageLabelAppState('selectedTreeKey',  [`${fId}-${index}`]);
     if (type) {
       type === 1 ? onToggle(fId, index, isAll) : onSelect(fId);
@@ -77,9 +77,10 @@ class Sidebar extends PureComponent {
 
   getTreeData = () => {
     const { toggles, labels } = this.props;
+    console.log('labelslabels',labels)
     return labels.map(item => {
       const { name, id, type } = item;
-      const allShow = toggles[id] && toggles[id].allShow;
+      const allShow = toggles && toggles[id] && toggles[id].allShow;
       const children = this.getTreeDataChildren(id, name);
       return {
         key: `${id}`,
@@ -93,7 +94,7 @@ class Sidebar extends PureComponent {
             </div>
           </React.Fragment>
         ),
-        children: this.getTreeDataChildren(id, name),
+        children: children,
         selectable: false
       }
     });
@@ -142,6 +143,7 @@ class Sidebar extends PureComponent {
       btnLoading
     } = this.props;
     const { expandedKeys, selectType }= this.state;
+
     return (
       <div className={styles.sidebarWrap}>
         <h2>
@@ -158,7 +160,6 @@ class Sidebar extends PureComponent {
           </Select>
           <Button onClick={this.addLabel} type="primary">新增</Button>
         </div>
-        {toggles && Object.keys(toggles).length > 0 && 
         <Tree
           showLine
           onSelect={this.onSelectNode}
@@ -166,7 +167,7 @@ class Sidebar extends PureComponent {
           selectedKeys={selectedTreeKey}
           onExpand={k => this.setState({ expandedKeys: k })}
           treeData={this.getTreeData()}
-        />}
+        />
         <div className={styles.btnWrap}>
           <div>
             <Button onClick={onBack}>上一张</Button>

@@ -56,10 +56,10 @@ class TaskDetail extends React.Component {
 
   getNext = async (taskId) => {
     const res = await getNextData(projectId, dataSetId, taskId);
-    const { successful, next } = res;
-    if (successful === 'true') {
+    const { code, data } = res;
+    if (code === 0) {
      history.push(
-        `/image_label/project/dataSet/taskList/detail/${next.id}?projectId=${projectId}&dataSetId=${dataSetId}`
+        `/image_label/project/dataSet/taskList/detail/${data.next.id}?projectId=${projectId}&dataSetId=${dataSetId}`
       );
     }
   }
@@ -69,9 +69,10 @@ class TaskDetail extends React.Component {
     const { taskId } = this.props.match.params;
     let _this = this;
     const res = await getAnnotations(projectId, dataSetId, taskId);
-    const { successful, annotations, msg } = res;
+    const { code, data, msg } = res;
+    const { annotations } = data;
 
-    if (successful === 'true') {
+    if (code === 0) {
       let _project = [], formParts = {}, imageInfo = {};
       if (annotations) {
         imageInfo = annotations.images || {};
@@ -187,7 +188,7 @@ class TaskDetail extends React.Component {
     const { taskId } = this.props.match.params;
     this.setState({ btnLoading: true });
     const res = await submitDetail(projectId, dataSetId, taskId, this.tansformToCocoFormat());
-    res.successful === 'true' && this.getNext(taskId);
+    res.code === 0 && this.getNext(taskId);
     this.setState({ btnLoading: false });
   }
 
@@ -252,11 +253,10 @@ class TaskDetail extends React.Component {
       <div>
         <DocumentMeta title={title}>
           <LabelingApp
-            labels={project.form.formParts}
-            // reference={{ referenceLink, referenceText }}
             labelData={image.labelData.labels || {}}
             imageUrl={image.link}
             fetch={this.fetch}
+            labels={project.form.formParts}
             project={project}
             chnageState={this.chnageState}
             isOCR={isOCR}

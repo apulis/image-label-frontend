@@ -40,8 +40,9 @@ class LabelingApp extends Component {
   }
 
   componentDidMount() {
-    const { labels, labelData, figures } = this.props;
+    const { labelData, figures, project } = this.props;
     const { selectedFigureId } = this.state;
+    const labels = project.form.formParts;
     let toggles = {}, selectedFigure = null, allFigures = [];
     labels.forEach(label => {
       const { id, type } = label;
@@ -60,7 +61,8 @@ class LabelingApp extends Component {
   }
 
   getAllFigures = (toggles) => {
-    const { labels, labelData, figures, isOCR } = this.props;
+    const { project, labelData, figures, isOCR } = this.props;
+    const labels = project.form.formParts;
     const { selectedFigureId } = this.state;
     let selectedFigure = null, allFigures = [];
     labels.forEach(label => {
@@ -99,7 +101,8 @@ class LabelingApp extends Component {
   handleSelected = v => {
     const val = v.toString();
     const { selected, popupShow, toggles } = this.state;
-    const { pushState, labels, figures, chnageHOCState } = this.props;
+    const { pushState, project, figures, chnageHOCState } = this.props;
+    const labels = project.form.formParts;
     const idx = labels.findIndex(i => i.id == val);
     let newF = cloneDeep(figures), newT = cloneDeep(toggles),
         child = {
@@ -153,8 +156,9 @@ class LabelingApp extends Component {
   }
 
   handleSelectionChange = (figureId, selectedFigureData) => {
-    console.log('-------')
-    const { labels, isOCR } = this.props;
+    const { project, isOCR } = this.props;
+    const labels = project.form.formParts;
+
     const { popupText } = this.state;
     if (figureId) {
       const { fId } = selectedFigureData;
@@ -182,7 +186,8 @@ class LabelingApp extends Component {
 
   handleChange = (eventType, figure, newLabelId) => {
     const { color, id, type, points, fId } = figure;
-    const { labels, figures, pushState, isOCR } = this.props;
+    const { project, figures, pushState, isOCR } = this.props;
+    const labels = project.form.formParts;
     const label = labels[labels.findIndex(i => i.id == id)];
     this.setState({ eventType });
     let childId = 0;
@@ -190,7 +195,6 @@ class LabelingApp extends Component {
       let temp = figures[id], len = figures[id].length;
       childId = Number(temp[len - 1].id) + 1;
     }
-
     switch (eventType) {
       case 'new':
         const obj = {
@@ -220,8 +224,7 @@ class LabelingApp extends Component {
               popupText: null
             });
           }
-          let toggles = cloneDeep(this.state.toggles);
-          this.getAllFigures(toggles);
+          this.getAllFigures(this.state.toggles);
           this.setState({ selected: null, selectedTreeKey: [] });
           this.canvasRef.current.changeState('selectedFigureId', null);
         });
@@ -399,7 +402,9 @@ class LabelingApp extends Component {
           $unset: [id]
         })
     }),() => {
-      const { labels, figures, chnageState } = this.props;
+      const { project, figures, chnageState } = this.props;
+      const labels = project.form.formParts;
+
       let _labels = cloneDeep(labels);
       labels.forEach((item, i) => {
         if (Object.keys(figures).indexOf(item.id.toString()) == -1) delete _labels[i];
@@ -515,7 +520,6 @@ class LabelingApp extends Component {
 
   render() {
     const {
-      labels,
       imageUrl,
       onBack,
       onBackTasks,
@@ -533,7 +537,7 @@ class LabelingApp extends Component {
       figures,
       btnLoading
     } = this.props;
-    const { hotkeysPanel, popupPoint, popupShow, popupText, allFigures, selectedFigureId, selectedTreeKey } = this.state;
+    const { hotkeysPanel, popupPoint, popupShow, popupText, allFigures, selectedFigureId, selectedTreeKey, toggles } = this.state;
     const forwardedProps = {
       onBack,
       onBackTasks,
@@ -542,13 +546,15 @@ class LabelingApp extends Component {
       models,
       makePrediction
     };
-    console.log('figures--------',figures)
+    const labels = project.form.formParts;
     const hotkeysPanelDOM = hotkeysPanel ? (
       <HotkeysPanel
         labels={labels.map(label => label.name)}
         onClose={() => this.setState({ hotkeysPanel: false })}
       />
     ) : null;
+    console.log('figures--------', figures)
+    console.log('toggles--------', toggles)
 
     return (
       <div className={styles.labelappWrap}>
