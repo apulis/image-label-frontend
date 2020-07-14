@@ -4,17 +4,17 @@ export default [
     component: '../layouts/SecurityLayout',
     routes: [
       {
-        path: '/image_label/user',
+        path: '/user',
         component: '../layouts/UserLayout',
         routes: [
           {
-            path: '/image_label/user',
-            redirect: '/image_label/user/login',          
+            path: '/user',
+            redirect: '/user/login',          
           },
           {
             name: 'login',
             icon: 'smile',
-            path: '/image_label/user/login',
+            path: '/user/login',
             component: './user/login',
           },
           {
@@ -29,58 +29,39 @@ export default [
         authority: ['admin', 'user'],
         routes: [
           { 
-            path: '/image_label/project',
+            path: '/project',
             name: 'Project',
             icon: 'AppstoreOutlined',
             routes: [
               {
                 name: 'myProject',
                 icon: 'ReadOutlined',
-                path: '/image_label/project',
+                path: '/project',
                 component: './project/myProject',
               },
               {
                 name: 'dataSetList',
-                path: '/image_label/project/dataSetList',
+                path: '/project/dataSetList',
                 component: './project/myProject/dataSet',
                 hideInMenu: true
               },
               {
                 name: 'taskList',
-                path: '/image_label/project/dataSet/taskList',
+                path: '/project/dataSet/taskList',
                 component: './project/myProject/task',
                 hideInMenu: true
               },
               {
                 name: 'detail',
-                path: '/image_label/project/dataSet/taskList/detail/:taskId',
+                path: '/project/dataSet/taskList/detail/:taskId',
                 component: './project/myProject/task/detail',
                 hideInMenu: true
               }
             ],
           },
-          // {
-          //   name: 'account',
-          //   icon: 'user',
-          //   path: '/image_label/account',
-          //   routes: [
-          //     {
-          //       name: 'center',
-          //       icon: 'smile',
-          //       path: '/image_label/account/center',
-          //       component: './account/center',
-          //     },
-          //     {
-          //       name: 'settings',
-          //       icon: 'smile',
-          //       path: '/image_label/account/settings',
-          //       component: './account/settings',
-          //     },
-          //   ],
-          // },
           {
             path: '/',
-            redirect: '/image_label/project',
+            redirect: '/project',
           },
           {
             component: '404',
