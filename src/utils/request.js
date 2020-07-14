@@ -5,7 +5,7 @@
 import { extend } from 'umi-request';
 import { notification, message } from 'antd';
 import { history } from 'umi';
-import { USER_DASHBOARD_PATH } from '@/utils/const';
+import { USER_LOGIN_URL } from '@/utils/const';
 
 const prefix = '/ai_arts/api/annotations';
 
@@ -40,9 +40,9 @@ export const errorHandler = error => {
       const href = window.location.href;
       if (!/localhost/.test(href)) {
         const queryString = stringify({
-          redirect: encodeURIComponent(window.location.href),
+          redirect: window.location.href,
         });
-        window.location.href = `${USER_DASHBOARD_PATH}/user/login?` + queryString;
+        window.location.href = `${USER_LOGIN_URL}?` + queryString;
       }
     }
     notification.error({
