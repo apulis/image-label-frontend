@@ -50,6 +50,7 @@
     "bizcharts": "^3.5.3-beta.0",
     "bizcharts-plugin-slider": "^2.1.1-beta.1",
     "classnames": "^2.2.6",
+    "connect-history-api-fallback": "^1.6.0",
     "ecstatic": "^4.1.4",
     "gg-editor": "^2.0.2",
     "immutability-helper": "^3.1.1",
