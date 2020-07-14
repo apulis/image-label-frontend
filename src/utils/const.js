@@ -14,4 +14,4 @@ export const TYPE = {
   text: '文字'
 }
 
-export const IMAGE_BASE_URL = "/api/nfs/public/tasks/";
+export const IMAGE_BASE_URL = "/data-platform-backend/api/nfs/public/tasks/";
