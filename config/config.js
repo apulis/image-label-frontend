@@ -78,7 +78,7 @@ export default defineConfig({
   manifest: {
     basePath: '/',
   },
-  base: '/image_label',
+  base: '/image_label/',
   publicPath: '/image_label/',
   proxy: proxy[REACT_APP_ENV || 'dev'],
   chainWebpack: webpackPlugin,

@@ -58,7 +58,7 @@ const TaskList = () => {
     return (
       <PageHeader
         ghost={false}
-        onBack={() => history.push(`/image_label/project/dataSetList?projectId=${projectId}`)}
+        onBack={() => history.push(`/project/dataSetList?projectId=${projectId}`)}
         title="任务列表"
       >
         <div className={styles.taskList}>
@@ -68,7 +68,7 @@ const TaskList = () => {
             return (
               <Card hoverable
                 cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}.jpg`} />} key={i}
-                onClick={() => history.push(`/image_label/project/dataSet/taskList/detail/${id}?projectId=${projectId}&dataSetId=${dataSetId}`)}
+                onClick={() => history.push(`/project/dataSet/taskList/detail/${id}?projectId=${projectId}&dataSetId=${dataSetId}`)}
               >
                 <Meta title={`第${i + 1}张 ${id}.jpg`} />
               </Card>

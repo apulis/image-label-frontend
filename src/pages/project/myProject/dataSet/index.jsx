@@ -1,6 +1,6 @@
 import { message, Table, Modal, Input, Button, PageHeader } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
-import { getDataSet, addDataSet, submitDataSet, deleteDataSet } from '../service';
+import { getDataSet, addDataSet, submitDataSet, deleteDataSet, convertDataset, getConvertDetail } from '../service';
 import { PAGEPARAMS, TYPE } from '../../../../const';
 import { getPageQuery } from '@/utils/utils';
 import { Link, useSelector, useDispatch, history } from 'umi';
@@ -54,7 +54,7 @@ const DataSetTable = (props) => {
       title: '数据集Id',
       dataIndex: 'dataSetId',
       width: 300,
-      render: id => <Link to={`/image_label/project/dataSet/taskList?projectId=${projectId}&dataSetId=${id}`}>{id}</Link>
+      render: id => <Link to={`/project/dataSet/taskList?projectId=${projectId}&dataSetId=${id}`}>{id}</Link>
     },
     {
       title: '数据集名称',
@@ -77,7 +77,7 @@ const DataSetTable = (props) => {
         const { dataSetId } = item;
         return (
           <div className={styles.actions}>
-            {/* <Link to={`/image_label/project/dataSet-tasks?projectId=${id}`}>Explorer</Link> */}
+            {/* <Link to={`/project/dataSet-tasks?projectId=${id}`}>Explorer</Link> */}
             {/* <a onClick={() => { setMapModal(true); setClickDataSetId(dataSetId); }}>mAP</a> */}
             <a onClick={() => onClickDataSetModal(2, item)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => delDataSet(dataSetId) }>删除</a>
@@ -184,7 +184,7 @@ const DataSetTable = (props) => {
     <div className={styles.dataSetList}>
        <PageHeader
         ghost={false}
-        onBack={() => history.push(`/image_label/project?projectId=${projectId}`)}
+        onBack={() => history.push(`/project?projectId=${projectId}`)}
         title={
           <div>数据集列表
             <Button type="primary" style={{ float: 'right' }}

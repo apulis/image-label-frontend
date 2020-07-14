@@ -84,7 +84,7 @@ const ProjectTable = () => {
       title: '项目ID',
       dataIndex: 'projectId',
       width: 300,
-      render: id => <Link to={`/image_label/project/dataSetList?projectId=${id}`}>{id}</Link>
+      render: id => <Link to={`/project/dataSetList?projectId=${id}`}>{id}</Link>
     },
     {
       title: '项目名称',

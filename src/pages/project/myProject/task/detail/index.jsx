@@ -59,7 +59,7 @@ class TaskDetail extends React.Component {
     const { code, data } = res;
     if (code === 0) {
      history.push(
-        `/image_label/project/dataSet/taskList/detail/${data.next.id}?projectId=${projectId}&dataSetId=${dataSetId}`
+        `/project/dataSet/taskList/detail/${data.next.id}?projectId=${projectId}&dataSetId=${dataSetId}`
       );
     }
   }
@@ -171,10 +171,10 @@ class TaskDetail extends React.Component {
 
     try {
       if (!taskId) {
-        history.replace(`/image_label/project/dataSet/taskList?projectId=${projectId}&&dataSetId=${dataSetId}`);
+        history.replace(`/project/dataSet/taskList?projectId=${projectId}&&dataSetId=${dataSetId}`);
         return;
       }
-      history.replace(`/image_label/project/dataSet/taskList/detail/${taskId}?projectId=${projectId}&dataSetId=${dataSetId}`);
+      history.replace(`/project/dataSet/taskList/detail/${taskId}?projectId=${projectId}&dataSetId=${dataSetId}`);
       this.getData();
     } catch (error) {
       this.setState({
@@ -240,7 +240,7 @@ class TaskDetail extends React.Component {
       },
       onBackTasks: () => {
         history.push(
-          `/image_label/project/dataSet/taskList?projectId=${projectId}&dataSetId=${dataSetId}`
+          `/project/dataSet/taskList?projectId=${projectId}&dataSetId=${dataSetId}`
         )
       },
       onLabelChange: this.pushUpdate,
