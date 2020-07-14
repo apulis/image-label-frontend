@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Pagination, Card, Empty, PageHeader, message } from 'antd';
 import LazyLoad from 'react-lazyload';
-import { PAGEPARAMS, IMAGE_BASE_URL } from '../../../../const';
+import { PAGEPARAMS, IMAGE_BASE_URL } from '@/utils/const';
 import { getTasks } from '../service';
 import { getPageQuery } from '@/utils/utils';
 import { EditOutlined } from '@ant-design/icons';

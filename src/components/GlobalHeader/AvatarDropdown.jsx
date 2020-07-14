@@ -4,7 +4,7 @@ import React from 'react';
 import { history, connect } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import { AVATAR } from '../../const.js';
+import { AVATAR } from '@/utils/const';
 
 class AvatarDropdown extends React.Component {
   onMenuClick = (event) => {

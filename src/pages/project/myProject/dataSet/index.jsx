@@ -1,7 +1,7 @@
 import { message, Table, Modal, Input, Button, PageHeader } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
-import { getDataSet, addDataSet, submitDataSet, deleteDataSet, convertDataset, getConvertDetail } from '../service';
-import { PAGEPARAMS, TYPE } from '../../../../const';
+import { getDataSet, addDataSet, submitDataSet, deleteDataSet, convertDataset } from '../service';
+import { PAGEPARAMS, TYPE } from '@/utils/const';
 import { getPageQuery } from '@/utils/utils';
 import { Link, useSelector, useDispatch, history } from 'umi';
 import styles from './index.less';
@@ -71,6 +71,11 @@ const DataSetTable = (props) => {
       ellipsis: true,
       width: 350
     },
+    // {
+    //   title: '转换状态',
+    //   dataIndex: 'status',
+    //   render: type => <span>{type}</span>
+    // }, 
     {
       title: '操作',
       render: item => {
@@ -79,6 +84,7 @@ const DataSetTable = (props) => {
           <div className={styles.actions}>
             {/* <Link to={`/project/dataSet-tasks?projectId=${id}`}>Explorer</Link> */}
             {/* <a onClick={() => { setMapModal(true); setClickDataSetId(dataSetId); }}>mAP</a> */}
+            {/* <a onClick={() => handleConvert(dataSetId)} disabled={}>转换</a> */}
             <a onClick={() => onClickDataSetModal(2, item)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => delDataSet(dataSetId) }>删除</a>
           </div>
@@ -86,6 +92,22 @@ const DataSetTable = (props) => {
       }
     },
   ]
+
+  const handleConvert = async (id) => {
+    const obj = {
+      projectId: projectId,
+      dataSetId: id,
+      type: 'image',
+      target: 'coco'
+    };
+    const res = await convertDataset(obj);
+    const { code, data } = res;
+    if (code === 0) {
+      message.success('转换成功！');
+    } else {
+      message.error(msg);
+    }
+  }
 
   const delDataSet = async (id) => {
     confirm({

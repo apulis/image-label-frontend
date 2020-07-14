@@ -1,7 +1,7 @@
 import { message, Table, Modal, Form, Input, Button, PageHeader } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { getProject, deleteProject, submitProject, editProject } from './service';
-import { PAGEPARAMS } from '../../../const';
+import { PAGEPARAMS } from '@/utils/const';
 import { Link } from 'umi';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import styles from './index.less';

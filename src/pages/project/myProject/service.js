@@ -98,10 +98,6 @@ export async function getDatasetsOptions(params) {
   });
 }
 
-export async function getConvertDetail(id) {
-  return request(`/GetConvertDetail`);
-}
-
 export async function convertDataset(data) {
   return await request(`/GetConvertDetail`, {
     method: 'POST',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IMAGE_BASE_URL } from '../../../../../const';
+import { IMAGE_BASE_URL } from '@/utils/const';
 import DocumentMeta from 'react-document-meta';
 import LabelingApp from '../../../../../components/LabelUtilsComponents/LabelingApp/index';
 import { message } from 'antd';

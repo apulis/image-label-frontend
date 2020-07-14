@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Select, message } from 'antd';
 import styles from './index.less';
 import { getMap } from '../../../service';
-import { PAGEPARAMS } from '../../../../../../const';
+import { PAGEPARAMS } from '@/utils/const';
 
 const { Option } = Select;
 
