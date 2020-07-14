@@ -3,11 +3,11 @@ import { Result, Button } from 'antd';
 import React from 'react';
 import { stringify } from 'querystring';
 
-import { USER_DASHBOARD_PATH } from '@/utils/const';
+import { USER_LOGIN_URL } from '@/utils/const';
 
 
 const queryString = stringify({
-  redirect: encodeURIComponent(window.location.href),
+  redirect: window.location.href,
 });
 export default () => {
   
@@ -21,7 +21,7 @@ export default () => {
         }}
         subTitle="尚未登录"
         extra={
-          <Button href={USER_DASHBOARD_PATH + '?' + queryString} type="primary">
+          <Button href={USER_LOGIN_URL + '?' + queryString} type="primary">
             去登录
           </Button>
         }
