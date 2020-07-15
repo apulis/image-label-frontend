@@ -19,6 +19,7 @@ const DataSetTable = (props) => {
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [dataSetModalType, setDataSetModalType] = useState(1);
   const [btnLoading, setBtnLoading] = useState(false);
+  const [convertLoading, setConvertLoading] = useState(false);
   const [cascaderOptions, setCascaderOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const dataSetModalFormRef = useRef();
@@ -71,11 +72,11 @@ const DataSetTable = (props) => {
       ellipsis: true,
       width: 350
     },
-    // {
-    //   title: '转换状态',
-    //   dataIndex: 'status',
-    //   render: type => <span>{type}</span>
-    // }, 
+    {
+      title: '转换状态',
+      dataIndex: 'convertStatus',
+      render: type => <span>{type}</span>
+    }, 
     {
       title: '操作',
       render: item => {
@@ -84,7 +85,7 @@ const DataSetTable = (props) => {
           <div className={styles.actions}>
             {/* <Link to={`/project/dataSet-tasks?projectId=${id}`}>Explorer</Link> */}
             {/* <a onClick={() => { setMapModal(true); setClickDataSetId(dataSetId); }}>mAP</a> */}
-            {/* <a onClick={() => handleConvert(dataSetId)} disabled={}>转换</a> */}
+            {/* <a onClick={() => handleConvert(dataSetId)} disabled={convertLoading}>转换</a> */}
             <a onClick={() => onClickDataSetModal(2, item)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => delDataSet(dataSetId) }>删除</a>
           </div>
@@ -94,14 +95,9 @@ const DataSetTable = (props) => {
   ]
 
   const handleConvert = async (id) => {
-    const obj = {
-      projectId: projectId,
-      dataSetId: id,
-      type: 'image',
-      target: 'coco'
-    };
-    const res = await convertDataset(obj);
-    const { code, data } = res;
+    // setConvertLoading(true);
+    const res = await convertDataset(projectId, id, { type: 'image', target: 'coco' });
+    const { code, data, msg } = res;
     if (code === 0) {
       message.success('转换成功！');
     } else {

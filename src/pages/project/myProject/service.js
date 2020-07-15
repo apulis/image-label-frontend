@@ -98,8 +98,8 @@ export async function getDatasetsOptions(params) {
   });
 }
 
-export async function convertDataset(data) {
-  return await request(`/GetConvertDetail`, {
+export async function convertDataset(projectId, dataSetId, data) {
+  return await request(`/projects/${projectId}/datasets/${dataSetId}/ConvertDataFormat`, {
     method: 'POST',
     data: data,
   });
