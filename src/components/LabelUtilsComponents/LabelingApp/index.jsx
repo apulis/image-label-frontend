@@ -156,11 +156,11 @@ class LabelingApp extends Component {
   }
 
   handleSelectionChange = (figureId, selectedFigureData) => {
-    const { project, isOCR } = this.props;
+    const { project, isOCR, pushState } = this.props;
     const labels = project.form.formParts;
-
     const { popupText } = this.state;
-    if (figureId) {
+
+    if (figureId && selectedFigureData) {
       const { fId } = selectedFigureData;
       if (isOCR) {
         this.canvasRef.current.changeState('text', selectedFigureData.popupText || popupText);
@@ -512,6 +512,11 @@ class LabelingApp extends Component {
 
   changCanvasState = (key, val) => {
     this.canvasRef.current.changeState(key, val);
+    if (!val) {
+      this.props.pushState(
+        state => ({ unfinishedFigure: null }), () => this.setState({ selected: null })
+      );
+    }
   }
 
   onRef = (ref) => {
@@ -553,8 +558,6 @@ class LabelingApp extends Component {
         onClose={() => this.setState({ hotkeysPanel: false })}
       />
     ) : null;
-    console.log('figures--------', figures)
-    console.log('toggles--------', toggles)
 
     return (
       <div className={styles.labelappWrap}>

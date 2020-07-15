@@ -14,4 +14,5 @@ export const TYPE = {
   text: '文字'
 }
 
+// export const IMAGE_BASE_URL = "http://219.133.167.42:52009/data-platform-backend/api/nfs/public/tasks/";
 export const IMAGE_BASE_URL = "/data-platform-backend/api/nfs/public/tasks/";

@@ -77,7 +77,6 @@ class Sidebar extends PureComponent {
 
   getTreeData = () => {
     const { toggles, labels } = this.props;
-    console.log('labelslabels',labels)
     return labels.map(item => {
       const { name, id, type } = item;
       const allShow = toggles && toggles[id] && toggles[id].allShow;
