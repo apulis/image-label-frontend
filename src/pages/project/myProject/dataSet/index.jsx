@@ -117,8 +117,14 @@ const DataSetTable = (props) => {
       cancelText: '取消',
       icon: <ExclamationCircleOutlined />,
       onOk: async () => {
-        await deleteDataSet(projectId, id)
-        getData();
+        const res = await deleteDataSet(projectId, id);
+        const { code, msg } = res;
+        if (code === 0) {
+          message.success('删除成功！')
+          getData();
+        } else {
+          message.error(msg);
+        }
       },
       onCancel() {}
     });
