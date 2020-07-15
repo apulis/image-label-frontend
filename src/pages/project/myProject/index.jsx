@@ -152,7 +152,9 @@ const ProjectTable = () => {
             showTotal: total => `共 ${total} 条`,
             showSizeChanger: true,
             onChange: pageParamsChange,
-            onShowSizeChange: pageParamsChange
+            onShowSizeChange: pageParamsChange,
+            current: pageParams.page,
+            pageSize: pageParams.size
           }}
         />
       </PageHeader>

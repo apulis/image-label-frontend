@@ -37,18 +37,8 @@ const TaskList = () => {
     setLoading(false);
   }
 
-  const onPageChange = (page, size) => {
-    setPageParams({
-      page,
-      size: pageParams.size
-    });
-  }
-
-  const onPageSizeChange = (current, size) => {
-    setPageParams({
-      page: pageParams.page,
-      size
-    });
+  const pageParamsChange = (page, size) => {
+    setPageParams({ page: page, size: size });
   }
 
   if (loading) {
@@ -81,8 +71,10 @@ const TaskList = () => {
             current={pageParams.page}
             pageSize={pageParams.size}
             showTotal={total => `共 ${total} 条`}
-            onChange={onPageChange}
-            onShowSizeChange={onPageSizeChange}
+            onChange={pageParamsChange}
+            onShowSizeChange={pageParamsChange}
+            current={pageParams.page}
+            pageSize={pageParams.size}
           />}
         </div>
       </PageHeader>
