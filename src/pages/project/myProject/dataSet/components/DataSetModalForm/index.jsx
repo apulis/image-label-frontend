@@ -17,7 +17,7 @@ const DataSetModalForm = (props, ref) => {
   const [plainOptions, setPlainOptions] = useState([]);
   const [sourceOptions, setSourceOptions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { cascaderOptions, dataSetId, projectId } = props;
+  const { cascaderOptions, dataSetId, projectId, type } = props;
   const Labels = useSelector(({ global }) => global.Labels);
 
   useImperativeHandle(ref, () => ({
@@ -103,9 +103,9 @@ const DataSetModalForm = (props, ref) => {
     <div className={styles.dataSetModalFormWrap}>
       <div className={styles.idWrap}>
         <p>项目 ID：</p><span>{projectId}</span>
-        {dataSetId && <div><p>数据集 Id：</p><span>{dataSetId}</span></div>}
+        {dataSetId && type === 2 && <div><p>数据集 Id：</p><span>{dataSetId}</span></div>}
       </div>
-      {((dataSetId && !loading) || !dataSetId) && <Form form={form} initialValues={{
+      {((type === 2 && !loading) || type === 1) && <Form form={form} initialValues={{
         name: detail.name || undefined,
         info: detail.info || undefined,
         type: detail.type || undefined,
@@ -120,7 +120,7 @@ const DataSetModalForm = (props, ref) => {
           rules={[{ required: true, message: '请输入数据集简介！' }]}>
           <Input.TextArea  placeholder="请填输入数据集简介" />
         </Form.Item>
-        {!dataSetId && <Form.Item label="数据源" name="sourceId"
+        {type === 1 && <Form.Item label="数据源" name="sourceId"
           rules={[{ required: true, message: '请选择数据源！' }]}>
           <Select placeholder="请选择数据源">
             {sourceOptions.length > 0 ? sourceOptions.map(i => <Option value={i.id}>{i.name}</Option>) : null}
@@ -134,7 +134,7 @@ const DataSetModalForm = (props, ref) => {
             <Option value="text">文字</Option>
           </Select>
         </Form.Item>
-        {dataSetId &&
+        {type === 2 &&
         <div className={styles.diyWrap}>
           <Form.Item label="选择对象类型" name="category2" className={styles.speItem}
             rules={[{ required: true, message: '请选择对象类型！' }]}>
@@ -177,7 +177,7 @@ const DataSetModalForm = (props, ref) => {
           <Button onClick={addNewDataSetCategory}>确定</Button>
         </div>}
         <ul>
-          <p>{dataSetId ? '已有对象类型' : checkedList.indexOf(2) > -1 ? '已自定义对象类型' : ''}</p>
+          <p>{type === 2 ? '已有对象类型' : checkedList.indexOf(2) > -1 ? '已自定义对象类型' : ''}</p>
           <ul className={styles.selectedCategory}>
             {selectedCategoryList.map(list => (
               <li key={list.name}>

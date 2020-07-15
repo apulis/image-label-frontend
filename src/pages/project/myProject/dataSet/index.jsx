@@ -258,7 +258,8 @@ const DataSetTable = (props) => {
           dataSetModalType={dataSetModalType}
           dataSetId={clickData.dataSetId}
           projectId={projectId}
-          cascaderOptions={cascaderOptions} />
+          cascaderOptions={cascaderOptions}
+          type={dataSetModalType} />
       </Modal>}
     </div>
   )
