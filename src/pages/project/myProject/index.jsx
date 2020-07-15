@@ -91,11 +91,11 @@ const ProjectTable = () => {
       title: '项目名称',
       dataIndex: 'name',
     },
-    {
-      title: '类型',
-      dataIndex: 'type',
-      render: () => <span>Image</span>
-    },  
+    // {
+    //   title: '类型',
+    //   dataIndex: 'type',
+    //   render: () => <span>Image</span>
+    // },  
     {
       title: '简介',
       dataIndex: 'info',
