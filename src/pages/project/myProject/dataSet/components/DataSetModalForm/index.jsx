@@ -13,6 +13,7 @@ const DataSetModalForm = (props, ref) => {
   const [form] = Form.useForm();
   const [checkedList, setCheckedList] = useState([]);
   const [selectedCategoryList, setSelectedCategoryList] = useState([]);
+  const [oldSelectList, setOldSelectList] = useState([]);
   const [detail, setDetail] = useState({});
   const [plainOptions, setPlainOptions] = useState([]);
   const [sourceOptions, setSourceOptions] = useState([]);
@@ -44,6 +45,7 @@ const DataSetModalForm = (props, ref) => {
         const { info } = data;
         setDetail(info);
         setSelectedCategoryList(info.labels);
+        setOldSelectList(info.labels);
         setLoading(false);
       } else {
         message.error(msg);
@@ -179,10 +181,11 @@ const DataSetModalForm = (props, ref) => {
         <ul>
           <p>{type === 2 ? '已有对象类型' : checkedList.indexOf(2) > -1 ? '已自定义对象类型' : ''}</p>
           <ul className={styles.selectedCategory}>
-            {selectedCategoryList.map(list => (
-              <li key={list.name}>
-                <span>{list.name}</span>
-                <CloseOutlined onClick={() => setSelectedCategoryList(selectedCategoryList.filter(val => val.name !== list.name))} />
+            {selectedCategoryList.map(item => (
+              <li key={item.name}>
+                <span>{item.name}</span>
+                {!oldSelectList.find(i => i.id === item.id) && 
+                <CloseOutlined onClick={() => setSelectedCategoryList(selectedCategoryList.filter(val => val.name !== item.name))} />}
               </li>
             ))}
           </ul>
