@@ -26,6 +26,11 @@ const DataSetTable = (props) => {
   const projectId = getPageQuery().projectId;
   const global = useSelector(({ global }) => global);
   const dispatch = useDispatch();
+  const typeString = {
+    'queue': '转换中',
+    'finished': '转换成功',
+    'error': '转换失败'
+  }
 
   useEffect(() => {
     getData();
@@ -75,17 +80,17 @@ const DataSetTable = (props) => {
     {
       title: '转换状态',
       dataIndex: 'convertStatus',
-      render: type => <span>{type}</span>
+      render: type => <span>{typeString[type]}</span>
     }, 
     {
       title: '操作',
       render: item => {
-        const { dataSetId } = item;
+        const { dataSetId, type } = item;
         return (
           <div className={styles.actions}>
             {/* <Link to={`/project/dataSet-tasks?projectId=${id}`}>Explorer</Link> */}
             {/* <a onClick={() => { setMapModal(true); setClickDataSetId(dataSetId); }}>mAP</a> */}
-            {/* <a onClick={() => handleConvert(dataSetId)} disabled={convertLoading}>转换</a> */}
+            <a onClick={() => handleConvert(dataSetId)} disabled={convertLoading || type === 'queue'}>转换</a>
             <a onClick={() => onClickDataSetModal(2, item)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => delDataSet(dataSetId) }>删除</a>
           </div>
@@ -95,14 +100,16 @@ const DataSetTable = (props) => {
   ]
 
   const handleConvert = async (id) => {
-    // setConvertLoading(true);
-    const res = await convertDataset(projectId, id, { type: 'image', target: 'coco' });
+    setConvertLoading(true);
+    const res = await convertDataset({projectId: projectId, dataSetId: id,  type: 'image', target: 'coco' });
     const { code, data, msg } = res;
     if (code === 0) {
+      getData();
       message.success('转换成功！');
     } else {
       message.error(msg);
     }
+    setConvertLoading(false);
   }
 
   const delDataSet = async (id) => {
