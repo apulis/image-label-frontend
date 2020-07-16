@@ -88,7 +88,7 @@ const ProjectTable = () => {
       render: id => <Link to={`/project/dataSetList?projectId=${id}`}>{id}</Link>
     },
     {
-      title: '项目名称111111',
+      title: '项目名称',
       dataIndex: 'name',
     },
     // {
