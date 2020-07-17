@@ -1,6 +1,6 @@
-import { message, Table, Modal, Input, Button, PageHeader } from 'antd';
+import { message, Table, Modal, Input, Button, PageHeader, Select } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
-import { getDataSet, addDataSet, submitDataSet, deleteDataSet, convertDataset } from '../service';
+import { getDataSet, addDataSet, submitDataSet, deleteDataSet, convertDataset, getConvertSupportFormat } from '../service';
 import { PAGEPARAMS, TYPE } from '@/utils/const';
 import { getPageQuery } from '@/utils/utils';
 import { Link, useSelector, useDispatch, history } from 'umi';
@@ -11,16 +11,21 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { PageLoading } from '@ant-design/pro-layout';
 
 const { confirm } = Modal;
+const { Option } = Select;
+
 const DataSetTable = (props) => {
   const [dataset, setDataSet] = useState({ data: [], total: 0 });
   const [mapModal, setMapModal] = useState(false);
+  const [convertModal, setConvertModal] = useState(false);
   const [dataSetFormModal, setDataSetFormModal] = useState(false);
-  const [clickData, setClickData] = useState('');
+  const [clickData, setClickData] = useState({});
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [dataSetModalType, setDataSetModalType] = useState(1);
   const [btnLoading, setBtnLoading] = useState(false);
   const [convertLoading, setConvertLoading] = useState(false);
   const [cascaderOptions, setCascaderOptions] = useState([]);
+  const [convertOptions, setConvertOptions] = useState([]);
+  const [convertTarget, setConvertTarget] = useState('');
   const [loading, setLoading] = useState(true);
   const dataSetModalFormRef = useRef();
   const projectId = getPageQuery().projectId;
@@ -90,7 +95,7 @@ const DataSetTable = (props) => {
           <div className={styles.actions}>
             {/* <Link to={`/project/dataSet-tasks?projectId=${id}`}>Explorer</Link> */}
             {/* <a onClick={() => { setMapModal(true); setClickDataSetId(dataSetId); }}>mAP</a> */}
-            <a onClick={() => handleConvert(dataSetId)} disabled={convertLoading || type === 'queue'}>转换</a>
+            <a onClick={() => openConvert(item)} disabled={convertLoading || type === 'queue'}>转换</a>
             <a onClick={() => onClickDataSetModal(2, item)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => delDataSet(dataSetId) }>删除</a>
           </div>
@@ -99,13 +104,27 @@ const DataSetTable = (props) => {
     },
   ]
 
-  const handleConvert = async (id) => {
+  const openConvert = async (item) => {
+    setConvertModal(true);
+    setClickData(item);
+    const res = await getConvertSupportFormat(projectId, item.dataSetId);
+    const { code, data, msg } = res;
+    if (code === 0) {
+      setConvertOptions(data);
+      data.length === 1 && setConvertTarget(data[0]);
+    } else {
+      message.error(msg);
+    }
+  }
+
+  const handleConvert = async () => {
     setConvertLoading(true);
-    const res = await convertDataset({projectId: projectId, dataSetId: id,  type: 'image', target: 'coco' });
+    const res = await convertDataset({projectId: projectId, dataSetId: clickData.dataSetId,  type: 'image', target: convertTarget });
     const { code, data, msg } = res;
     if (code === 0) {
       getData();
-      message.success('转换成功！');
+      message.success('提交成功！');
+      setConvertModal(false); 
     } else {
       message.error(msg);
     }
@@ -271,6 +290,23 @@ const DataSetTable = (props) => {
           projectId={projectId}
           cascaderOptions={cascaderOptions}
           type={dataSetModalType} />
+      </Modal>}
+      {convertModal && <Modal
+        visible={convertModal}
+        title="转换目标数据格式"
+        destroyOnClose
+        width={360}
+        maskClosable={false}
+        
+        onCancel={() => setConvertModal(false)}
+        footer={[
+          <Button onClick={() => setConvertModal(false)}>取消</Button>,
+          <Button type="primary" loading={convertLoading} onClick={handleConvert}>转换</Button>,
+        ]}
+      >
+        <Select placeholder="请选择转换目标数据格式" className="convertSelect" value={convertTarget} onChange={v => setConvertTarget(v)}>
+          {convertOptions.length > 0 && convertOptions.map(i => <Option value={i}>{i}</Option>)}
+        </Select>
       </Modal>}
     </div>
   )

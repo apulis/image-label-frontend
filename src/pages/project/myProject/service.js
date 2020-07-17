@@ -105,3 +105,7 @@ export async function convertDataset(data) {
     data: data,
   });
 }
+
+export async function getConvertSupportFormat(projectId, dataSetId) {
+  return request(`/projects/${projectId}/datasets/${dataSetId}/ConvertSupportFormat`)
+}
