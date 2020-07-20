@@ -90,12 +90,7 @@ const ProjectTable = () => {
     {
       title: '项目名称',
       dataIndex: 'name',
-    },
-    // {
-    //   title: '类型',
-    //   dataIndex: 'type',
-    //   render: () => <span>Image</span>
-    // },  
+    }, 
     {
       title: '简介',
       dataIndex: 'info',
@@ -167,11 +162,11 @@ const ProjectTable = () => {
           destroyOnClose
         >
           <Form form={form} className={styles.projectModal}>
-            <Form.Item label="项目名称" name="name" rules={[{ required: true, message: '请输入项目名称！' }]}>
+            <Form.Item label="项目名称" name="name" rules={[{ required: true, message: '请输入项目名称！' }, { max: 15 }]}>
               <Input placeholder="请输入项目名称" />
             </Form.Item>
             <Form.Item label="简介" name="info" 
-              rules={[{ required: true, message: '请输入简介！' }, { min: 10 }]}>
+              rules={[{ required: true, message: '请输入简介！' }, { min: 10, max: 50 }]}>
               <Input.TextArea placeholder="请输入简介" autoSize={{ minRows: 4 }} />
             </Form.Item>
           </Form>

@@ -169,7 +169,7 @@ class Sidebar extends PureComponent {
         />
         <div className={styles.btnWrap}>
           <div>
-            <Button onClick={onBack}>上一张</Button>
+            <Button onClick={onBack}>返回</Button>
             <Button type="primary" onClick={onSkip}>下一张</Button>
           </div>
           <Button onClick={onBackTasks}>返回列表</Button>

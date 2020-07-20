@@ -279,7 +279,7 @@ class Canvas extends Component {
         >
           <ZoomControl position="bottomright" />
           <Control className="leaflet-bar" position="bottomright">
-            <a
+            {/* <a
               role="button"
               title="Zoom reset"
               href="#"
@@ -289,7 +289,7 @@ class Canvas extends Component {
               }}
             >
               <Icon name="redo" fitted style={{ fontSize: '1.2em' }} />
-            </a>
+            </a> */}
           </Control>
           <ImageOverlay url={url} bounds={bounds} />
           {popupShow && <Popup position={popupPoint} closeOnClick={false} closeButton={false}>

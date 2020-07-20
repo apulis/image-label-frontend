@@ -9,9 +9,6 @@ import { getPageQuery } from '@/utils/utils';
 import { history } from 'umi';
 import { PageLoading } from '@ant-design/pro-layout';
 
-const projectId = getPageQuery().projectId;
-const dataSetId = getPageQuery().dataSetId
-
 @connect(({ global }) => ({ global }))
 class TaskDetail extends React.Component {
   constructor(props) {
@@ -23,27 +20,28 @@ class TaskDetail extends React.Component {
       image: null,
       imageInfo: {},
       isOCR: false,
-      btnLoading: false
+      btnLoading: false,
+      projectId: getPageQuery().projectId,
+      dataSetId: getPageQuery().dataSetId
     };
   }
 
   async componentDidMount() {
     const { dispatch, global } = this.props;
-    const { labels, l_projectId, l_datasetId } = global.Labels;
+    const { projectId, dataSetId } = this.state;
+    // const { labels, l_projectId, l_datasetId } = global.Labels;
     dispatch({
       type: 'global/changeLayoutCollapsed',
       payload: {
         collapsed: false
       }
     });
-    if (!(labels && labels.length && l_projectId == projectId && l_datasetId == dataSetId)) {
-      await dispatch({
-        type: 'global/getLabels',
-        payload: {
-          projectId, dataSetId
-        }
-      });
-    }
+    await dispatch({
+      type: 'global/getLabels',
+      payload: {
+        projectId, dataSetId
+      }
+    });
     this.getData();
   }
 
@@ -55,6 +53,7 @@ class TaskDetail extends React.Component {
   }
 
   getNext = async (taskId) => {
+    const { projectId, dataSetId } = this.state;
     const res = await getNextData(projectId, dataSetId, taskId);
     const { code, data } = res;
     if (code === 0) {
@@ -67,6 +66,7 @@ class TaskDetail extends React.Component {
   getData = async () => {
     const { labels } = this.props.global.Labels;
     const { taskId } = this.props.match.params;
+    const { projectId, dataSetId } = this.state;
     let _this = this;
     const res = await getAnnotations(projectId, dataSetId, taskId);
     const { code, data, msg } = res;
@@ -117,15 +117,14 @@ class TaskDetail extends React.Component {
       } else {
         imageInfo = { "file_name": taskId + '.jpg' };
       }
-
+      
       _this.setState({
         loading: false,
         project: {
           form: { formParts: _project }
         },
         image: {
-          // externalLink: null, id: 4, labeld: 1, lastEdited: 1575603884857,s
-          link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.jpg',
+          link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + imageInfo[0].file_name.split('.')[1],
           localPath: null, originalName: taskId + ".jpg", projectsId: 1,
           labelData: {
             height: 480, width: 640,
@@ -141,6 +140,7 @@ class TaskDetail extends React.Component {
 
   pushUpdate = (labelData) => {
     const { taskId } = this.props.match.params;
+    const { dataSetId } = this.state;
     let imageInfo = this.state.imageInfo;
     if (imageInfo) {
       imageInfo["height"] = labelData.height;
@@ -162,6 +162,7 @@ class TaskDetail extends React.Component {
   }
 
   refetch = async (taskId) => {
+    const { projectId, dataSetId } = this.state;
     this.setState({
       loading: true,
       error: null,
@@ -186,6 +187,7 @@ class TaskDetail extends React.Component {
 
   markComplete = async () => {
     const { taskId } = this.props.match.params;
+    const { projectId, dataSetId } = this.state;
     this.setState({ btnLoading: true });
     const res = await submitDetail(projectId, dataSetId, taskId, this.tansformToCocoFormat());
     res.code === 0 && this.getNext(taskId);
@@ -226,7 +228,7 @@ class TaskDetail extends React.Component {
   render() {
     const title = `Image Label Tool`;
     const { global } = this.props;
-    const { project, image, isOCR, loading, btnLoading } = this.state;
+    const { project, image, isOCR, loading, btnLoading, projectId, dataSetId } = this.state;
     const { taskId } = this.props.match.params;
     const props = {
       onBack: () => {

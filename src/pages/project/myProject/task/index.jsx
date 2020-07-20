@@ -54,11 +54,11 @@ const TaskList = () => {
         <div className={styles.taskList}>
           {hasData ? 
           tasks.data.map((item, i) => {
-            const { id } = item;
+            const { id, suffix } = item;
             return (
               <Card hoverable
-                cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}.jpg`} />} key={i}
-                onClick={() => history.push(`/project/dataSet/taskList/detail/${id}?projectId=${projectId}&dataSetId=${dataSetId}`)}
+                cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}${suffix}`} />} key={i}
+                onClick={() => history.push(`/project/dataSet/taskList/detail/${id}?projectId=${projectId}&dataSetId=${dataSetId}&last=${i === tasks.length - 1}`)}
               >
                 <Meta title={`第${i + 1}张 ${id}.jpg`} />
               </Card>
