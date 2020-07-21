@@ -84,8 +84,7 @@ const ProjectTable = () => {
     {
       title: '项目ID',
       dataIndex: 'projectId',
-      width: 300,
-      render: id => <Link to={`/project/dataSetList?projectId=${id}`}>{id}</Link>
+      render: id => <Link style={{fontFamily: 'Consolas'}} to={`/project/dataSetList?projectId=${id}`}>{id}</Link>
     },
     {
       title: '项目名称',
@@ -95,7 +94,6 @@ const ProjectTable = () => {
       title: '简介',
       dataIndex: 'info',
       ellipsis: true,
-      width: 350
     },
     {
       title: '操作',

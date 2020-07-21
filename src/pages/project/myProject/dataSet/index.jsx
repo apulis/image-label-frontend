@@ -64,8 +64,7 @@ const DataSetTable = (props) => {
     {
       title: '数据集Id',
       dataIndex: 'dataSetId',
-      width: 300,
-      render: id => <Link to={`/project/dataSet/taskList?projectId=${projectId}&dataSetId=${id}`}>{id}</Link>
+      render: id => <Link style={{fontFamily: 'Consolas'}} to={`/project/dataSet/taskList?projectId=${projectId}&dataSetId=${id}`}>{id}</Link>
     },
     {
       title: '数据集名称',
@@ -80,7 +79,6 @@ const DataSetTable = (props) => {
       title: '简介',
       dataIndex: 'info',
       ellipsis: true,
-      width: 350
     },
     {
       title: '转换状态',

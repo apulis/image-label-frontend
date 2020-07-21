@@ -8,8 +8,8 @@
 export default {
   dev: {
     '/ai_arts/api/': {
-      target: 'http://huawei-proxy01.sigsus.cn:49000/',
-      // target: 'http://219.133.167.42:52009/',
+      // target: 'http://huawei-proxy01.sigsus.cn:49000/',
+      target: 'http://219.133.167.42:52009/',
       changeOrigin: true,
       pathRewrite: {
         '^': '',
