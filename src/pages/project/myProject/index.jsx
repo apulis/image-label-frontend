@@ -82,7 +82,7 @@ const ProjectTable = () => {
 
   const columns = [
     {
-      title: '项目ID111',
+      title: '项目ID',
       dataIndex: 'projectId',
       render: id => <Link style={{fontFamily: 'Consolas'}} to={`/project/dataSetList?projectId=${id}`}>{id}</Link>
     },
