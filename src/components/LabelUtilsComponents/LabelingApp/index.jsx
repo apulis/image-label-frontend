@@ -115,13 +115,12 @@ class LabelingApp extends Component {
       newF[val] = [];
       chnageHOCState('figures', newF);
     }
+    child.type = labels.find(i => i.id === v).type;
     if (Object.keys(toggles).indexOf(val) === -1) {
-      child.type = labels.find(i => i.id === v).type;
       newT[val] = { allShow: true, children: [child] };
     } else {
       newT[val].allShow = true;
-      child.type = figures[val][0].type;
-      if (newT[val].children) {
+      if (newT[val].children.length) {
         let temp = newT[val].children, len = temp.length;
         let _id = Number(temp[len - 1].id.split('-')[1]) + 1;
         child.id = `${val}-${_id}`;
@@ -131,7 +130,7 @@ class LabelingApp extends Component {
       }
     }
     if (popupShow) return;
-    if (!val || val === selected) {
+    if (val === selected) {
       pushState(
         state => ({ unfinishedFigure: null }), () => this.setState({ selected: null })
       );

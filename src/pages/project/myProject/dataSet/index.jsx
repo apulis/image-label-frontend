@@ -189,20 +189,16 @@ const DataSetTable = (props) => {
     clickData && setClickData(clickData);
     setDataSetFormModal(true);
     if (type == 2) {
-      const { Labels, l_projectId, l_datasetId } = global;
-      if (Labels && Labels.length && l_projectId == projectId && l_datasetId == clickData.dataSetId) {
-        getSupercategory(Labels);
-      } else {
-        const res = await dispatch({
-          type: 'global/getLabels',
-          payload: {
-            projectId, 
-            dataSetId: clickData.dataSetId
-          }
-        });
-        const { code, data } = res;
-        code === 0 && getSupercategory(data.annotations || []);
-      }
+      // const { Labels, l_projectId, l_datasetId } = global;
+      const res = await dispatch({
+        type: 'global/getLabels',
+        payload: {
+          projectId, 
+          dataSetId: clickData.dataSetId
+        }
+      });
+      const { code, data } = res;
+      code === 0 && getSupercategory(data.annotations || []);
     }
   }
 

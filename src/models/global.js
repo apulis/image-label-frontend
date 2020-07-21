@@ -7,8 +7,8 @@ const GlobalModel = {
     notices: [],
     Labels: {
       labels: [],
-      l_projectId: '',
-      l_datasetId: ''
+      // l_projectId: '',
+      // l_datasetId: ''
     }
   },
   effects: {
@@ -21,8 +21,8 @@ const GlobalModel = {
           payload: {
             Labels: {
               labels: data.annotations,
-              l_projectId: payload.projectId,
-              l_datasetId: payload.dataSetId
+              // l_projectId: payload.projectId,
+              // l_datasetId: payload.dataSetId
             }
           }
         })

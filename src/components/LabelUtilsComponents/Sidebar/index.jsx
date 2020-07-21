@@ -59,7 +59,7 @@ class Sidebar extends PureComponent {
   }
 
   onSelectNode = (key) => {
-    const { chnageLabelAppState, changCanvasState } = this.props;
+    const { chnageLabelAppState, changCanvasState, unfinishedFigure, onSelect } = this.props;
     chnageLabelAppState('selectedTreeKey', key);
     chnageLabelAppState('selected', key);
     chnageLabelAppState('selectedFigureId', key.length ? key[0] : null, true);

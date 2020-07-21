@@ -27,9 +27,8 @@ class TaskDetail extends React.Component {
   }
 
   async componentDidMount() {
-    const { dispatch, global } = this.props;
+    const { dispatch } = this.props;
     const { projectId, dataSetId } = this.state;
-    // const { labels, l_projectId, l_datasetId } = global.Labels;
     dispatch({
       type: 'global/changeLayoutCollapsed',
       payload: {
@@ -124,7 +123,8 @@ class TaskDetail extends React.Component {
           form: { formParts: _project }
         },
         image: {
-          link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + imageInfo[0].file_name.split('.')[1],
+          // link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + imageInfo[0].file_name.split('.')[1],
+          link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.jpg',
           localPath: null, originalName: taskId + ".jpg", projectsId: 1,
           labelData: {
             height: 480, width: 640,
