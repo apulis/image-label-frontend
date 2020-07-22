@@ -18,7 +18,7 @@ class TaskDetail extends React.Component {
       error: null,
       project: null,
       image: null,
-      imageInfo: {},
+      imageInfo: [{}],
       isOCR: false,
       btnLoading: false,
       projectId: getPageQuery().projectId,
@@ -74,7 +74,7 @@ class TaskDetail extends React.Component {
     if (code === 0) {
       let _project = [], formParts = {}, imageInfo = {};
       if (annotations) {
-        imageInfo = annotations.images || {};
+        imageInfo = annotations.images[0] || {};
         let ann = annotations.annotations || [];
         ann.map((one, index) => {
           const { category_id, segmentation, bbox, text } = one;
@@ -113,7 +113,7 @@ class TaskDetail extends React.Component {
           _project.push({ id: Number(p), type: formParts[p][0].type, name: _name.length ? _name[0].name : '' });
         }
       } else {
-        imageInfo = { "file_name": taskId + '.jpg' };
+        imageInfo = [{ "file_name": taskId + '.jpg' }];
       }
       const suffix = imageInfo.file_name.split('.')[1];
       _this.setState({
@@ -129,7 +129,7 @@ class TaskDetail extends React.Component {
             labels: formParts
           }
         },
-        imageInfo
+        imageInfo: [imageInfo]
       });
     } else {
       message('error', msg);
@@ -140,11 +140,11 @@ class TaskDetail extends React.Component {
     const { taskId } = this.props.match.params;
     const { dataSetId } = this.state;
     let imageInfo = this.state.imageInfo;
-    if (imageInfo) {
-      imageInfo["height"] = labelData.height;
-      imageInfo["width"] = labelData.width;
+    if (imageInfo[0]) {
+      imageInfo[0].height = labelData.height;
+      imageInfo[0].width = labelData.width;
     }
-    const suffix = imageInfo.file_name.split('.')[1];
+    const suffix = imageInfo[0].file_name.split('.')[1];
     this.setState({
       image: {
         link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + suffix,
