@@ -83,7 +83,12 @@ const DataSetTable = (props) => {
     {
       title: '转换状态',
       dataIndex: 'convertStatus',
-      render: type => <span>{typeString[type]}</span>
+      render: type => <span>{typeString[type] || '--'}</span>
+    }, 
+    {
+      title: '转换路径',
+      dataIndex: 'convertOutPath',
+      render: i => <span>{i || '--'}</span>
     }, 
     {
       title: '操作',

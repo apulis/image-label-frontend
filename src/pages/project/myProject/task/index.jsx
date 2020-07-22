@@ -55,11 +55,11 @@ const TaskList = () => {
           {hasData ? 
           tasks.data.map((item, i) => {
             const { id, suffix } = item;
+            const _data = tasks.data;
             return (
               <Card hoverable
-                // cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}${suffix}`} />} key={i}
-                cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}.jpg`} />} key={i}
-                onClick={() => history.push(`/project/dataSet/taskList/detail/${id}?projectId=${projectId}&dataSetId=${dataSetId}&last=${i === tasks.length - 1}`)}
+                cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}${suffix}`} />} key={i}
+                onClick={() => history.push(`/project/dataSet/taskList/detail/${id}?projectId=${projectId}&dataSetId=${dataSetId}&lastId=${_data[_data.length - 1].id}`)}
               >
                 <Meta title={`第${i + 1}张 ${id}.jpg`} />
               </Card>

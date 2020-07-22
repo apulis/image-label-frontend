@@ -76,7 +76,7 @@ class TaskDetail extends React.Component {
       if (annotations) {
         imageInfo = annotations.images || {};
         let ann = annotations.annotations || [];
-
+console.log('imageInfo',imageInfo)
         ann.map((one, index) => {
           const { category_id, segmentation, bbox, text } = one;
           this.setState({ isOCR: text !== undefined });
@@ -116,16 +116,15 @@ class TaskDetail extends React.Component {
       } else {
         imageInfo = { "file_name": taskId + '.jpg' };
       }
-      
+      const suffix = imageInfo.file_name.split('.')[1];
       _this.setState({
         loading: false,
         project: {
           form: { formParts: _project }
         },
         image: {
-          // link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + imageInfo[0].file_name.split('.')[1],
-          link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.jpg',
-          localPath: null, originalName: taskId + ".jpg", projectsId: 1,
+          link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + suffix,
+          localPath: null, originalName: taskId + "." + suffix, projectsId: 1,
           labelData: {
             height: 480, width: 640,
             labels: formParts
@@ -146,11 +145,11 @@ class TaskDetail extends React.Component {
       imageInfo["height"] = labelData.height;
       imageInfo["width"] = labelData.width;
     }
+    const suffix = imageInfo.file_name.split('.')[1];
     this.setState({
       image: {
-        externalLink: null, id: 4, labeld: 1, lastEdited: 1575603884857,
-        link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.jpg',
-        localPath: null, originalName: taskId + ".jpg", projectsId: 1,
+        link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + suffix,
+        localPath: null, originalName: taskId + "." + suffix, projectsId: 1,
         labelData: labelData
       },
       imageInfo
@@ -263,6 +262,7 @@ class TaskDetail extends React.Component {
             chnageState={this.chnageState}
             isOCR={isOCR}
             image={image}
+            taskId={taskId}
             {...props}
           />
         </DocumentMeta>

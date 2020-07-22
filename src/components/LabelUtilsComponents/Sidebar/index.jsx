@@ -6,6 +6,7 @@ import styles from './index.less';
 import { message } from 'antd';
 import { connect } from 'umi';
 import { DeleteOutlined, EyeOutlined, EyeInvisibleOutlined, PlusOutlined, TableOutlined } from '@ant-design/icons';
+import { getPageQuery } from '@/utils/utils';
 
 const { TreeNode } = Tree;
 const { Option } = Select;
@@ -139,7 +140,8 @@ class Sidebar extends PureComponent {
       onSubmit,
       selectedTreeKey,
       chnageLabelAppState,
-      btnLoading
+      btnLoading,
+      taskId
     } = this.props;
     const { expandedKeys, selectType }= this.state;
 
@@ -170,7 +172,7 @@ class Sidebar extends PureComponent {
         <div className={styles.btnWrap}>
           <div>
             <Button onClick={onBack}>返回</Button>
-            <Button type="primary" onClick={onSkip}>下一张</Button>
+            <Button type="primary" onClick={onSkip} disabled={getPageQuery().lastId === taskId}>下一张</Button>
           </div>
           <Button onClick={onBackTasks}>返回列表</Button>
           <Button type="primary" onClick={onSubmit} loading={btnLoading}>提交</Button>
