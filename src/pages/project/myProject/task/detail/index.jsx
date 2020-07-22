@@ -76,7 +76,6 @@ class TaskDetail extends React.Component {
       if (annotations) {
         imageInfo = annotations.images || {};
         let ann = annotations.annotations || [];
-console.log('imageInfo',imageInfo)
         ann.map((one, index) => {
           const { category_id, segmentation, bbox, text } = one;
           this.setState({ isOCR: text !== undefined });
