@@ -49,18 +49,47 @@ class Sidebar extends PureComponent {
   }
 
   onIconClick = (e, type, fId, index, isAll) => {
-    const { onToggle, deleteEvent, onSelect, chnageLabelAppState } = this.props;
+    const { onToggle, deleteEvent, onSelect, chnageLabelAppState, toggles } = this.props;
     e.stopPropagation();
     index !== undefined && chnageLabelAppState('selectedTreeKey',  [`${fId}-${index}`]);
-    if (type) {
-      type === 1 ? onToggle(fId, index, isAll) : onSelect(fId);
+    if (type === 1) {
+      onToggle(fId, index, isAll);
+    } else if (type === 2) {
+      let flag = true;
+      toggles[fId].children.forEach(i => { if (i.points.length === 0) flag = false })
+      if (flag) {
+        onSelect(fId);
+      } else {
+        message.warning('请先完成上一个新增标注！');
+        return;
+      }
     } else {
       deleteEvent(fId, index);
     }
   }
 
   onSelectNode = (key) => {
-    const { chnageLabelAppState, changCanvasState, unfinishedFigure, onSelect } = this.props;
+    const { chnageLabelAppState, changCanvasState, toggles, figures, labels, pushState, unfinishedFigure } = this.props;
+    const fId = key.length ? key[0].split('-')[0] : null;
+    if (toggles[fId] && toggles[fId].children.length) {
+      const points1 = toggles[fId].children.find(i => i.id === key[0]).points;
+      const temp = figures[fId].find(i => i.id === key[0].split('-')[1]);
+      const points2 = temp ? temp.points : [];
+      if (!points1.length && !points2.length && !unfinishedFigure) {
+        const { type, id } = labels.find(i => i.id == fId);
+        const idx = labels.findIndex(i => i.id == fId);
+        pushState(
+          state => ({
+            unfinishedFigure: {
+              id,
+              color: colors[idx],
+              type,
+              points: [],
+            },
+          })
+        );
+      }
+    }
     chnageLabelAppState('selectedTreeKey', key);
     chnageLabelAppState('selected', key);
     chnageLabelAppState('selectedFigureId', key.length ? key[0] : null, true);

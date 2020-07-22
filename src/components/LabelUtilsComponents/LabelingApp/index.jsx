@@ -136,7 +136,6 @@ class LabelingApp extends Component {
       );
       return;
     }
-    console.log('selected', selected)
     const { type, id } = labels.find(i => i.id == val);
     pushState(
       state => ({
@@ -541,7 +540,8 @@ class LabelingApp extends Component {
       isOCR,
       figures,
       btnLoading,
-      taskId
+      taskId,
+      pushState
     } = this.props;
     const { hotkeysPanel, popupPoint, popupShow, popupText, allFigures, selectedFigureId, selectedTreeKey, toggles } = this.state;
     const forwardedProps = {
@@ -577,6 +577,8 @@ class LabelingApp extends Component {
               btnLoading={btnLoading}
               onRef={this.onRef}
               taskId={taskId}
+              pushState={pushState}
+              figures={figures}
             />
             {hotkeysPanelDOM}
             <div className={styles.flexWrap}>
