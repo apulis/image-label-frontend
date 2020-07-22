@@ -88,6 +88,7 @@ const DataSetTable = (props) => {
     {
       title: '转换路径',
       dataIndex: 'convertOutPath',
+      ellipsis: true,
       render: i => <span>{i || '--'}</span>
     }, 
     {
