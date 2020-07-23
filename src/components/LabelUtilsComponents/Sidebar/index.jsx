@@ -56,7 +56,9 @@ class Sidebar extends PureComponent {
       onToggle(fId, index, isAll);
     } else if (type === 2) {
       let flag = true;
-      toggles[fId].children.forEach(i => { if (i.points.length === 0) flag = false })
+      if (toggles[fId] && toggles[fId].children) {
+        toggles[fId].children.forEach(i => { if (i.points.length === 0) flag = false })
+      }
       if (flag) {
         onSelect(fId);
       } else {

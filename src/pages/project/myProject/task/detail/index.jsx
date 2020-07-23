@@ -113,9 +113,9 @@ class TaskDetail extends React.Component {
           _project.push({ id: Number(p), type: formParts[p][0].type, name: _name.length ? _name[0].name : '' });
         }
       } else {
-        imageInfo = [{ "file_name": taskId + '.jpg' }];
+        imageInfo = { "file_name": taskId + '.jpg' };
       }
-      const suffix = imageInfo.file_name.split('.')[1];
+      const suffix = imageInfo ? imageInfo.file_name.split('.')[1] : 'jpg';
       _this.setState({
         loading: false,
         project: {
