@@ -18,6 +18,7 @@ const DataSetModalForm = (props, ref) => {
   const [plainOptions, setPlainOptions] = useState([]);
   const [sourceOptions, setSourceOptions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isPrivate, setIsPrivate] = useState(true);
   const { cascaderOptions, dataSetId, projectId, type } = props;
   const Labels = useSelector(({ global }) => global.Labels);
 
@@ -113,6 +114,7 @@ const DataSetModalForm = (props, ref) => {
         type: detail.type || undefined,
         labelType2: 'polygon',
         labelType1: 'polygon',
+        isPrivate: detail.isPrivate || isPrivate
       }}>
         <Form.Item label="数据集名称" name="name" 
           rules={[{ required: true, message: '请输入数据集名称！' }]}> 
@@ -122,12 +124,20 @@ const DataSetModalForm = (props, ref) => {
           rules={[{ required: true, message: '请输入数据集简介！' }]}>
           <Input.TextArea  placeholder="请填输入数据集简介" />
         </Form.Item>
-        {type === 1 && <Form.Item label="数据源" name="sourceId"
-          rules={[{ required: true, message: '请选择数据源！' }]}>
-          <Select placeholder="请选择数据源">
-            {sourceOptions.length > 0 ? sourceOptions.map(i => <Option value={i.id}>{i.name}</Option>) : null}
-          </Select>
-        </Form.Item>}
+        {type === 1 && <>
+          <Form.Item label="数据权限" rules={[{ required: true }]} name="isPrivate">
+            <Radio.Group onChange={e => setIsPrivate(e.target.value)}>
+              <Radio value={true}>私有</Radio>
+              <Radio value={false}>公有</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item label="数据源" name="sourceId"
+            rules={[{ required: true, message: '请选择数据源！' }]}>
+            <Select placeholder="请选择数据源">
+              {sourceOptions.length > 0 ? sourceOptions.map(i => <Option value={i.id}>{i.name}</Option>) : null}
+            </Select>
+          </Form.Item>
+        </>}
         <Form.Item label="数据集类型" name="type"
           rules={[{ required: true, message: '请选择数据集类型！' }]}>
           <Select placeholder="请选择数据集类型" style={{ width: 180 }}>
