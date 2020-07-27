@@ -48,16 +48,12 @@ const DataSetModalForm = (props, ref) => {
         setSelectedCategoryList(info.labels);
         setOldSelectList(info.labels);
         setLoading(false);
-      } else {
-        message.error(msg);
       }
     } else {
       const res = await getDatasetsOptions({page: 1, count: 999});
       const { data, code, msg } = res;
       if (code === 0) {
         setSourceOptions(data.datasets);
-      } else {
-        message.error(msg);
       }
     }
     setCheckedList(dataSetId ? [1] : []);

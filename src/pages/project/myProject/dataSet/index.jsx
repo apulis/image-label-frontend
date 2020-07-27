@@ -62,8 +62,6 @@ const DataSetTable = (props) => {
         data:datasets,
         total: totalCount
       });
-    } else {
-      message.error(msg);
     }
     setLoading(false);
   }
@@ -131,8 +129,6 @@ const DataSetTable = (props) => {
     if (code === 0) {
       setConvertOptions(data);
       data.length === 1 && setConvertTarget(data[0]);
-    } else {
-      message.error(msg);
     }
   }
 
@@ -144,8 +140,6 @@ const DataSetTable = (props) => {
       getData();
       message.success('提交成功！');
       setConvertModal(false); 
-    } else {
-      message.error(msg);
     }
     setConvertLoading(false);
   }
@@ -163,8 +157,6 @@ const DataSetTable = (props) => {
         if (code === 0) {
           message.success('删除成功！')
           getData();
-        } else {
-          message.error(msg);
         }
       },
       onCancel() {}

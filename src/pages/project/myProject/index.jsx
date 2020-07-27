@@ -42,8 +42,6 @@ const ProjectTable = () => {
         data: projects,
         total: totalCount
       });
-    } else {
-      message.error(msg);
     }
     setLoading(false);
   }
@@ -61,8 +59,6 @@ const ProjectTable = () => {
         if (code === 0) {
           message.success('删除成功！')
           getData();
-        } else {
-          message.error(msg);
         }
       },
       onCancel() {}

@@ -30,8 +30,6 @@ const TaskList = () => {
         data: taskList,
         total: totalCount
       });
-    } else {
-      message.error(msg);
     }
     setLoading(false);
   }
