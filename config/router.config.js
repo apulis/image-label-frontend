@@ -30,7 +30,7 @@ export default [
         routes: [
           { 
             path: '/project',
-            name: 'Project',
+            name: 'project',
             icon: 'AppstoreOutlined',
             routes: [
               {

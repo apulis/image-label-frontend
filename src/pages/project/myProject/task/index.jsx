@@ -23,8 +23,7 @@ const TaskList = () => {
   }, [pageParams]);
 
   const getData = async () => {
-    const { page, size } = pageParams;
-    const { code, data, msg } = await getTasks(projectId, dataSetId, page, size);
+    const { code, data, msg } = await getTasks(projectId, dataSetId, { ...pageParams });
     if (code === 0) {
       const { taskList, totalCount } = data;
       setTasks({

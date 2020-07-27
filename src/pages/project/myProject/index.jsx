@@ -8,6 +8,7 @@ import styles from './index.less';
 import { PageLoading } from '@ant-design/pro-layout';
 
 const { confirm } = Modal;
+const { Search } = Input;
 
 const ProjectTable = () => {
   const emptyValue = {name: '', info: ''};
@@ -18,14 +19,14 @@ const ProjectTable = () => {
   const [editProjectId, setEditProjectId] = useState('');
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
+  const [name, setName] = useState('');
 
   useEffect(() => {
     getData();
-  }, [pageParams]);
+  }, [pageParams, name]);
 
   const getData = async () => {
-    const { page, size } = pageParams;
-    const { code, data, msg } = await getProject(page, size);
+    const { code, data, msg } = await getProject({ ...pageParams, name: name });
     if (code === 0) {
       const { projects, totalCount } = data;
       setProject({
@@ -88,6 +89,7 @@ const ProjectTable = () => {
     },
     {
       title: '项目名称',
+      sorter: (a, b) => a.name.length - b.name.length,
       dataIndex: 'name',
     }, 
     {
@@ -128,10 +130,10 @@ const ProjectTable = () => {
         ghost={false}
         title={
           <div>项目列表
-            <Button type="primary" style={{ float: 'right' }} onClick={() => {
-              setModalType('new');
-              resetModal(true);
-            }}>新建项目</Button>
+            <div style={{ margin: '16px 0 4px' }}>
+              <Button type="primary" onClick={() => { setModalType('new'); resetModal(true); }}>新建项目</Button>
+              <Search placeholder="请输入项目名称查询" enterButton onSearch={v => setName(v)} />
+            </div>
           </div>
         }
       >

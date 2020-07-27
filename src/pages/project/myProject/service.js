@@ -1,9 +1,9 @@
 import request from '@/utils/request';
 import request2 from '@/utils/request-ai';
 
-export async function getProject(page, size) {
+export async function getProject(params) {
   return request('/projects', {
-    params: { page, size }
+    params: params
   })
 }
 
@@ -27,15 +27,15 @@ export async function editProject(projectId, data) {
   });
 }
 
-export async function getDataSet(projectId, page, size) {
+export async function getDataSet(projectId, params) {
   return request(`/projects/${projectId}/datasets`, {
-    params: { page, size }
+    params: params
   })
 }
 
-export async function getTasks(projectId, dataSetId, page, size) {
+export async function getTasks(projectId, dataSetId, params) {
   return request(`/projects/${projectId}/datasets/${dataSetId}/tasks`, {
-    params: { page, size }
+    params: params
   })
 }
 

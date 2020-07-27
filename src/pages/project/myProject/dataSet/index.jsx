@@ -12,6 +12,7 @@ import { PageLoading } from '@ant-design/pro-layout';
 
 const { confirm } = Modal;
 const { Option } = Select;
+const { Search } = Input;
 
 const DataSetTable = (props) => {
   const [dataset, setDataSet] = useState({ data: [], total: 0 });
@@ -31,6 +32,8 @@ const DataSetTable = (props) => {
   const projectId = getPageQuery().projectId;
   const global = useSelector(({ global }) => global);
   const dispatch = useDispatch();
+  const [name, setName] = useState('');
+
   const typeString = {
     'queue': '转换中',
     'finished': '转换成功',
@@ -39,11 +42,10 @@ const DataSetTable = (props) => {
 
   useEffect(() => {
     getData();
-  }, [pageParams]);
+  }, [pageParams, name]);
   
   const getData = async () => {
-    const { page, size } = pageParams;
-    const { code, data, msg } = await getDataSet(projectId, page, size);
+    const { code, data, msg } = await getDataSet(projectId, { ...pageParams, name: name });
     if (code === 0) {
       const { datasets, totalCount } = data;
       setDataSet({
@@ -68,6 +70,7 @@ const DataSetTable = (props) => {
     },
     {
       title: '数据集名称',
+      sorter: (a, b) => a.name.length - b.name.length,
       dataIndex: 'name',
     },
     {
@@ -235,13 +238,12 @@ const DataSetTable = (props) => {
        <PageHeader
         ghost={false}
         onBack={() => history.push(`/project?projectId=${projectId}`)}
-        title={
-          <div>数据集列表
-            <Button type="primary" style={{ float: 'right' }}
-              onClick={() => onClickDataSetModal(1)}>新增数据集</Button>
-          </div>
-        }
+        title="数据集列表"
       >
+        <div style={{ marginBottom: 16 }}>
+          <Button type="primary" onClick={() => onClickDataSetModal(1)}>新增数据集</Button>
+          <Search placeholder="请输入数据集名称查询" enterButton onSearch={v => setName(v)} />
+        </div>
         <Table 
           columns={columns} 
           dataSource={dataset.data}
