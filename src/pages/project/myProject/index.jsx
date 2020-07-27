@@ -1,11 +1,10 @@
 import { message, Table, Modal, Form, Input, Button, PageHeader } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { getProject, deleteProject, submitProject, editProject } from './service';
-import { PAGEPARAMS } from '@/utils/const';
+import { PAGEPARAMS, sortText } from '@/utils/const';
 import { Link } from 'umi';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import styles from './index.less';
-import { PageLoading } from '@ant-design/pro-layout';
 
 const { confirm } = Modal;
 const { Search } = Input;
@@ -20,23 +19,33 @@ const ProjectTable = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
-
+  const [sortedInfo, setSortedInfo] = useState({
+    orderBy: '',
+    order: ''
+  });
   useEffect(() => {
     getData();
   }, [pageParams, name]);
 
   const getData = async () => {
-    const { code, data, msg } = await getProject({ ...pageParams, name: name });
+    setLoading(true);
+    const params = { 
+      ...pageParams, 
+      name: name, 
+      orderBy: sortedInfo.columnKey,
+      order: sortText[sortedInfo.order]
+    };
+    const { code, data, msg } = await getProject(params);
     if (code === 0) {
       const { projects, totalCount } = data;
       setProject({
         data: projects,
         total: totalCount
       });
-      setLoading(false);
     } else {
       message.error(msg);
     }
+    setLoading(false);
   }
 
   const handleRemove = id => {
@@ -89,8 +98,10 @@ const ProjectTable = () => {
     },
     {
       title: '项目名称',
-      sorter: (a, b) => a.name.length - b.name.length,
       dataIndex: 'name',
+      key: 'name',
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order
     }, 
     {
       title: '简介',
@@ -122,25 +133,25 @@ const ProjectTable = () => {
     setModalFlag(type);
   }
 
-  if (loading) return (<PageLoading />)
+  const onSortChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
+  }
 
   return (
     <div className={styles.project}>
       <PageHeader
         ghost={false}
-        title={
-          <div>项目列表
-            <div style={{ margin: '16px 0 4px' }}>
-              <Button type="primary" onClick={() => { setModalType('new'); resetModal(true); }}>新建项目</Button>
-              <Search placeholder="请输入项目名称查询" enterButton onSearch={v => setName(v)} />
-            </div>
-          </div>
-        }
+        title="项目列表"
       >
+        <div style={{ marginBottom: 16 }}>
+          <Button type="primary" onClick={() => { setModalType('new'); resetModal(true); }}>新建项目</Button>
+          <Search placeholder="请输入项目名称查询" enterButton onSearch={v => setName(v)} allowClear />
+        </div>
         <Table 
           columns={columns} 
           dataSource={project.data}
           rowKey={r => r.projectId}
+          onChange={onSortChange}
           pagination={{
             total: project.total,
             showQuickJumper: true,
@@ -151,6 +162,7 @@ const ProjectTable = () => {
             current: pageParams.page,
             pageSize: pageParams.size
           }}
+          loading={loading}
         />
       </PageHeader>
       {modalFlag && <Modal

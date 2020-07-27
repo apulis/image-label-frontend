@@ -1,14 +1,13 @@
 import { message, Table, Modal, Input, Button, PageHeader, Select } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { getDataSet, addDataSet, submitDataSet, deleteDataSet, convertDataset, getConvertSupportFormat } from '../service';
-import { PAGEPARAMS, TYPE } from '@/utils/const';
+import { PAGEPARAMS, TYPE, sortText } from '@/utils/const';
 import { getPageQuery } from '@/utils/utils';
 import { Link, useSelector, useDispatch, history } from 'umi';
 import styles from './index.less';
 import MapTable from './components/MapTable/index';
 import DataSetModalForm from './components/DataSetModalForm/index';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { PageLoading } from '@ant-design/pro-layout';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -33,6 +32,10 @@ const DataSetTable = (props) => {
   const global = useSelector(({ global }) => global);
   const dispatch = useDispatch();
   const [name, setName] = useState('');
+  const [sortedInfo, setSortedInfo] = useState({
+    orderBy: '',
+    order: ''
+  });
 
   const typeString = {
     'queue': '转换中',
@@ -42,20 +45,27 @@ const DataSetTable = (props) => {
 
   useEffect(() => {
     getData();
-  }, [pageParams, name]);
+  }, [pageParams, name, sortedInfo]);
   
   const getData = async () => {
-    const { code, data, msg } = await getDataSet(projectId, { ...pageParams, name: name });
+    setLoading(true);
+    const params = { 
+      ...pageParams, 
+      name: name, 
+      orderBy: sortedInfo.columnKey,
+      order: sortText[sortedInfo.order]
+    };
+    const { code, data, msg } = await getDataSet(projectId, params);
     if (code === 0) {
       const { datasets, totalCount } = data;
       setDataSet({
         data:datasets,
         total: totalCount
       });
-      setLoading(false);
     } else {
       message.error(msg);
     }
+    setLoading(false);
   }
 
   const pageParamsChange = (page, size) => {
@@ -70,8 +80,10 @@ const DataSetTable = (props) => {
     },
     {
       title: '数据集名称',
-      sorter: (a, b) => a.name.length - b.name.length,
       dataIndex: 'name',
+      key: 'name',
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
       title: '数据集类型',
@@ -188,6 +200,7 @@ const DataSetTable = (props) => {
       if (res && res.code === 0) {
         setDataSetFormModal(false);
         getData();
+        message.success('新增成功！');
       }
       setBtnLoading(false);
     })
@@ -231,7 +244,9 @@ const DataSetTable = (props) => {
     setCascaderOptions(cascaderOptions);
   }
 
-  if (loading) return (<PageLoading />);
+  const onSortChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
+  }
 
   return (
     <div className={styles.dataSetList}>
@@ -242,12 +257,14 @@ const DataSetTable = (props) => {
       >
         <div style={{ marginBottom: 16 }}>
           <Button type="primary" onClick={() => onClickDataSetModal(1)}>新增数据集</Button>
-          <Search placeholder="请输入数据集名称查询" enterButton onSearch={v => setName(v)} />
+          <Search placeholder="请输入数据集名称查询" enterButton onSearch={v => setName(v)} allowClear />
         </div>
         <Table 
           columns={columns} 
           dataSource={dataset.data}
           rowKey={r => r.dataSetId}
+          onChange={onSortChange}
+          loading={loading}
           pagination={{
             total: dataset.total, 
             showQuickJumper: true,
