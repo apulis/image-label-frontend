@@ -31,7 +31,7 @@ const codeMessage = {
  * 异常处理程序
  */
 
-export const errorHandler = error => {
+export const errorHandler = async (error) => {
   const { response } = error;
   let _response;
   try {
