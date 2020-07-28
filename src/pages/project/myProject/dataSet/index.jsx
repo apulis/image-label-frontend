@@ -7,7 +7,7 @@ import { Link, useSelector, useDispatch, history } from 'umi';
 import styles from './index.less';
 import MapTable from './components/MapTable/index';
 import DataSetModalForm from './components/DataSetModalForm/index';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -47,7 +47,7 @@ const DataSetTable = (props) => {
     getData();
   }, [pageParams, name, sortedInfo]);
   
-  const getData = async () => {
+  const getData = async (text) => {
     setLoading(true);
     const params = { 
       ...pageParams, 
@@ -62,6 +62,7 @@ const DataSetTable = (props) => {
         data:datasets,
         total: totalCount
       });
+      text && message.success(text);
     }
     setLoading(false);
   }
@@ -247,9 +248,10 @@ const DataSetTable = (props) => {
         onBack={() => history.push(`/project?projectId=${projectId}`)}
         title="数据集列表"
       >
-        <div style={{ marginBottom: 16 }}>
-          <Button type="primary" onClick={() => onClickDataSetModal(1)}>新增数据集</Button>
+        <Button type="primary" onClick={() => onClickDataSetModal(1)}>新增数据集</Button>
+        <div className={styles.serachWrap}>
           <Search placeholder="请输入数据集名称查询" enterButton onSearch={v => setName(v)} allowClear />
+          <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
         </div>
         <Table 
           columns={columns} 

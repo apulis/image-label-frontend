@@ -2,16 +2,22 @@
   .actions a {
     margin-right: 10px;
   }
+  .serachWrap {
+    float: right;
+    margin-bottom: 16px;
+    :global {
+      .ant-input-search .ant-input-wrapper {
+        width: 250px;
+        margin-right: 16px;
+      }
+      .ant-input-group-wrapper {
+        width: inherit;
+      }
+    }
+  }
   :global {
     .ant-page-header-heading-left, .ant-page-header-heading-title {
       width: 100%;
-    }
-    .ant-input-search {
-      width: 250px;
-      float: right;
-    }
-    .ant-input-wrapper {
-      right: 46px;
     }
   }
 }
