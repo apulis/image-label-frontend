@@ -49,7 +49,7 @@ class Sidebar extends PureComponent {
   }
 
   onIconClick = (e, type, fId, index, isAll) => {
-    const { onToggle, deleteEvent, onSelect, chnageLabelAppState, toggles } = this.props;
+    const { onToggle, deleteEvent, onSelect, chnageLabelAppState, toggles, figures } = this.props;
     e.stopPropagation();
     index !== undefined && chnageLabelAppState('selectedTreeKey',  [`${fId}-${index}`]);
     if (type === 1) {
@@ -57,7 +57,12 @@ class Sidebar extends PureComponent {
     } else if (type === 2) {
       let flag = true;
       if (toggles[fId] && toggles[fId].children) {
-        toggles[fId].children.forEach(i => { if (i.points.length === 0) flag = false })
+        toggles[fId].children.forEach((i, idx) => {
+          let temp = figures[fId].find(i => i.id == idx)
+          if ((i.points.length === 0 && temp && temp.points.length === 0) || !temp) {
+            flag = false;
+          }
+        })
       }
       if (flag) {
         onSelect(fId);
