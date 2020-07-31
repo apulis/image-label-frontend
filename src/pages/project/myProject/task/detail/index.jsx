@@ -187,8 +187,17 @@ class TaskDetail extends React.Component {
     const { taskId } = this.props.match.params;
     const { projectId, dataSetId } = this.state;
     this.setState({ btnLoading: true });
-    const res = await submitDetail(projectId, dataSetId, taskId, this.tansformToCocoFormat());
-    res.code === 0 && this.getNext(taskId);
+    const { code } = await submitDetail(projectId, dataSetId, taskId, this.tansformToCocoFormat());
+    if (code === 0) {
+      message.success('提交成功！');
+      if (getPageQuery().lastId === taskId) {
+        history.push(
+          `/project/dataSet/taskList?projectId=${projectId}&dataSetId=${dataSetId}`
+        )
+      } else {
+        this.getNext(taskId);
+      }
+    } 
     this.setState({ btnLoading: false });
   }
 

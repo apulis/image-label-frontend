@@ -15,6 +15,7 @@ const TaskList = () => {
   const [tasks, setTasks] = useState({ data: [], total: 0 });
   const [pageParams, setPageParams] = useState({ page: 1, size: 20 });
   const [loading, setLoading] = useState(true);
+  const [lastId, setLastId] = useState(0);
   const projectId = getPageQuery().projectId;
   const dataSetId = getPageQuery().dataSetId;
 
@@ -23,6 +24,7 @@ const TaskList = () => {
   }, [pageParams]);
 
   const getData = async () => {
+    setLoading(true);
     const { code, data, msg } = await getTasks(projectId, dataSetId, { ...pageParams });
     if (code === 0) {
       const { taskList, totalCount } = data;
@@ -30,6 +32,8 @@ const TaskList = () => {
         data: taskList,
         total: totalCount
       });
+      const all = await getTasks(projectId, dataSetId, { page: 1, size: 999999 });
+      all.code === 0 && setLastId(all.data.taskList[totalCount - 1].id);
     }
     setLoading(false);
   }
@@ -52,13 +56,14 @@ const TaskList = () => {
           {hasData ? 
           tasks.data.map((item, i) => {
             const { id, suffix } = item;
+            const { page, size } = pageParams;
             const _data = tasks.data;
             return (
               <Card hoverable
                 cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}${suffix}`} />} key={i}
-                onClick={() => history.push(`/project/dataSet/taskList/detail/${id}?projectId=${projectId}&dataSetId=${dataSetId}&lastId=${_data[_data.length - 1].id}`)}
+                onClick={() => history.push(`/project/dataSet/taskList/detail/${id}?projectId=${projectId}&dataSetId=${dataSetId}&lastId=${lastId}`)}
               >
-                <Meta title={`第${i + 1}张 ${id}.jpg`} />
+                <Meta title={`第${page > 1 ? (page - 1) * size + i + 1 : i + 1}张 ${id}.jpg`} />
               </Card>
             )
           }) : <Empty />}
