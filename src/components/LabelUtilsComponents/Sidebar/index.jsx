@@ -207,7 +207,7 @@ class Sidebar extends PureComponent {
         />
         <div className={styles.btnWrap}>
           <div>
-            <Button onClick={onBack}>返回</Button>
+            <Button onClick={onBack} disabled={getPageQuery().firstId === taskId}>上一张</Button>
             <Button type="primary" onClick={onSkip} disabled={getPageQuery().lastId === taskId}>下一张</Button>
           </div>
           <Button onClick={onBackTasks}>返回列表</Button>

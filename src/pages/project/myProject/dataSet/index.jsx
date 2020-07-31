@@ -140,7 +140,7 @@ const DataSetTable = (props) => {
     if (code === 0) {
       getData();
       message.success('提交成功！');
-      setConvertModal(false); 
+      setConvertModal(false);
     }
     setConvertLoading(false);
   }
@@ -310,7 +310,6 @@ const DataSetTable = (props) => {
         destroyOnClose
         width={360}
         maskClosable={false}
-        
         onCancel={() => setConvertModal(false)}
         footer={[
           <Button onClick={() => setConvertModal(false)}>取消</Button>,

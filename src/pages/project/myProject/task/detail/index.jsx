@@ -3,7 +3,7 @@ import { IMAGE_BASE_URL } from '@/utils/const';
 import DocumentMeta from 'react-document-meta';
 import LabelingApp from '../../../../../components/LabelUtilsComponents/LabelingApp/index';
 import { message } from 'antd';
-import { getNextData, getAnnotations, submitDetail } from '../../service';
+import { getUpDownData, getAnnotations, submitDetail } from '../../service';
 import { connect } from 'umi';
 import { getPageQuery } from '@/utils/utils';
 import { history } from 'umi';
@@ -51,13 +51,14 @@ class TaskDetail extends React.Component {
     }
   }
 
-  getNext = async (taskId) => {
+  getUpDown = async (taskId, type) => {
     const { projectId, dataSetId } = this.state;
-    const res = await getNextData(projectId, dataSetId, taskId);
+    const res = await getUpDownData(projectId, dataSetId, taskId, type);
     const { code, data } = res;
+    const _id = type ? data.next.id : data.previous.id;
     if (code === 0) {
      history.push(
-        `/project/dataSet/taskList/detail/${data.next.id}?projectId=${projectId}&dataSetId=${dataSetId}`
+        `/project/dataSet/taskList/detail/${_id}?projectId=${projectId}&dataSetId=${dataSetId}`
       );
     }
   }
@@ -195,7 +196,7 @@ class TaskDetail extends React.Component {
           `/project/dataSet/taskList?projectId=${projectId}&dataSetId=${dataSetId}`
         )
       } else {
-        this.getNext(taskId);
+        this.getUpDown(taskId, 1);
       }
     } 
     this.setState({ btnLoading: false });
@@ -239,10 +240,10 @@ class TaskDetail extends React.Component {
     const { taskId } = this.props.match.params;
     const props = {
       onBack: () => {
-        history.goBack();
+        this.getUpDown(taskId, 0);
       },
       onSkip: () => {
-        this.getNext(taskId);
+        this.getUpDown(taskId, 1);
       },
       onSubmit: () =>  {
         this.markComplete();

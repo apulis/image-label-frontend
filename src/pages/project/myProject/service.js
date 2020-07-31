@@ -77,8 +77,8 @@ export async function submitTask(projectId, dataSetId, taskId, data) {
   })
 }
 
-export async function getNextData(projectId, dataSetId, taskId) {
-  return request(`/projects/${projectId}/datasets/${dataSetId}/tasks/next/${taskId}`)
+export async function getUpDownData(projectId, dataSetId, taskId, type) {
+  return request(`/projects/${projectId}/datasets/${dataSetId}/tasks/${type ? 'next' : 'previous'}/${taskId}`)
 }
 
 export async function getAnnotations(projectId, dataSetId, taskId) {
