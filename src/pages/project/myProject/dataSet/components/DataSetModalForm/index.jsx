@@ -68,10 +68,10 @@ const DataSetModalForm = (props, ref) => {
         message.warning(`已经含有 ${category1}了`);
         return;
       }
-      const idArr = selectedCategoryList.map(i => i.id);
+      const idArr = selectedCategoryList.length ? selectedCategoryList.map(i => i.id) : [];
       let _selectedCategoryList = _.cloneDeep(selectedCategoryList);
       _selectedCategoryList.push({
-        id: Math.max(...idArr) + 1,
+        id: idArr.length ? Math.max(...idArr) + 1 : 0,
         name: category1,
         type: labelType1,
         supercategory: fatherType
