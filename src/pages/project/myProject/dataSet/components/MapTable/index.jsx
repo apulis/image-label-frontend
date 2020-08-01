@@ -30,8 +30,6 @@ const MapTable = (props) => {
       setAllData({ data: allData, totalCount: data.totalCount });
       setIouOptions(allData.map(i => ({ iouThr: i.iouThr, mean_ap: i.mean_ap })));
       setTableDataSource(allData);
-    } else {
-      message.error(msg);
     }
   }
 

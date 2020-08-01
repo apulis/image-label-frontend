@@ -1,17 +1,17 @@
 import { message, Table, Modal, Input, Button, PageHeader, Select } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { getDataSet, addDataSet, submitDataSet, deleteDataSet, convertDataset, getConvertSupportFormat } from '../service';
-import { PAGEPARAMS, TYPE } from '@/utils/const';
+import { PAGEPARAMS, TYPE, sortText } from '@/utils/const';
 import { getPageQuery } from '@/utils/utils';
 import { Link, useSelector, useDispatch, history } from 'umi';
 import styles from './index.less';
 import MapTable from './components/MapTable/index';
 import DataSetModalForm from './components/DataSetModalForm/index';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { PageLoading } from '@ant-design/pro-layout';
+import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 
 const { confirm } = Modal;
 const { Option } = Select;
+const { Search } = Input;
 
 const DataSetTable = (props) => {
   const [dataset, setDataSet] = useState({ data: [], total: 0 });
@@ -31,6 +31,12 @@ const DataSetTable = (props) => {
   const projectId = getPageQuery().projectId;
   const global = useSelector(({ global }) => global);
   const dispatch = useDispatch();
+  const [name, setName] = useState('');
+  const [sortedInfo, setSortedInfo] = useState({
+    orderBy: '',
+    order: ''
+  });
+
   const typeString = {
     'queue': '转换中',
     'finished': '转换成功',
@@ -39,21 +45,26 @@ const DataSetTable = (props) => {
 
   useEffect(() => {
     getData();
-  }, [pageParams]);
+  }, [pageParams, name, sortedInfo]);
   
-  const getData = async () => {
-    const { page, size } = pageParams;
-    const { code, data, msg } = await getDataSet(projectId, page, size);
+  const getData = async (text) => {
+    setLoading(true);
+    const params = { 
+      ...pageParams, 
+      name: name, 
+      orderBy: sortedInfo.columnKey,
+      order: sortText[sortedInfo.order]
+    };
+    const { code, data, msg } = await getDataSet(projectId, params);
     if (code === 0) {
       const { datasets, totalCount } = data;
       setDataSet({
         data:datasets,
         total: totalCount
       });
-      setLoading(false);
-    } else {
-      message.error(msg);
+      text && message.success(text);
     }
+    setLoading(false);
   }
 
   const pageParamsChange = (page, size) => {
@@ -69,6 +80,9 @@ const DataSetTable = (props) => {
     {
       title: '数据集名称',
       dataIndex: 'name',
+      key: 'name',
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
       title: '数据集类型',
@@ -83,7 +97,13 @@ const DataSetTable = (props) => {
     {
       title: '转换状态',
       dataIndex: 'convertStatus',
-      render: type => <span>{typeString[type]}</span>
+      render: type => <span>{typeString[type] || '--'}</span>
+    }, 
+    {
+      title: '转换路径',
+      dataIndex: 'convertOutPath',
+      ellipsis: true,
+      render: i => <span>{i || '--'}</span>
     }, 
     {
       title: '操作',
@@ -110,8 +130,6 @@ const DataSetTable = (props) => {
     if (code === 0) {
       setConvertOptions(data);
       data.length === 1 && setConvertTarget(data[0]);
-    } else {
-      message.error(msg);
     }
   }
 
@@ -122,9 +140,7 @@ const DataSetTable = (props) => {
     if (code === 0) {
       getData();
       message.success('提交成功！');
-      setConvertModal(false); 
-    } else {
-      message.error(msg);
+      setConvertModal(false);
     }
     setConvertLoading(false);
   }
@@ -142,8 +158,6 @@ const DataSetTable = (props) => {
         if (code === 0) {
           message.success('删除成功！')
           getData();
-        } else {
-          message.error(msg);
         }
       },
       onCancel() {}
@@ -179,6 +193,7 @@ const DataSetTable = (props) => {
       if (res && res.code === 0) {
         setDataSetFormModal(false);
         getData();
+        message.success('新增成功！');
       }
       setBtnLoading(false);
     })
@@ -222,24 +237,28 @@ const DataSetTable = (props) => {
     setCascaderOptions(cascaderOptions);
   }
 
-  if (loading) return (<PageLoading />);
+  const onSortChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
+  }
 
   return (
     <div className={styles.dataSetList}>
        <PageHeader
         ghost={false}
         onBack={() => history.push(`/project?projectId=${projectId}`)}
-        title={
-          <div>数据集列表
-            <Button type="primary" style={{ float: 'right' }}
-              onClick={() => onClickDataSetModal(1)}>新增数据集</Button>
-          </div>
-        }
+        title="数据集列表"
       >
+        <Button type="primary" onClick={() => onClickDataSetModal(1)}>新增数据集</Button>
+        <div className={styles.serachWrap}>
+          <Search placeholder="请输入数据集名称查询" enterButton onSearch={v => setName(v)} allowClear />
+          <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
+        </div>
         <Table 
           columns={columns} 
           dataSource={dataset.data}
           rowKey={r => r.dataSetId}
+          onChange={onSortChange}
+          loading={loading}
           pagination={{
             total: dataset.total, 
             showQuickJumper: true,
@@ -291,7 +310,6 @@ const DataSetTable = (props) => {
         destroyOnClose
         width={360}
         maskClosable={false}
-        
         onCancel={() => setConvertModal(false)}
         footer={[
           <Button onClick={() => setConvertModal(false)}>取消</Button>,

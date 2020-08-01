@@ -1,9 +1,9 @@
 import request from '@/utils/request';
 import request2 from '@/utils/request-ai';
 
-export async function getProject(page, size) {
+export async function getProject(params) {
   return request('/projects', {
-    params: { page, size }
+    params: params
   })
 }
 
@@ -27,15 +27,15 @@ export async function editProject(projectId, data) {
   });
 }
 
-export async function getDataSet(projectId, page, size) {
+export async function getDataSet(projectId, params) {
   return request(`/projects/${projectId}/datasets`, {
-    params: { page, size }
+    params: params
   })
 }
 
-export async function getTasks(projectId, dataSetId, page, size) {
+export async function getTasks(projectId, dataSetId, params) {
   return request(`/projects/${projectId}/datasets/${dataSetId}/tasks`, {
-    params: { page, size }
+    params: params
   })
 }
 
@@ -77,8 +77,8 @@ export async function submitTask(projectId, dataSetId, taskId, data) {
   })
 }
 
-export async function getNextData(projectId, dataSetId, taskId) {
-  return request(`/projects/${projectId}/datasets/${dataSetId}/tasks/next/${taskId}`)
+export async function getUpDownData(projectId, dataSetId, taskId, type) {
+  return request(`/projects/${projectId}/datasets/${dataSetId}/tasks/${type ? 'next' : 'previous'}/${taskId}`)
 }
 
 export async function getAnnotations(projectId, dataSetId, taskId) {

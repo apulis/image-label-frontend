@@ -3,7 +3,7 @@ import { IMAGE_BASE_URL } from '@/utils/const';
 import DocumentMeta from 'react-document-meta';
 import LabelingApp from '../../../../../components/LabelUtilsComponents/LabelingApp/index';
 import { message } from 'antd';
-import { getNextData, getAnnotations, submitDetail } from '../../service';
+import { getUpDownData, getAnnotations, submitDetail } from '../../service';
 import { connect } from 'umi';
 import { getPageQuery } from '@/utils/utils';
 import { history } from 'umi';
@@ -18,7 +18,7 @@ class TaskDetail extends React.Component {
       error: null,
       project: null,
       image: null,
-      imageInfo: {},
+      imageInfo: [{}],
       isOCR: false,
       btnLoading: false,
       projectId: getPageQuery().projectId,
@@ -51,13 +51,14 @@ class TaskDetail extends React.Component {
     }
   }
 
-  getNext = async (taskId) => {
+  getUpDown = async (taskId, type) => {
     const { projectId, dataSetId } = this.state;
-    const res = await getNextData(projectId, dataSetId, taskId);
+    const res = await getUpDownData(projectId, dataSetId, taskId, type);
     const { code, data } = res;
+    const _id = type ? data.next.id : data.previous.id;
     if (code === 0) {
      history.push(
-        `/project/dataSet/taskList/detail/${data.next.id}?projectId=${projectId}&dataSetId=${dataSetId}`
+        `/project/dataSet/taskList/detail/${_id}?projectId=${projectId}&dataSetId=${dataSetId}`
       );
     }
   }
@@ -74,9 +75,8 @@ class TaskDetail extends React.Component {
     if (code === 0) {
       let _project = [], formParts = {}, imageInfo = {};
       if (annotations) {
-        imageInfo = annotations.images || {};
+        imageInfo = annotations.images[0] || {};
         let ann = annotations.annotations || [];
-
         ann.map((one, index) => {
           const { category_id, segmentation, bbox, text } = one;
           this.setState({ isOCR: text !== undefined });
@@ -116,22 +116,21 @@ class TaskDetail extends React.Component {
       } else {
         imageInfo = { "file_name": taskId + '.jpg' };
       }
-      
+      const suffix = imageInfo ? imageInfo.file_name.split('.')[1] : 'jpg';
       _this.setState({
         loading: false,
         project: {
           form: { formParts: _project }
         },
         image: {
-          // link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + imageInfo[0].file_name.split('.')[1],
-          link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.jpg',
-          localPath: null, originalName: taskId + ".jpg", projectsId: 1,
+          link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + suffix,
+          localPath: null, originalName: taskId + "." + suffix, projectsId: 1,
           labelData: {
             height: 480, width: 640,
             labels: formParts
           }
         },
-        imageInfo
+        imageInfo: [imageInfo]
       });
     } else {
       message('error', msg);
@@ -142,15 +141,15 @@ class TaskDetail extends React.Component {
     const { taskId } = this.props.match.params;
     const { dataSetId } = this.state;
     let imageInfo = this.state.imageInfo;
-    if (imageInfo) {
-      imageInfo["height"] = labelData.height;
-      imageInfo["width"] = labelData.width;
+    if (imageInfo[0]) {
+      imageInfo[0].height = labelData.height;
+      imageInfo[0].width = labelData.width;
     }
+    const suffix = imageInfo[0].file_name.split('.')[1];
     this.setState({
       image: {
-        externalLink: null, id: 4, labeld: 1, lastEdited: 1575603884857,
-        link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.jpg',
-        localPath: null, originalName: taskId + ".jpg", projectsId: 1,
+        link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + suffix,
+        localPath: null, originalName: taskId + "." + suffix, projectsId: 1,
         labelData: labelData
       },
       imageInfo
@@ -189,8 +188,17 @@ class TaskDetail extends React.Component {
     const { taskId } = this.props.match.params;
     const { projectId, dataSetId } = this.state;
     this.setState({ btnLoading: true });
-    const res = await submitDetail(projectId, dataSetId, taskId, this.tansformToCocoFormat());
-    res.code === 0 && this.getNext(taskId);
+    const { code } = await submitDetail(projectId, dataSetId, taskId, this.tansformToCocoFormat());
+    if (code === 0) {
+      message.success('提交成功！');
+      if (getPageQuery().lastId === taskId) {
+        history.push(
+          `/project/dataSet/taskList?projectId=${projectId}&dataSetId=${dataSetId}`
+        )
+      } else {
+        this.getUpDown(taskId, 1);
+      }
+    } 
     this.setState({ btnLoading: false });
   }
 
@@ -232,10 +240,10 @@ class TaskDetail extends React.Component {
     const { taskId } = this.props.match.params;
     const props = {
       onBack: () => {
-        history.goBack();
+        this.getUpDown(taskId, 0);
       },
       onSkip: () => {
-        this.getNext(taskId);
+        this.getUpDown(taskId, 1);
       },
       onSubmit: () =>  {
         this.markComplete();
@@ -263,6 +271,7 @@ class TaskDetail extends React.Component {
             chnageState={this.chnageState}
             isOCR={isOCR}
             image={image}
+            taskId={taskId}
             {...props}
           />
         </DocumentMeta>

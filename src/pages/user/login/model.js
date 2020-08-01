@@ -20,6 +20,7 @@ const Model = {
         message.success('登录成功！');
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
+        setAuthority(payload.permissionList);
         let { redirect } = params;
 
         if (redirect) {
@@ -43,7 +44,6 @@ const Model = {
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
       return { ...state, status: payload.status, type: payload.type };
     },
   },

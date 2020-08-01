@@ -6,6 +6,7 @@ import styles from './index.less';
 import { message } from 'antd';
 import { connect } from 'umi';
 import { DeleteOutlined, EyeOutlined, EyeInvisibleOutlined, PlusOutlined, TableOutlined } from '@ant-design/icons';
+import { getPageQuery } from '@/utils/utils';
 
 const { TreeNode } = Tree;
 const { Option } = Select;
@@ -48,18 +49,54 @@ class Sidebar extends PureComponent {
   }
 
   onIconClick = (e, type, fId, index, isAll) => {
-    const { onToggle, deleteEvent, onSelect, chnageLabelAppState } = this.props;
+    const { onToggle, deleteEvent, onSelect, chnageLabelAppState, toggles, figures } = this.props;
     e.stopPropagation();
     index !== undefined && chnageLabelAppState('selectedTreeKey',  [`${fId}-${index}`]);
-    if (type) {
-      type === 1 ? onToggle(fId, index, isAll) : onSelect(fId);
+    if (type === 1) {
+      onToggle(fId, index, isAll);
+    } else if (type === 2) {
+      let flag = true;
+      if (toggles[fId] && toggles[fId].children) {
+        toggles[fId].children.forEach((i, idx) => {
+          let temp = figures[fId].find(i => i.id == idx)
+          if ((i.points.length === 0 && temp && temp.points.length === 0) || !temp) {
+            flag = false;
+          }
+        })
+      }
+      if (flag) {
+        onSelect(fId);
+      } else {
+        message.warning('请先完成上一个新增标注！');
+        return;
+      }
     } else {
       deleteEvent(fId, index);
     }
   }
 
   onSelectNode = (key) => {
-    const { chnageLabelAppState, changCanvasState, unfinishedFigure, onSelect } = this.props;
+    const { chnageLabelAppState, changCanvasState, toggles, figures, labels, pushState, unfinishedFigure } = this.props;
+    const fId = key.length ? key[0].split('-')[0] : null;
+    if (toggles[fId] && toggles[fId].children.length) {
+      const points1 = toggles[fId].children.find(i => i.id === key[0]).points;
+      const temp = figures[fId].find(i => i.id === key[0].split('-')[1]);
+      const points2 = temp ? temp.points : [];
+      if (!points1.length && !points2.length && !unfinishedFigure) {
+        const { type, id } = labels.find(i => i.id == fId);
+        const idx = labels.findIndex(i => i.id == fId);
+        pushState(
+          state => ({
+            unfinishedFigure: {
+              id,
+              color: colors[idx],
+              type,
+              points: [],
+            },
+          })
+        );
+      }
+    }
     chnageLabelAppState('selectedTreeKey', key);
     chnageLabelAppState('selected', key);
     chnageLabelAppState('selectedFigureId', key.length ? key[0] : null, true);
@@ -139,7 +176,8 @@ class Sidebar extends PureComponent {
       onSubmit,
       selectedTreeKey,
       chnageLabelAppState,
-      btnLoading
+      btnLoading,
+      taskId
     } = this.props;
     const { expandedKeys, selectType }= this.state;
 
@@ -169,8 +207,8 @@ class Sidebar extends PureComponent {
         />
         <div className={styles.btnWrap}>
           <div>
-            <Button onClick={onBack}>返回</Button>
-            <Button type="primary" onClick={onSkip}>下一张</Button>
+            <Button onClick={onBack} disabled={getPageQuery().firstId === taskId}>上一张</Button>
+            <Button type="primary" onClick={onSkip} disabled={getPageQuery().lastId === taskId}>下一张</Button>
           </div>
           <Button onClick={onBackTasks}>返回列表</Button>
           <Button type="primary" onClick={onSubmit} loading={btnLoading}>提交</Button>

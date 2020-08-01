@@ -31,8 +31,25 @@ const codeMessage = {
  * 异常处理程序
  */
 
-export const errorHandler = error => {
+export const errorHandler = async (error) => {
   const { response } = error;
+  let _response;
+  try {
+    _response = await response.json();
+  } catch (e) {
+    notification.error({
+      message: '请求错误',
+      description: '请稍后再试',
+    });
+  }
+  if (!_response) {
+    return {};
+  }
+  const { code, msg } = _response;
+  if (code !== 0 && msg) {
+    message.error(msg);
+  }
+
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
@@ -45,14 +62,9 @@ export const errorHandler = error => {
         window.location.href = `${USER_LOGIN_URL}?` + queryString;
       }
     }
-    notification.error({
+    !msg && notification.error({
       message: `请求错误 ${status}: ${url}`,
       description: errorText,
-    });
-  } else if (!response) {
-    notification.error({
-      description: '您的网络发生异常，无法连接服务器',
-      message: '网络异常',
     });
   }
 

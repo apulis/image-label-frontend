@@ -17,7 +17,7 @@ class Canvas extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      zoom: 0,
+      zoom: -1,
       selectedFigureId: null,
       cursorPos: { lat: 0, lng: 0 },
       text: props.popup.popupText || ''
@@ -263,8 +263,8 @@ class Canvas extends Component {
         <Map
           crs={CRS.Simple}
           zoom={zoom}
-          minZoom={-50}
-          maxZoom={maxZoom}
+          minZoom={-3}
+          maxZoom={3}
           center={[height / 2, width / 2]}
           zoomAnimation={false}
           zoomSnap={0.1}

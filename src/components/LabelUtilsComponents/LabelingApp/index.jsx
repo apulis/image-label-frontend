@@ -130,7 +130,7 @@ class LabelingApp extends Component {
       }
     }
     if (popupShow) return;
-    if (val === selected) {
+    if (!val || val === selected) {
       pushState(
         state => ({ unfinishedFigure: null }), () => this.setState({ selected: null })
       );
@@ -539,7 +539,9 @@ class LabelingApp extends Component {
       chnageState,
       isOCR,
       figures,
-      btnLoading
+      btnLoading,
+      taskId,
+      pushState
     } = this.props;
     const { hotkeysPanel, popupPoint, popupShow, popupText, allFigures, selectedFigureId, selectedTreeKey, toggles } = this.state;
     const forwardedProps = {
@@ -574,6 +576,9 @@ class LabelingApp extends Component {
               changCanvasState={this.changCanvasState}
               btnLoading={btnLoading}
               onRef={this.onRef}
+              taskId={taskId}
+              pushState={pushState}
+              figures={figures}
             />
             {hotkeysPanelDOM}
             <div className={styles.flexWrap}>

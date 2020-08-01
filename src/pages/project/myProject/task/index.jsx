@@ -15,6 +15,8 @@ const TaskList = () => {
   const [tasks, setTasks] = useState({ data: [], total: 0 });
   const [pageParams, setPageParams] = useState({ page: 1, size: 20 });
   const [loading, setLoading] = useState(true);
+  const [lastId, setLastId] = useState(0);
+  const [firstId, setFirstId] = useState(0);
   const projectId = getPageQuery().projectId;
   const dataSetId = getPageQuery().dataSetId;
 
@@ -23,16 +25,19 @@ const TaskList = () => {
   }, [pageParams]);
 
   const getData = async () => {
-    const { page, size } = pageParams;
-    const { code, data, msg } = await getTasks(projectId, dataSetId, page, size);
+    setLoading(true);
+    const { code, data, msg } = await getTasks(projectId, dataSetId, { ...pageParams });
     if (code === 0) {
       const { taskList, totalCount } = data;
       setTasks({
         data: taskList,
         total: totalCount
       });
-    } else {
-      message.error(msg);
+      const all = await getTasks(projectId, dataSetId, { page: 1, size: 999999 });
+      if (all.code === 0) {
+        setFirstId(all.data.taskList[0].id);
+        setLastId(all.data.taskList[totalCount - 1].id);
+      }
     }
     setLoading(false);
   }
@@ -55,13 +60,14 @@ const TaskList = () => {
           {hasData ? 
           tasks.data.map((item, i) => {
             const { id, suffix } = item;
+            const { page, size } = pageParams;
+            const _data = tasks.data;
             return (
               <Card hoverable
-                // cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}${suffix}`} />} key={i}
-                cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}.jpg`} />} key={i}
-                onClick={() => history.push(`/project/dataSet/taskList/detail/${id}?projectId=${projectId}&dataSetId=${dataSetId}&last=${i === tasks.length - 1}`)}
+                cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}${suffix}`} />} key={i}
+                onClick={() => history.push(`/project/dataSet/taskList/detail/${id}?projectId=${projectId}&dataSetId=${dataSetId}&lastId=${lastId}&firstId=${firstId}`)}
               >
-                <Meta title={`第${i + 1}张 ${id}.jpg`} />
+                <Meta title={`第${page > 1 ? (page - 1) * size + i + 1 : i + 1}张 ${id}.jpg`} />
               </Card>
             )
           }) : <Empty />}
