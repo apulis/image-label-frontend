@@ -8,7 +8,7 @@
 // 编译镜像
 docker build -t apulistech/image-label .
 // 上线服务
-docker-compose up
+docker-compose up -d
 // 下线服务
 docker-compose down
 ```
