@@ -1,0 +1,6 @@
+version: '3'
+services:
+  ai-arts-frontend:
+    image: apulistech/image-label:latest
+    ports:
+      - "3085:3085"
