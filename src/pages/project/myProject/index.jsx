@@ -5,11 +5,13 @@ import { PAGEPARAMS, sortText } from '@/utils/const';
 import { Link } from 'umi';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import styles from './index.less';
+import { connect } from 'dva';
 
 const { confirm } = Modal;
 const { Search } = Input;
 
-const ProjectTable = () => {
+const ProjectTable = ({ user }) => {
+  const { currentUser: { onlyImageLabel } } = user;
   const emptyValue = {name: '', info: ''};
   const [project, setProject] = useState({ data: [], total: 0 });
   const [modalFlag, setModalFlag] = useState(false);
@@ -105,14 +107,18 @@ const ProjectTable = () => {
       ellipsis: true,
     },
     {
-      title: '操作',
+      title: onlyImageLabel ? '' : '操作',
       render: item => {
-        return (
-          <div>
-            <a onClick={() => onEditClick(item)}>编辑</a>
-            <a style={{ color: 'red', marginLeft: 10 }} onClick={() => handleRemove(item.projectId)}>删除</a>
-          </div>
-        )
+        if (onlyImageLabel) {
+          return null;
+        } else {
+          return (
+            <div>
+              <a onClick={() => onEditClick(item)}>编辑</a>
+              <a style={{ color: 'red', marginLeft: 10 }} onClick={() => handleRemove(item.projectId)}>删除</a>
+            </div>
+          )
+        }
       }
     },
   ]
@@ -140,7 +146,7 @@ const ProjectTable = () => {
         title="项目列表"
       >
         <div style={{ marginBottom: 16 }}>
-          <Button type="primary" onClick={() => { setModalType('new'); resetModal(true); }}>新建项目</Button>
+          {!onlyImageLabel && <Button type="primary" onClick={() => { setModalType('new'); resetModal(true); }}>新建项目</Button>}
           <Search placeholder="请输入项目名称查询" enterButton onSearch={v => setName(v)} allowClear />
         </div>
         <Table 
@@ -183,4 +189,4 @@ const ProjectTable = () => {
   )
 }
 
-export default ProjectTable;
+export default connect(({ user }) => ({ user }))(ProjectTable);

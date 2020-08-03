@@ -11,6 +11,7 @@ const UserModel = {
       nickName: undefined,
       phone: '',
       email: '',
+      onlyImageLabel: false
     },
   },
   effects: {
@@ -18,18 +19,19 @@ const UserModel = {
       const res = yield call(getUserInfo);
       const { code } = res;
       if (code === 0) {
-        setAuthority(res.permissionList);
+        const { permissionList, userName, id, nickName, phone, email } = res;
+        setAuthority(permissionList);
         yield put({
           type: 'updateState',
           payload: {
             currentUser: {
-              
-              userName: res.userName,
-              id: res.id,
-              permissionList: res.permissionList,
-              nickName: res.nickName,
-              phone: res.phone,
-              email: res.email
+              userName: userName,
+              id: id,
+              permissionList: permissionList,
+              nickName: nickName,
+              phone: phone,
+              email: email,
+              onlyImageLabel: !permissionList.includes('AI_ARTS_ALL') && permissionList.includes('LABELING_IMAGE')
             }
           }
         })
@@ -44,7 +46,8 @@ const UserModel = {
               permissionList: [],
               nickName: '',
               phone: '',
-              email: ''
+              email: '',
+              onlyImageLabel: false
             }
           }
         })

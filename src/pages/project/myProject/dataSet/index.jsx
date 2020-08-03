@@ -8,12 +8,14 @@ import styles from './index.less';
 import MapTable from './components/MapTable/index';
 import DataSetModalForm from './components/DataSetModalForm/index';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { connect } from 'dva';
 
 const { confirm } = Modal;
 const { Option } = Select;
 const { Search } = Input;
 
-const DataSetTable = (props) => {
+const DataSetTable = ({ user }) => {
+  const { currentUser: { onlyImageLabel } } = user;
   const [dataset, setDataSet] = useState({ data: [], total: 0 });
   const [mapModal, setMapModal] = useState(false);
   const [convertModal, setConvertModal] = useState(false);
@@ -109,18 +111,22 @@ const DataSetTable = (props) => {
       render: i => <span>{i || '--'}</span>
     }, 
     {
-      title: '操作',
+      title: onlyImageLabel ? '' : '操作',
       render: item => {
         const { dataSetId, type } = item;
-        return (
-          <div className={styles.actions}>
-            {/* <Link to={`/project/dataSet-tasks?projectId=${id}`}>Explorer</Link> */}
-            {/* <a onClick={() => { setMapModal(true); setClickDataSetId(dataSetId); }}>mAP</a> */}
-            <a onClick={() => openConvert(item)} disabled={convertLoading || type === 'queue'}>转换</a>
-            <a onClick={() => onClickDataSetModal(2, item)}>编辑</a>
-            <a style={{ color: 'red' }} onClick={() => delDataSet(dataSetId) }>删除</a>
-          </div>
-        )
+        if (onlyImageLabel) {
+          return null;
+        } else {
+          return (
+            <div className={styles.actions}>
+              {/* <Link to={`/project/dataSet-tasks?projectId=${id}`}>Explorer</Link> */}
+              {/* <a onClick={() => { setMapModal(true); setClickDataSetId(dataSetId); }}>mAP</a> */}
+              <a onClick={() => openConvert(item)} disabled={convertLoading || type === 'queue'}>转换</a>
+              <a onClick={() => onClickDataSetModal(2, item)}>编辑</a>
+              <a style={{ color: 'red' }} onClick={() => delDataSet(dataSetId) }>删除</a>
+            </div>
+          )
+        }
       }
     },
   ]
@@ -251,7 +257,7 @@ const DataSetTable = (props) => {
         onBack={() => history.push(`/project?projectId=${projectId}`)}
         title="数据集列表"
       >
-        <Button type="primary" onClick={() => onClickDataSetModal(1)}>新增数据集</Button>
+        {!onlyImageLabel && <Button type="primary" onClick={() => onClickDataSetModal(1)}>新增数据集</Button>}
         <div className={styles.serachWrap}>
           <Search placeholder="请输入数据集名称查询" enterButton onSearch={v => setName(v)} allowClear />
           <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
@@ -327,4 +333,4 @@ const DataSetTable = (props) => {
   )
 }
 
-export default DataSetTable;
+export default connect(({ user }) => ({ user }))(DataSetTable);
