@@ -53,7 +53,7 @@ const DataSetModalForm = (props, ref) => {
       const res = await getDatasetsOptions({page: 1, count: 999});
       const { data, code, msg } = res;
       if (code === 0) {
-        setSourceOptions(data.datasets);
+        setSourceOptions(data.datasets.filter(i => i.isTranslated === false));
       }
     }
     setCheckedList(dataSetId ? [1] : []);
