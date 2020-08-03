@@ -50,7 +50,7 @@ const DataSetModalForm = (props, ref) => {
         setLoading(false);
       }
     } else {
-      const res = await getDatasetsOptions({page: 1, count: 999});
+      const res = await getDatasetsOptions({ pageNum: 1, pageSize: 99999 });
       const { data, code, msg } = res;
       if (code === 0) {
         setSourceOptions(data.datasets.filter(i => i.isTranslated === false));
