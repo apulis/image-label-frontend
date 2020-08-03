@@ -40,7 +40,10 @@ const DataSetTable = (props) => {
   const typeString = {
     'queue': '转换中',
     'finished': '转换成功',
-    'error': '转换失败'
+    'error': '转换失败',
+    'image': '图片',
+    'video': '视频',
+    'text': '文字'
   }
 
   useEffect(() => {
@@ -87,7 +90,7 @@ const DataSetTable = (props) => {
     {
       title: '数据集类型',
       dataIndex: 'type',
-      render: type => <span>{type}</span>
+      render: type => <span>{typeString[type] || '--'}</span>
     },  
     {
       title: '简介',

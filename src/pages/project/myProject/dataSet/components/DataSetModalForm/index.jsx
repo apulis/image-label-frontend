@@ -118,7 +118,7 @@ const DataSetModalForm = (props, ref) => {
         </Form.Item>
         <Form.Item label="数据集简介" name="info"
           rules={[{ required: true, message: '请输入数据集简介！' }]}>
-          <Input.TextArea  placeholder="请填输入数据集简介" />
+          <Input.TextArea  placeholder="请输入数据集简介" />
         </Form.Item>
         {type === 1 && <>
           <Form.Item label="数据权限" rules={[{ required: true }]} name="isPrivate">
@@ -138,8 +138,8 @@ const DataSetModalForm = (props, ref) => {
           rules={[{ required: true, message: '请选择数据集类型！' }]}>
           <Select placeholder="请选择数据集类型" style={{ width: 180 }}>
             <Option value="image">图片</Option>
-            <Option value="video">视频</Option>
-            <Option value="text">文字</Option>
+            {/* <Option value="video">视频</Option>
+            <Option value="text">文字</Option> */}
           </Select>
         </Form.Item>
         {type === 2 &&
