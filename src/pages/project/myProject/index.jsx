@@ -27,7 +27,7 @@ const ProjectTable = ({ user }) => {
   });
   useEffect(() => {
     getData();
-  }, [pageParams]);
+  }, [pageParams, sortedInfo]);
 
   const getData = async () => {
     setLoading(true);
