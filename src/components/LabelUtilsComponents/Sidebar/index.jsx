@@ -180,7 +180,7 @@ class Sidebar extends PureComponent {
       taskId
     } = this.props;
     const { expandedKeys, selectType }= this.state;
-
+    
     return (
       <div className={styles.sidebarWrap}>
         <h2>
