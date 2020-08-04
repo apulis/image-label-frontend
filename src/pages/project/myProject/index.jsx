@@ -27,7 +27,7 @@ const ProjectTable = ({ user }) => {
   });
   useEffect(() => {
     getData();
-  }, [pageParams, name]);
+  }, [pageParams]);
 
   const getData = async () => {
     setLoading(true);
@@ -139,6 +139,11 @@ const ProjectTable = ({ user }) => {
     setSortedInfo(sorter);
   }
 
+  const onSearchChange = v => {
+    setName(v);
+    setPageParams({ ...pageParams, page: 1 });
+  }
+
   return (
     <div className={styles.project}>
       <PageHeader
@@ -147,7 +152,7 @@ const ProjectTable = ({ user }) => {
       >
         <div style={{ marginBottom: 16 }}>
           {!onlyImageLabel && <Button type="primary" onClick={() => { setModalType('new'); resetModal(true); }}>新建项目</Button>}
-          <Search placeholder="请输入项目名称查询" enterButton onSearch={v => setName(v)} allowClear />
+          <Search placeholder="请输入项目名称查询" enterButton onSearch={onSearchChange} />
         </div>
         <Table 
           columns={columns} 

@@ -50,7 +50,7 @@ const DataSetTable = ({ user }) => {
 
   useEffect(() => {
     getData();
-  }, [pageParams, name, sortedInfo]);
+  }, [pageParams, sortedInfo]);
   
   const getData = async (text) => {
     setLoading(true);
@@ -250,6 +250,11 @@ const DataSetTable = ({ user }) => {
     setSortedInfo(sorter);
   }
 
+  const onSearchChange = v => {
+    setName(v);
+    setPageParams({ ...pageParams, page: 1 });
+  }
+
   return (
     <div className={styles.dataSetList}>
        <PageHeader
@@ -259,7 +264,7 @@ const DataSetTable = ({ user }) => {
       >
         {!onlyImageLabel && <Button type="primary" onClick={() => onClickDataSetModal(1)}>新增数据集</Button>}
         <div className={styles.serachWrap}>
-          <Search placeholder="请输入数据集名称查询" enterButton onSearch={v => setName(v)} allowClear />
+          <Search placeholder="请输入数据集名称查询" enterButton onSearch={onSearchChange} />
           <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
         </div>
         <Table 
