@@ -180,7 +180,7 @@ const DataSetTable = ({ user }) => {
 
   const onSubmit = () => {
     const { form, selectedCategoryList, sourceOptions } = dataSetModalFormRef.current;
-    form.validateFields(['name', 'info', 'type', 'sourceId']).then(async (values) => {
+    form.validateFields(['name', 'info', 'type', 'sourceId', 'isPrivate']).then(async (values) => {
       setBtnLoading(true);
       if (dataSetModalType == 2 && !selectedCategoryList.length) {
         message.error('请确定选择的对象类型！');
