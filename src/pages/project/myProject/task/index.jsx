@@ -34,7 +34,7 @@ const TaskList = () => {
         total: totalCount
       });
       const all = await getTasks(projectId, dataSetId, { page: 1, size: 999999 });
-      if (all.code === 0) {
+      if (all.code === 0 && all.data.taskList.length) {
         setFirstId(all.data.taskList[0].id);
         setLastId(all.data.taskList[totalCount - 1].id);
       }
