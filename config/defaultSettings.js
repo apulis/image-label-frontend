@@ -11,7 +11,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'Image Label',
+  title: '数据标注平台',
   pwa: false,
   iconfontUrl: '',
 };
