@@ -63,7 +63,7 @@ const DataSetModalForm = (props, ref) => {
   const addNewDataSetCategory = () => {
     form.validateFields(['category1', 'labelType1', 'fatherType']).then(values => {
       const { category1, labelType1, fatherType } = values;
-      const isExsisted = selectedCategoryList.find(val => val.name == category1);
+      const isExsisted = selectedCategoryList.length && selectedCategoryList.find(val => val.name == category1);
       if (isExsisted) {
         message.warning(`已经含有 ${category1}了`);
         return;
@@ -83,7 +83,7 @@ const DataSetModalForm = (props, ref) => {
   const onSelectDataSetCategory = () => {
     form.validateFields(['category2', 'labelType2']).then(values => {
       const { category2, labelType2 } = values;
-      const isExsisted = selectedCategoryList.find(val => val.id == category2[1]);
+      const isExsisted = selectedCategoryList.length && selectedCategoryList.find(val => val.id == category2[1]);
       if (isExsisted) {
         message.warning(`已经含有 ${isExsisted.name}了`);
         return;
@@ -91,7 +91,7 @@ const DataSetModalForm = (props, ref) => {
       let _selectedCategoryList = selectedCategoryList;
       _selectedCategoryList.push({
         id: category2[1],
-        name: Labels.labels.find(c => c.id == category2[1]).name,
+        name: Labels.labels.length ? Labels.labels.find(c => c.id == category2[1]).name : '',
         type: labelType2,
         supercategory: category2[0]
       });
@@ -190,7 +190,7 @@ const DataSetModalForm = (props, ref) => {
             {selectedCategoryList.length > 0 && selectedCategoryList.map(item => (
               <li key={item.name}>
                 <span>{item.name}</span>
-                {!oldSelectList.find(i => i.id === item.id) && 
+                {!(oldSelectList.length && oldSelectList.find(i => i.id === item.id)) && 
                 <CloseOutlined onClick={() => setSelectedCategoryList(selectedCategoryList.filter(val => val.name !== item.name))} />}
               </li>
             ))}
