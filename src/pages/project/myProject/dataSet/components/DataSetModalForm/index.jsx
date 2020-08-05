@@ -46,7 +46,7 @@ const DataSetModalForm = (props, ref) => {
         const { info } = data;
         setDetail(info);
         setSelectedCategoryList(info.labels || []);
-        setOldSelectList(info.labels);
+        setOldSelectList(info.labels || []);
         setLoading(false);
       }
     } else {
