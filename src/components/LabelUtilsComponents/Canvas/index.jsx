@@ -6,7 +6,6 @@ import Hotkeys from 'react-hot-keys';
 import update from 'immutability-helper';
 import 'leaflet-path-drag';
 import 'leaflet/dist/leaflet.css';
-import { Icon } from 'semantic-ui-react';
 import { BBoxFigure, PolygonFigure } from '../Figure/index';
 import { convertPoint, lighten, colorMapping } from '../utils';
 import { withBounds, maxZoom } from '../CalcBoundsHOC';

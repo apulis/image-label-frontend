@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import Hotkeys from 'react-hot-keys';
 import update from 'immutability-helper';
-import 'semantic-ui-css/semantic.min.css';
 import Canvas from '../Canvas/index';
-import HotkeysPanel from '../HotkeysPanel';
+// import HotkeysPanel from '../HotkeysPanel';
 import Sidebar from '../Sidebar/index';
-import { PathToolbar, MakePredictionToolbar } from '../CanvasToolbar';
+// import { PathToolbar, MakePredictionToolbar } from '../CanvasToolbar';
 import styles from './index.less';
 import { genId, colors } from '../utils';
 import { computeTrace } from '../tracing';
@@ -412,52 +411,52 @@ class LabelingApp extends Component {
     })
   }
 
-  getToolBarDOM = () => {
-    const { selectedFigure } = this.state;
-    const { models, makePrediction } = this.props;
-    let toolbarDOM = null;
-    const toolbarStyle = {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      zIndex: 99,
-    };
-    if (selectedFigure && selectedFigure.type === 'polygon') {
-      const options = selectedFigure.tracingOptions || {
-        enabled: false,
-        smoothing: 0.3,
-        precision: 0,
-        trace: [],
-      };
-      const handler = (property, value) => {
-        this.handleChange(
-          'replace',
-          update( {
-            tracingOptions: {
-              $set: update(options, { [property]: { $set: value } }),
-            },
-          })
-        );
-      };
-      toolbarDOM = (
-        <PathToolbar style={toolbarStyle} onChange={handler} {...options} />
-      );
-    } else if (!selectedFigure && models.length > 0) {
-      toolbarDOM = (
-        <MakePredictionToolbar
-          style={toolbarStyle}
-          models={models}
-          generate={async (model, options) => {
-            const preds = await makePrediction(model, options);
-            if (model.type !== 'object_classification') {
-              preds.forEach(f => this.handleChange('new', f));
-            }
-          }}
-        />
-      );
-    }
-    return toolbarDOM;
-  }
+  // getToolBarDOM = () => {
+  //   const { selectedFigure } = this.state;
+  //   const { models, makePrediction } = this.props;
+  //   let toolbarDOM = null;
+  //   const toolbarStyle = {
+  //     position: 'absolute',
+  //     top: 0,
+  //     left: 0,
+  //     zIndex: 99,
+  //   };
+  //   if (selectedFigure && selectedFigure.type === 'polygon') {
+  //     const options = selectedFigure.tracingOptions || {
+  //       enabled: false,
+  //       smoothing: 0.3,
+  //       precision: 0,
+  //       trace: [],
+  //     };
+  //     const handler = (property, value) => {
+  //       this.handleChange(
+  //         'replace',
+  //         update( {
+  //           tracingOptions: {
+  //             $set: update(options, { [property]: { $set: value } }),
+  //           },
+  //         })
+  //       );
+  //     };
+  //     toolbarDOM = (
+  //       <PathToolbar style={toolbarStyle} onChange={handler} {...options} />
+  //     );
+  //   } else if (!selectedFigure && models.length > 0) {
+  //     toolbarDOM = (
+  //       <MakePredictionToolbar
+  //         style={toolbarStyle}
+  //         models={models}
+  //         generate={async (model, options) => {
+  //           const preds = await makePrediction(model, options);
+  //           if (model.type !== 'object_classification') {
+  //             preds.forEach(f => this.handleChange('new', f));
+  //           }
+  //         }}
+  //       />
+  //     );
+  //   }
+  //   return toolbarDOM;
+  // }
 
   getSidebarProps = () => {
     const { reassigning, selected, toggles } = this.state;
@@ -553,12 +552,12 @@ class LabelingApp extends Component {
       makePrediction
     };
     const labels = project.form.formParts;
-    const hotkeysPanelDOM = hotkeysPanel ? (
-      <HotkeysPanel
-        labels={labels.map(label => label.name)}
-        onClose={() => this.setState({ hotkeysPanel: false })}
-      />
-    ) : null;
+    // const hotkeysPanelDOM = hotkeysPanel ? (
+    //   <HotkeysPanel
+    //     labels={labels.map(label => label.name)}
+    //     onClose={() => this.setState({ hotkeysPanel: false })}
+    //   />
+    // ) : null;
 
     return (
       <div className={styles.labelappWrap}>
@@ -580,7 +579,7 @@ class LabelingApp extends Component {
               pushState={pushState}
               figures={figures}
             />
-            {hotkeysPanelDOM}
+            {/* {hotkeysPanelDOM} */}
             <div className={styles.flexWrap}>
               <div className={styles.canvasWrap}>
                 {/* {this.getToolBarDOM()} */}

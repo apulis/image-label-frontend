@@ -185,7 +185,7 @@ class Sidebar extends PureComponent {
       <div className={styles.sidebarWrap}>
         <h2>
           {title}
-          {toggleHotKeys ? (<TableOutlined onClick={toggleHotKeys} />) : null}
+          {/* {toggleHotKeys ? (<TableOutlined onClick={toggleHotKeys} />) : null} */}
         </h2>
         <div className={styles.slectWrap}>
           <Select
