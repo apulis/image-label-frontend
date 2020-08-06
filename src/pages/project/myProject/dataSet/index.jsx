@@ -266,7 +266,7 @@ const DataSetTable = ({ user }) => {
       >
         {!onlyImageLabel && <Button type="primary" onClick={() => onClickDataSetModal(1)}>新增数据集</Button>}
         <div className={styles.serachWrap}>
-          <Search placeholder="请输入数据集名称查询" enterButton onSearch={onSearchChange} />
+          <Search placeholder="请输入数据集名称查询" enterButton onSearch={() => setPageParams({ ...pageParams, page: 1 })} onChange={e => setName(e.target.value)} />
           <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
         </div>
         <Table 
