@@ -3,7 +3,7 @@ import { IMAGE_BASE_URL } from '@/utils/const';
 import DocumentMeta from 'react-document-meta';
 import LabelingApp from '../../../../../components/LabelUtilsComponents/LabelingApp/index';
 import { message } from 'antd';
-import { getUpDownData, getAnnotations, submitDetail } from '../../service';
+import { getUpDownData, getAnnotations, submitDetail, getTasks } from '../../service';
 import { connect } from 'umi';
 import { getPageQuery } from '@/utils/utils';
 import { history } from 'umi';
@@ -22,7 +22,9 @@ class TaskDetail extends React.Component {
       isOCR: false,
       btnLoading: false,
       projectId: getPageQuery().projectId,
-      dataSetId: getPageQuery().dataSetId
+      dataSetId: getPageQuery().dataSetId,
+      lastId: 0,
+      firstId: 0
     };
   }
 
@@ -41,6 +43,14 @@ class TaskDetail extends React.Component {
         projectId, dataSetId
       }
     });
+    const all = await getTasks(projectId, dataSetId, { page: 1, size: 999999 });
+    if (all.code === 0 && all.data.taskList.length) {
+      const list = all.data.taskList;
+      this.setState({
+        firstId: list[0].id,
+        lastId: list[list.length - 1].id
+      });
+    }
     this.getData();
   }
 
@@ -52,13 +62,13 @@ class TaskDetail extends React.Component {
   }
 
   getUpDown = async (taskId, type) => {
-    const { projectId, dataSetId } = this.state;
+    const { projectId, dataSetId, firstId, lastId } = this.state;
     const res = await getUpDownData(projectId, dataSetId, taskId, type);
     const { code, data } = res;
     const _id = type ? data.next.id : data.previous.id;
     if (code === 0) {
      history.push(
-        `/project/dataSet/taskList/detail/${_id}?projectId=${projectId}&dataSetId=${dataSetId}`
+        `/project/dataSet/taskList/detail/${_id}?projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`
       );
     }
   }
@@ -161,7 +171,7 @@ class TaskDetail extends React.Component {
   }
 
   refetch = async (taskId) => {
-    const { projectId, dataSetId } = this.state;
+    const { projectId, dataSetId, firstId, lastId } = this.state;
     this.setState({
       loading: true,
       error: null,
@@ -174,7 +184,7 @@ class TaskDetail extends React.Component {
         history.replace(`/project/dataSet/taskList?projectId=${projectId}&&dataSetId=${dataSetId}`);
         return;
       }
-      history.replace(`/project/dataSet/taskList/detail/${taskId}?projectId=${projectId}&dataSetId=${dataSetId}`);
+      history.replace(`/project/dataSet/taskList/detail/${taskId}?projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`);
       this.getData();
     } catch (error) {
       this.setState({
