@@ -40,6 +40,9 @@ const ProjectTable = ({ user }) => {
     const { code, data, msg } = await getProject(params);
     if (code === 0) {
       const { projects, totalCount } = data;
+      if (!projects.length && totalCount) {
+        setPageParams({ ...pageParams, page: 1 })
+      }
       setProject({
         data: projects,
         total: totalCount

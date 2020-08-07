@@ -63,6 +63,9 @@ const DataSetTable = ({ user }) => {
     const { code, data, msg } = await getDataSet(projectId, params);
     if (code === 0) {
       const { datasets, totalCount } = data;
+      if (!datasets.length && totalCount) {
+        setPageParams({ ...pageParams, page: 1 })
+      }
       setDataSet({
         data:datasets,
         total: totalCount
@@ -213,7 +216,6 @@ const DataSetTable = ({ user }) => {
     clickData && setClickData(clickData);
     setDataSetFormModal(true);
     if (type == 2) {
-      // const { Labels, l_projectId, l_datasetId } = global;
       const res = await dispatch({
         type: 'global/getLabels',
         payload: {
