@@ -4,7 +4,7 @@
  */
 import { extend } from 'umi-request';
 import { notification, message } from 'antd';
-import { history } from 'umi';
+import { stringify } from 'querystring';
 import { USER_LOGIN_URL } from '@/utils/const';
 
 const prefix = '/ai_arts/api/annotations';
