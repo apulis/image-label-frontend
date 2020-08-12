@@ -6,9 +6,7 @@ const GlobalModel = {
     collapsed: false,
     notices: [],
     Labels: {
-      labels: [],
-      // l_projectId: '',
-      // l_datasetId: ''
+      labels: []
     }
   },
   effects: {
@@ -20,9 +18,7 @@ const GlobalModel = {
           type: 'updateState',
           payload: {
             Labels: {
-              labels: data.annotations,
-              // l_projectId: payload.projectId,
-              // l_datasetId: payload.dataSetId
+              labels: data.annotations
             }
           }
         })

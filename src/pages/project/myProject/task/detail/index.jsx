@@ -214,8 +214,14 @@ class TaskDetail extends React.Component {
 
   tansformToCocoFormat() {
     const { imageInfo, image, isOCR } = this.state;
-    const { taskId } = this.props.match.params;
-    let sendData = { images: imageInfo, annotations: [], id: taskId }, data = image.labelData.labels;
+    const { global, match } = this.props;
+    const { taskId } = match.params;
+    let data = image.labelData.labels, sendData = {
+      images: imageInfo,
+      annotations: [],
+      id: taskId,
+      categories: global.Labels.labels
+    };
     for (let one in data) {
       data[one].map((o) => {
         let seg = [];
