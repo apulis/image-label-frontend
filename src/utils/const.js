@@ -6,7 +6,7 @@ export const PAGEPARAMS = {
   size: 10
 }
 
-export const AVATAR = "https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png";
+// export const AVATAR = "https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png";
 
 export const TYPE = {
   image: '图片',

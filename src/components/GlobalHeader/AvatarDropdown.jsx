@@ -4,7 +4,7 @@ import React from 'react';
 import { history, connect } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import { AVATAR } from '@/utils/const';
+// import { AVATAR } from '@/utils/const';
 
 class AvatarDropdown extends React.Component {
   onMenuClick = (event) => {
@@ -57,7 +57,7 @@ class AvatarDropdown extends React.Component {
     return currentUser && currentUser.userName ? (
       <HeaderDropdown overlay={menuHeaderDropdown} placement="bottomCenter">
         <span className={`${styles.action} ${styles.account}`}>
-          <Avatar size="small" className={styles.avatar} src={AVATAR} alt="avatar" />
+          {/* <Avatar size="small" className={styles.avatar} src={AVATAR} alt="avatar" /> */}
           <span className={styles.name}>{currentUser.userName}</span>
         </span>
       </HeaderDropdown>
