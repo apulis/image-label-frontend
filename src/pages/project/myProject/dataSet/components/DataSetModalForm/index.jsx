@@ -71,7 +71,7 @@ const DataSetModalForm = (props, ref) => {
       const idArr = selectedCategoryList.length ? selectedCategoryList.map(i => i.id) : [];
       let _selectedCategoryList = _.cloneDeep(selectedCategoryList);
       _selectedCategoryList.push({
-        id: idArr.length ? Math.max(...idArr) + 1 : 0,
+        id: idArr.length ? Math.max(...idArr) + 1 : 1,
         name: category1,
         type: labelType1,
         supercategory: fatherType
