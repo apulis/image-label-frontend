@@ -250,7 +250,7 @@ class TaskDetail extends React.Component {
   }
 
   render() {
-    const title = `Image Label Tool`;
+    const title = `标注工具`;
     const { global } = this.props;
     const { project, image, isOCR, loading, btnLoading, projectId, dataSetId } = this.state;
     const { taskId } = this.props.match.params;
