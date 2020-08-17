@@ -1,8 +1,8 @@
 FROM node:12
 
-RUN mkdir -p /home/AIArts
-WORKDIR /home/AIArts
-COPY . /home/AIArts
+RUN mkdir -p /home/image-label
+WORKDIR /home/image-label
+COPY . /home/image-label
 
 RUN yarn config set registry 'https://registry.npm.taobao.org'
 RUN yarn
