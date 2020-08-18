@@ -43,13 +43,14 @@ class TaskDetail extends React.Component {
         projectId, dataSetId
       }
     });
-    const all = await getTasks(projectId, dataSetId, { page: 1, size: 999999 });
-    if (all.code === 0 && all.data.taskList.length) {
-      const list = all.data.taskList;
-      this.setState({
-        firstId: list[0].id,
-        lastId: list[list.length - 1].id
-      });
+    const { code, data } = await getTasks(projectId, dataSetId, { page: 1, size: 20 });
+    const { taskList, totalCount } = data;
+    if (code === 0 && taskList.length) {
+      this.setState({ firstId: taskList[0].id });
+    }
+    const resL = await getTasks(projectId, dataSetId, { page: Math.ceil(totalCount / 100), size: 100 });
+    if (resL.code === 0 && resL.data.taskList.length) {
+      this.setState({ lastId: resL.data.taskList[resL.data.taskList.length - 1].id });
     }
     this.getData();
   }

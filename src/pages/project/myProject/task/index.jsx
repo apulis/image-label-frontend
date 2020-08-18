@@ -26,17 +26,24 @@ const TaskList = () => {
 
   const getData = async () => {
     setLoading(true);
-    const { code, data, msg } = await getTasks(projectId, dataSetId, { ...pageParams });
+    const { code, data } = await getTasks(projectId, dataSetId, { ...pageParams });
     if (code === 0) {
       const { taskList, totalCount } = data;
       setTasks({
         data: taskList,
         total: totalCount
       });
-      const all = await getTasks(projectId, dataSetId, { page: 1, size: 999999 });
-      if (all.code === 0 && all.data.taskList.length) {
-        setFirstId(all.data.taskList[0].id);
-        setLastId(all.data.taskList[totalCount - 1].id);
+      if (pageParams.page !== 1) {
+        const resF = await getTasks(projectId, dataSetId, { page: 1, size: 20 });
+        if (resF.code === 0 && resF.data.taskList.length) {
+          setFirstId(resF.data.taskList[0].id);
+        }
+      } else {
+        setFirstId(taskList[0].id);
+      }
+      const resL = await getTasks(projectId, dataSetId, { page: Math.ceil(totalCount / 100), size: 100 });
+      if (resL.code === 0 && resL.data.taskList.length) {
+        setLastId(resL.data.taskList[resL.data.taskList.length - 1].id);
       }
     }
     setLoading(false);
