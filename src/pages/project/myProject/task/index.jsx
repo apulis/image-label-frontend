@@ -39,7 +39,7 @@ const TaskList = () => {
           setFirstId(resF.data.taskList[0].id);
         }
       } else {
-        setFirstId(taskList[0].id);
+        setFirstId(taskList.length ? taskList[0].id : 0);
       }
       const resL = await getTasks(projectId, dataSetId, { page: Math.ceil(totalCount / 100), size: 100 });
       if (resL.code === 0 && resL.data.taskList.length) {
