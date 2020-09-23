@@ -3,7 +3,7 @@ import { IMAGE_BASE_URL } from '@/utils/const';
 import DocumentMeta from 'react-document-meta';
 import LabelingApp from '../../../../../components/LabelUtilsComponents/LabelingApp/index';
 import { message } from 'antd';
-import { getUpDownData, getAnnotations, submitDetail, getTasks } from '../../service';
+import { getUpDownData, getAnnotations, submitDetail, getTasks, getSuffix } from '../../service';
 import { connect } from 'umi';
 import { getPageQuery } from '@/utils/utils';
 import { history } from 'umi';
@@ -80,13 +80,18 @@ class TaskDetail extends React.Component {
     const { projectId, dataSetId } = this.state;
     let _this = this;
     const res = await getAnnotations(projectId, dataSetId, taskId);
+    const res2 = await getSuffix(projectId, dataSetId, taskId);
     const { code, data, msg } = res;
     const { annotations } = data;
-
+    let imageInfo = {}, suffix = '.jpg';
+    if (res2.code === 0) {
+      suffix = res2.data.suffix;
+      imageInfo = [{ file_name: `${taskId}${suffix}` }];
+    }
     if (code === 0) {
-      let _project = [], formParts = {}, imageInfo = {};
+      let _project = [], formParts = {};
       if (annotations) {
-        imageInfo = annotations.images[0] || {};
+        // imageInfo = annotations.images[0] || {};
         let ann = annotations.annotations || [];
         ann.map((one, index) => {
           const { category_id, segmentation, bbox, text } = one;
@@ -124,17 +129,14 @@ class TaskDetail extends React.Component {
           const _name = labels ? labels.filter(v => v.id == p) : [];
           _project.push({ id: Number(p), type: formParts[p][0].type, name: _name.length ? _name[0].name : '' });
         }
-      } else {
-        imageInfo = { "file_name": taskId + '.jpg' };
       }
-      const suffix = imageInfo ? imageInfo.file_name.split('.')[1] : 'jpg';
       _this.setState({
         loading: false,
         project: {
           form: { formParts: _project }
         },
         image: {
-          link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + suffix,
+          link: `${IMAGE_BASE_URL}${dataSetId}/images/${taskId}${suffix}`,
           localPath: null, originalName: taskId + "." + suffix, projectsId: 1,
           labelData: {
             height: 480, width: 640,
