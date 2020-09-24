@@ -85,11 +85,6 @@ export async function getAnnotations(projectId, dataSetId, taskId) {
   return request(`/projects/${projectId}/datasets/${dataSetId}/tasks/annotations/${taskId}`)
 }
 
-export async function getSuffix(projectId, dataSetId, taskId) {
-  return request(`/projects/${projectId}/datasets/${dataSetId}/tasks/suffix/${taskId}`)
-}
-
-
 export function submitDetail(projectId, dataSetId, taskId, data) {
   return request(`/projects/${projectId}/datasets/${dataSetId}/tasks/annotations/${taskId}`, {
     method: 'POST',
