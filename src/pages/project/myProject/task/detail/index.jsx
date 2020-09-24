@@ -86,7 +86,7 @@ class TaskDetail extends React.Component {
     let imageInfo = {}, suffix = '.jpg';
     if (res2.code === 0) {
       suffix = res2.data.suffix;
-      imageInfo = [{ file_name: `${taskId}${suffix}` }];
+      imageInfo = { file_name: `${taskId}${suffix}` };
     }
     if (code === 0) {
       let _project = [], formParts = {};
