@@ -38,6 +38,10 @@ class Sidebar extends PureComponent {
   addLabel = async () => {
     const { project, chnageState, labels, global } = this.props;
     const { selectType, expandedKeys } = this.state;
+    if (!selectType) {
+      message.warn('请选择种类！');
+      return;
+    }
     const { id, type, name } = global.Labels.labels.find(i => i.id == selectType);
     if (labels.find(f => Number(f.id) === Number(id))) {
       message.warn('已存在此类 category');
