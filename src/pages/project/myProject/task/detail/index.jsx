@@ -68,9 +68,10 @@ class TaskDetail extends React.Component {
     const res = await getUpDownData(projectId, dataSetId, taskId, type);
     const { code, data } = res;
     const _id = type ? data.next.id : data.previous.id;
+    this.setState({ taskId: _id });
     if (code === 0) {
      history.push(
-        `/project/dataSet/taskList/detail?taskId=${encodeURIComponent(id)}&projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`
+        `/project/dataSet/taskList/detail?taskId=${encodeURIComponent(_id)}&projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`
       );
     }
   }
@@ -180,7 +181,7 @@ class TaskDetail extends React.Component {
         history.replace(`/project/dataSet/taskList?projectId=${projectId}&&dataSetId=${dataSetId}`);
         return;
       }
-      history.replace(`/project/dataSet/taskList/detail/${taskId}?projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`);
+      // history.replace(`/project/dataSet/taskList/detail/${taskId}?projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`);
       this.getData();
     } catch (error) {
       this.setState({
