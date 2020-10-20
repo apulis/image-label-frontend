@@ -3,7 +3,6 @@ FROM node:12
 RUN mkdir -p /home/image-label
 WORKDIR /home/image-label
 ADD package.json .
-ADD yarn.lock .
 RUN yarn config set registry 'https://registry.npm.taobao.org'
 RUN yarn install
 
