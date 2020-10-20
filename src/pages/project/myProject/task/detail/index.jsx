@@ -23,6 +23,7 @@ class TaskDetail extends React.Component {
       btnLoading: false,
       projectId: getPageQuery().projectId,
       dataSetId: getPageQuery().dataSetId,
+      taskId: getPageQuery().taskId,
       lastId: 0,
       firstId: 0
     };
@@ -55,9 +56,9 @@ class TaskDetail extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    const { taskId } = this.props.match.params;
-    if (prevProps.match.params.taskId !== taskId) {
+  componentDidUpdate(prevProps, prevState) {
+    const { taskId } = this.state;
+    if (prevState.taskId !== taskId) {
       this.refetch(taskId);
     }
   }
@@ -67,26 +68,26 @@ class TaskDetail extends React.Component {
     const res = await getUpDownData(projectId, dataSetId, taskId, type);
     const { code, data } = res;
     const _id = type ? data.next.id : data.previous.id;
+    this.setState({ taskId: _id });
     if (code === 0) {
      history.push(
-        `/project/dataSet/taskList/detail/${_id}?projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`
+        `/project/dataSet/taskList/detail?taskId=${encodeURIComponent(_id)}&projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`
       );
     }
   }
 
   getData = async () => {
     const { labels } = this.props.global.Labels;
-    const { taskId } = this.props.match.params;
-    const { projectId, dataSetId } = this.state;
+    const { projectId, dataSetId, taskId } = this.state;
     let _this = this;
     const res = await getAnnotations(projectId, dataSetId, taskId);
     const { code, data, msg } = res;
     const { annotations } = data;
-
+    let imageInfo = { file_name: `${taskId}` };
     if (code === 0) {
-      let _project = [], formParts = {}, imageInfo = {};
+      let _project = [], formParts = {};
       if (annotations) {
-        imageInfo = annotations.images[0] || {};
+        // imageInfo = annotations.images[0] || {};
         let ann = annotations.annotations || [];
         ann.map((one, index) => {
           const { category_id, segmentation, bbox, text } = one;
@@ -124,18 +125,15 @@ class TaskDetail extends React.Component {
           const _name = labels ? labels.filter(v => v.id == p) : [];
           _project.push({ id: Number(p), type: formParts[p][0].type, name: _name.length ? _name[0].name : '' });
         }
-      } else {
-        imageInfo = { "file_name": taskId + '.jpg' };
       }
-      const suffix = imageInfo ? imageInfo.file_name.split('.')[1] : 'jpg';
       _this.setState({
         loading: false,
         project: {
           form: { formParts: _project }
         },
         image: {
-          link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + suffix,
-          localPath: null, originalName: taskId + "." + suffix, projectsId: 1,
+          link: `${IMAGE_BASE_URL}${dataSetId}/images/${taskId}`,
+          localPath: null, originalName: taskId, projectsId: 1,
           labelData: {
             height: 480, width: 640,
             labels: formParts
@@ -149,18 +147,16 @@ class TaskDetail extends React.Component {
   }
 
   pushUpdate = (labelData) => {
-    const { taskId } = this.props.match.params;
-    const { dataSetId } = this.state;
+    const { dataSetId, taskId } = this.state;
     let imageInfo = this.state.imageInfo;
     if (imageInfo[0]) {
       imageInfo[0].height = labelData.height;
       imageInfo[0].width = labelData.width;
     }
-    const suffix = imageInfo[0].file_name.split('.')[1];
     this.setState({
       image: {
-        link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId + '.' + suffix,
-        localPath: null, originalName: taskId + "." + suffix, projectsId: 1,
+        link: IMAGE_BASE_URL + dataSetId + '/images/' + taskId,
+        localPath: null, originalName: taskId, projectsId: 1,
         labelData: labelData
       },
       imageInfo
@@ -185,7 +181,7 @@ class TaskDetail extends React.Component {
         history.replace(`/project/dataSet/taskList?projectId=${projectId}&&dataSetId=${dataSetId}`);
         return;
       }
-      history.replace(`/project/dataSet/taskList/detail/${taskId}?projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`);
+      // history.replace(`/project/dataSet/taskList/detail/${taskId}?projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`);
       this.getData();
     } catch (error) {
       this.setState({
@@ -196,8 +192,7 @@ class TaskDetail extends React.Component {
   }
 
   markComplete = async () => {
-    const { taskId } = this.props.match.params;
-    const { projectId, dataSetId } = this.state;
+    const { projectId, dataSetId, taskId } = this.state;
     this.setState({ btnLoading: true });
     const { code } = await submitDetail(projectId, dataSetId, taskId, this.tansformToCocoFormat());
     if (code === 0) {
@@ -253,8 +248,7 @@ class TaskDetail extends React.Component {
   render() {
     const title = `标注工具`;
     const { global } = this.props;
-    const { project, image, isOCR, loading, btnLoading, projectId, dataSetId } = this.state;
-    const { taskId } = this.props.match.params;
+    const { project, image, isOCR, loading, btnLoading, projectId, dataSetId, taskId } = this.state;
     const props = {
       onBack: () => {
         this.getUpDown(taskId, 0);

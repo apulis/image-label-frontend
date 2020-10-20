@@ -53,7 +53,7 @@ export default [
               },
               {
                 name: 'detail',
-                path: '/project/dataSet/taskList/detail/:taskId',
+                path: '/project/dataSet/taskList/detail',
                 component: './project/myProject/task/detail',
                 hideInMenu: true
               }

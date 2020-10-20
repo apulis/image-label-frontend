@@ -66,15 +66,15 @@ const TaskList = () => {
         <div className={styles.taskList}>
           {hasData ? 
           tasks.data.map((item, i) => {
-            const { id, suffix } = item;
+            const { id } = item;
             const { page, size } = pageParams;
             const _data = tasks.data;
             return (
               <Card hoverable
-                cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}${suffix}`} />} key={i}
-                onClick={() => history.push(`/project/dataSet/taskList/detail/${id}?projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`)}
+                cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}`} />} key={i}
+                onClick={() => history.push(`/project/dataSet/taskList/detail?taskId=${encodeURIComponent(id)}&projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`)}
               >
-                <Meta title={`第${page > 1 ? (page - 1) * size + i + 1 : i + 1}张 ${id}${suffix}`} />
+                <Meta title={`第${page > 1 ? (page - 1) * size + i + 1 : i + 1}张 ${id}`} />
               </Card>
             )
           }) : <Empty />}
