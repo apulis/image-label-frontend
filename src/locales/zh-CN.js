@@ -7,6 +7,7 @@ import settings from './zh-CN/settings';
 import project from './zh-CN/pages/project';
 import dataset from './zh-CN/pages/dataset';
 import imageList from './zh-CN/pages/imageList';
+import label from './zh-CN/pages/label';
 
 export default {
   'navBar.lang': '语言',
@@ -24,5 +25,6 @@ export default {
   ...component,
   ...project,
   ...dataset,
-  ...imageList
+  ...imageList,
+  ...label,
 };

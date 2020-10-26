@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Hotkeys from 'react-hot-keys';
 import update from 'immutability-helper';
+import { formatMessage } from 'umi';
 import Canvas from '../Canvas/index';
 // import HotkeysPanel from '../HotkeysPanel';
 import Sidebar from '../Sidebar/index';
@@ -291,7 +292,7 @@ class LabelingApp extends Component {
     const idx = id.split('-')[1];
     if (clickType == 1) {
       if (!text) {
-        message.confirm('请输入标注文本！');
+        message.confirm(formatMessage({ id: 'label.labelingApp.messag' }));
         return;
       }
       if ((text !== popupText && eventType === 'replace') || eventType === 'new') {
@@ -358,10 +359,10 @@ class LabelingApp extends Component {
 
   deleteEvent = (fId, idx) => {
     confirm({
-      content: `你确定要删除${idx === undefined ? '该类所有' : '该'}标注吗？`,
-      okText: "确定",
+      content: idx === undefined ? formatMessage({ id: 'label.labelingApp.delete.confirm.content1' }) : formatMessage({ id: 'label.labelingApp.delete.confirm.content2' }),
+      okText: formatMessage({ id: 'label.labelingApp.delete.confirm.okText' }),
       okType: 'danger',
-      cancelText: "取消",
+      cancelText: formatMessage({ id: 'label.labelingApp.delete.confirm.cancelText' }),
       onOk: () => {
         const { pushState } = this.props;
         pushState(state => ({
@@ -463,7 +464,7 @@ class LabelingApp extends Component {
     const { figures, pushState } = this.props;
     const sidebarProps = reassigning.status ? 
       {
-        title: 'Select the new label',
+        title: formatMessage({ id: 'label.labelingApp.sidebar.props' }),
         selected: null,
         onSelect: selected => {
           const figure = this.canvasRef.current.getSelectedFigure();
@@ -476,12 +477,13 @@ class LabelingApp extends Component {
         labelData: figures,
       } : 
       {
-        title: '标注工具',
+        title: formatMessage({ id: 'label.labelingApp.sidebar.label.tool' }),
         selected,
         onSelect: this.handleSelected,
         toggles,
         onToggle: (fId, index, isAll) => {
           let toggles = this.state.toggles;
+          if (!toggles[fId]) return;
           if (isAll) {
             toggles[fId].allShow = !toggles[fId].allShow;
             toggles[fId].children.forEach(i => i.show = toggles[fId].allShow);

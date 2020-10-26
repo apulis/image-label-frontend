@@ -4,7 +4,7 @@ import { shortcuts, colors } from '../utils';
 import Hotkeys from 'react-hot-keys';
 import styles from './index.less';
 import { message } from 'antd';
-import { connect } from 'umi';
+import { connect, formatMessage } from 'umi';
 import { DeleteOutlined, EyeOutlined, EyeInvisibleOutlined, PlusOutlined, TableOutlined } from '@ant-design/icons';
 import { getPageQuery } from '@/utils/utils';
 
@@ -39,12 +39,12 @@ class Sidebar extends PureComponent {
     const { project, chnageState, labels, global } = this.props;
     const { selectType, expandedKeys } = this.state;
     if (!selectType) {
-      message.warn('请选择种类！');
+      message.warn(formatMessage({ id: 'label.sidebar.message.warning.select.category' }));
       return;
     }
     const { id, type, name } = global.Labels.labels.find(i => i.id == selectType);
     if (labels.find(f => Number(f.id) === Number(id))) {
-      message.warn('已存在此类 category');
+      message.warn(formatMessage({ id: 'label.sidebar.message.warning.existed' }));
       return;
     }
     let newProject = project;
@@ -71,7 +71,7 @@ class Sidebar extends PureComponent {
       if (flag) {
         onSelect(fId);
       } else {
-        message.warning('请先完成上一个新增标注！');
+        message.warning(formatMessage({ id: 'label.sidebar.message.warning.message.last.label' }));
         return;
       }
     } else {
@@ -193,13 +193,15 @@ class Sidebar extends PureComponent {
         </h2>
         <div className={styles.slectWrap}>
           <Select
-            placeholder="请选择类别"
+            placeholder={formatMessage({ id: 'label.sidebar.form.category.select.placeholder' })}
             value={selectType}
             onChange={v => this.setState({ selectType: v })}
           >
             {this.getSelectTypeChildren()}
           </Select>
-          <Button onClick={this.addLabel} type="primary">新增</Button>
+          <Button onClick={this.addLabel} type="primary">
+            {formatMessage({ id: 'label.sidebar.button.create' })}
+          </Button>
         </div>
         <Tree
           showLine
@@ -211,11 +213,19 @@ class Sidebar extends PureComponent {
         />
         <div className={styles.btnWrap}>
           <div>
-            <Button onClick={onBack} disabled={getPageQuery().firstId === taskId}>上一张</Button>
-            <Button type="primary" onClick={onSkip} disabled={getPageQuery().lastId === taskId}>下一张</Button>
+            <Button onClick={onBack} disabled={getPageQuery().firstId === taskId}>
+              {formatMessage({ id: 'label.sidebar.button.last.picture' })}
+            </Button>
+            <Button type="primary" onClick={onSkip} disabled={getPageQuery().lastId === taskId}>
+              {formatMessage({ id: 'label.sidebar.button.next.picture' })}
+            </Button>
           </div>
-          <Button onClick={onBackTasks}>返回列表</Button>
-          <Button type="primary" onClick={onSubmit} loading={btnLoading}>提交</Button>
+          <Button onClick={onBackTasks}>
+            {formatMessage({ id: 'label.sidebar.button.back.list' })}
+          </Button>
+          <Button type="primary" onClick={onSubmit} loading={btnLoading}>
+            {formatMessage({ id: 'label.sidebar.button.submit' })}
+          </Button>
         </div>
       </div>
     )

@@ -7,6 +7,7 @@ import settings from './en-US/settings';
 import project from './en-US/pages/project';
 import dataset from './en-US/pages/dataset';
 import imageList from './en-US/pages/imageList';
+import label from './en-US/pages/label';
 
 export default {
   'navBar.lang': 'Languages',
@@ -25,4 +26,5 @@ export default {
   ...project,
   ...dataset,
   ...imageList,
+  ...label,
 };
