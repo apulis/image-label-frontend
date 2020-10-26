@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Pagination, Card, Empty, PageHeader, message } from 'antd';
 import LazyLoad from 'react-lazyload';
-import { PAGEPARAMS, IMAGE_BASE_URL } from '@/utils/const';
+import {  IMAGE_BASE_URL } from '@/utils/const';
 import { getTasks } from '../service';
 import { getPageQuery } from '@/utils/utils';
-import { EditOutlined } from '@ant-design/icons';
 import styles from './index.less';
 import { PageLoading } from '@ant-design/pro-layout';
-import { history } from 'umi';
+import { history, formatMessage } from 'umi';
 
 const { Meta } = Card;
 
@@ -61,7 +60,7 @@ const TaskList = () => {
       <PageHeader
         ghost={false}
         onBack={() => history.push(`/project/dataSetList?projectId=${projectId}`)}
-        title="任务列表"
+        title={formatMessage({ id: 'imageList.page.title.taskList' })}
       >
         <div className={styles.taskList}>
           {hasData ? 
@@ -74,7 +73,7 @@ const TaskList = () => {
                 cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}`} />} key={i}
                 onClick={() => history.push(`/project/dataSet/taskList/detail?taskId=${encodeURIComponent(id)}&projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`)}
               >
-                <Meta title={`第${page > 1 ? (page - 1) * size + i + 1 : i + 1}张 ${id}`} />
+                <Meta title={`${formatMessage({ id: 'imageList.total' })}${page > 1 ? (page - 1) * size + i + 1 : i + 1}${formatMessage({ id: 'imageList.item' })} ${id}`} />
               </Card>
             )
           }) : <Empty />}
@@ -84,7 +83,7 @@ const TaskList = () => {
             showQuickJumper
             current={pageParams.page}
             pageSize={pageParams.size}
-            showTotal={total => `共 ${total} 条`}
+            showTotal={total => `${formatMessage({ id: 'imageList.total' })} ${total} ${formatMessage({ id: 'imageList.item' })}`}
             onChange={pageParamsChange}
             onShowSizeChange={pageParamsChange}
             current={pageParams.page}
