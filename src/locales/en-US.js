@@ -6,6 +6,7 @@ import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import project from './en-US/pages/project';
 import dataset from './en-US/pages/dataset';
+import imageList from './en-US/pages/imageList';
 
 export default {
   'navBar.lang': 'Languages',
@@ -23,4 +24,5 @@ export default {
   ...component,
   ...project,
   ...dataset,
+  ...imageList,
 };
