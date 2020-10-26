@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useImperativeHandle, forwardRef } from "react";
 import { Form, Select, Checkbox, Input, Cascader, message, Button, Radio } from "antd";
-import { useSelector } from 'umi';
+import { useSelector, formatMessage } from 'umi';
 import { getDataSetDetail, getDatasetsOptions } from '../../../service';
 import styles from './index.less';
 import { CloseOutlined } from '@ant-design/icons';
@@ -65,7 +65,7 @@ const DataSetModalForm = (props, ref) => {
       const { category1, labelType1, fatherType } = values;
       const isExsisted = selectedCategoryList.length && selectedCategoryList.find(val => val.name == category1);
       if (isExsisted) {
-        message.warning(`已经含有 ${category1}了`);
+        message.warning(`${category1}${formatMessage({ id: 'dataset.datasetmodalform.already.has' })}`);
         return;
       }
       const idArr = selectedCategoryList.length ? selectedCategoryList.map(i => i.id) : [];
@@ -85,7 +85,7 @@ const DataSetModalForm = (props, ref) => {
       const { category2, labelType2 } = values;
       const isExsisted = selectedCategoryList.length && selectedCategoryList.find(val => val.id == category2[1]);
       if (isExsisted) {
-        message.warning(`已经含有 ${isExsisted.name}了`);
+        message.warning(`${isExsisted.name}${formatMessage({ id: 'dataset.datasetmodalform.already.has' })}`);
         return;
       }
       let _selectedCategoryList = selectedCategoryList;
@@ -101,8 +101,8 @@ const DataSetModalForm = (props, ref) => {
   return (
     <div className={styles.dataSetModalFormWrap}>
       <div className={styles.idWrap}>
-        <p>项目 ID：</p><span>{projectId}</span>
-        {dataSetId && type === 2 && <div><p>数据集 Id：</p><span>{dataSetId}</span></div>}
+        <p>{formatMessage({ id: 'dataset.datasetmodalform.project.id' })}</p><span>{projectId}</span>
+        {dataSetId && type === 2 && <div><p>{formatMessage({ id: 'dataset.datasetmodalform.dataset.id' })}</p><span>{dataSetId}</span></div>}
       </div>
       {((type === 2 && !loading) || type === 1) && <Form form={form} initialValues={{
         name: detail.name || undefined,
@@ -112,53 +112,61 @@ const DataSetModalForm = (props, ref) => {
         labelType1: 'polygon',
         isPrivate: detail.isPrivate || isPrivate
       }}>
-        <Form.Item label="数据集名称" name="name" 
-          rules={[{ required: true, message: '请输入数据集名称！' }]}> 
-          <Input placeholder="请输入数据集名称" />
+        <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.datasetname.label' })} name="name" 
+          rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.datasetname.required' }) }]}> 
+          <Input placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.datasetname.placeholder' })} />
         </Form.Item>
-        <Form.Item label="数据集简介" name="info"
-          rules={[{ required: true, message: '请输入数据集简介！' }]}>
-          <Input.TextArea  placeholder="请输入数据集简介" />
+        <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.datasetinfo.label' })} name="info"
+          rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.datasetinfo.required' }) }]}>
+          <Input.TextArea  placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.datasetinfo.placeholder' })} />
         </Form.Item>
         {type === 1 && <>
-          <Form.Item label="数据权限" rules={[{ required: true }]} name="isPrivate">
+          <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.data.private.label' })} rules={[{ required: true }]} name="isPrivate">
             <Radio.Group onChange={e => setIsPrivate(e.target.value)}>
-              <Radio value={true}>私有</Radio>
-              <Radio value={false}>公有</Radio>
+              <Radio value={true}>
+                {formatMessage({ id: 'dataset.datasetmodalform.form.data.private.radio.1' })}
+              </Radio>
+              <Radio value={false}>
+              {formatMessage({ id: 'dataset.datasetmodalform.form.data.private.radio.2' })}
+              </Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="数据源" name="sourceId"
-            rules={[{ required: true, message: '请选择数据源！' }]}>
-            <Select placeholder="请选择数据源">
+          <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.datasource.label' })} name="sourceId"
+            rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.datasource.required' }) }]}>
+            <Select placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.datasource.placeholder' })}>
               {sourceOptions.length > 0 ? sourceOptions.map(i => <Option value={i.id}>{i.name}</Option>) : null}
             </Select>
           </Form.Item>
         </>}
-        <Form.Item label="数据集类型" name="type"
-          rules={[{ required: true, message: '请选择数据集类型！' }]}>
-          <Select placeholder="请选择数据集类型" style={{ width: 180 }}>
-            <Option value="image">图片</Option>
+        <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.dataset.type.label' })} name="type"
+          rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.dataset.type.required' }) }]}>
+          <Select placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.dataset.type.placeholder' })} style={{ width: 180 }}>
+            <Option value="image">
+              {formatMessage({ id: 'dataset.datasetmodalform.form.dataset.type.image' })}
+            </Option>
             {/* <Option value="video">视频</Option>
             <Option value="text">文字</Option> */}
           </Select>
         </Form.Item>
         {type === 2 &&
         <div className={styles.diyWrap}>
-          <Form.Item label="选择对象类型" name="category2" className={styles.speItem}
-            rules={[{ required: true, message: '请选择对象类型！' }]}>
+          <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.object.type.label' })} name="category2" className={styles.speItem}
+            rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.object.type.required' }) }]}>
               <Cascader
                 options={cascaderOptions}
-                placeholder="请选择对象类型"
+                placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.select.label.type' })}
               />
           </Form.Item>
           <Form.Item name="labelType2" className={styles.speItem}
-            rules={[{ required: true, message: '请选择' }]}>
+            rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.select.label.type' }) }]}>
             <Select style={{ width: 100 }}>
               <Option value="polygon">polygon</Option>
               <Option value="bbox">bbox</Option>
             </Select>
           </Form.Item>
-          <Button onClick={onSelectDataSetCategory}>确定</Button>
+          <Button onClick={onSelectDataSetCategory}>
+            {formatMessage({ id: 'dataset.datasetmodalform.form.button.confirm' })}
+          </Button>
         </div>}
         <div style={{ marginBottom: 10 }}>
           <CheckboxGroup options={plainOptions} value={checkedList}
@@ -167,25 +175,27 @@ const DataSetModalForm = (props, ref) => {
         </div>
         {checkedList.indexOf(2) > -1 && 
         <div className={styles.diyWrap}>
-          <Form.Item label="自定义对象类型" name="fatherType" className={styles.speItem}
-            rules={[{ required: true, message: '请填写对象父类型！' }]}>
-            <Input style={{ width: 140 }} placeholder="请填写对象父类型" />
+          <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.father.label' })} name="fatherType" className={styles.speItem}
+            rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.father.required' }) }]}>
+            <Input style={{ width: 140 }} placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.father.placeholder' })} />
           </Form.Item>
           <Form.Item className={styles.speItem} name="category1"
-            rules={[{ required: true, message: '请填写对象类型！' }]}>
-            <Input style={{ width: 140 }} placeholder="请填写对象类型" />
+            rules={[{ required: true, message: formatMessage({ id: '' }) }]}>
+            <Input style={{ width: 140 }} placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.object.type.placeholder' })} />
           </Form.Item>
           <Form.Item className={styles.speItem} name="labelType1"
-            rules={[{ required: true, message: '请选择！' }]}>
+            rules={[{ required: true }]}>
             <Select style={{ width: 100 }}>
               <Option value="polygon">polygon</Option>
               <Option value="bbox">bbox</Option>
             </Select>
           </Form.Item>
-          <Button onClick={addNewDataSetCategory}>确定</Button>
+          <Button onClick={addNewDataSetCategory}>
+            {formatMessage()}
+          </Button>
         </div>}
         <ul>
-          <p>{type === 2 ? '已有对象类型' : checkedList.indexOf(2) > -1 ? '已自定义对象类型' : ''}</p>
+          <p>{type === 2 ? formatMessage({ id: 'dataset.datasetmodalform.haved.object.type' }) : checkedList.indexOf(2) > -1 ? formatMessage({ id: 'dataset.datasetmodalform.haved.difined.object.type' }) : ''}</p>
           <ul className={styles.selectedCategory}>
             {selectedCategoryList.length > 0 && selectedCategoryList.map(item => (
               <li key={item.name}>

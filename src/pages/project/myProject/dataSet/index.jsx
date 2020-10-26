@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getDataSet, addDataSet, submitDataSet, deleteDataSet, convertDataset, getConvertSupportFormat } from '../service';
 import { PAGEPARAMS, TYPE, sortText } from '@/utils/const';
 import { getPageQuery } from '@/utils/utils';
-import { Link, useSelector, useDispatch, history } from 'umi';
+import { Link, useSelector, useDispatch, history, formatMessage } from 'umi';
 import styles from './index.less';
 import MapTable from './components/MapTable/index';
 import DataSetModalForm from './components/DataSetModalForm/index';
@@ -40,12 +40,12 @@ const DataSetTable = ({ user }) => {
   });
 
   const typeString = {
-    'queue': '转换中',
-    'finished': '转换成功',
-    'error': '转换失败',
-    'image': '图片',
-    'video': '视频',
-    'text': '文字'
+    'queue': formatMessage({ id: 'formatMessage' }),
+    'finished': formatMessage({ id: 'dataset.typestring.finished' }),
+    'error': formatMessage({ id: 'dataset.typestring.error' }),
+    'image': formatMessage({ id: 'dataset.typestring.image' }),
+    'video': formatMessage({ id: 'dataset.typestring.video' }),
+    'text': formatMessage({ id: 'dataset.typestring.text' })
   }
 
   useEffect(() => {
@@ -81,40 +81,40 @@ const DataSetTable = ({ user }) => {
 
   const columns = [
     {
-      title: '数据集Id',
+      title: formatMessage({ id: 'dataset.typestring.dataset.id' }),
       dataIndex: 'dataSetId',
       render: id => <Link style={{fontFamily: 'Consolas'}} to={`/project/dataSet/taskList?projectId=${projectId}&dataSetId=${id}`}>{id}</Link>
     },
     {
-      title: '数据集名称',
+      title: formatMessage({ id: 'dataset.typestring.dataset.name'}),
       dataIndex: 'name',
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
-      title: '数据集类型',
+      title: formatMessage({ id: 'dataset.typestring.dataset.type' }),
       dataIndex: 'type',
       render: type => <span>{typeString[type] || '--'}</span>
     },  
     {
-      title: '简介',
+      title: formatMessage({ id: 'dataset.typestring.dataset.info' }),
       dataIndex: 'info',
       ellipsis: true,
     },
     {
-      title: '转换状态',
+      title: formatMessage({ id: 'dataset.typestring.dataset.status' }),
       dataIndex: 'convertStatus',
       render: type => <span>{typeString[type] || '--'}</span>
     }, 
     {
-      title: '转换路径',
+      title: formatMessage({ id: 'dataset.typestring.dataset.path' }),
       dataIndex: 'convertOutPath',
       ellipsis: true,
       render: i => <span>{i || '--'}</span>
     }, 
     {
-      title: onlyImageLabel ? '' : '操作',
+      title: onlyImageLabel ? '' : formatMessage({ id: 'dataset.typestring.dataset.action' }),
       render: item => {
         const { dataSetId, type } = item;
         if (onlyImageLabel) {
@@ -124,9 +124,15 @@ const DataSetTable = ({ user }) => {
             <div className={styles.actions}>
               {/* <Link to={`/project/dataSet-tasks?projectId=${id}`}>Explorer</Link> */}
               {/* <a onClick={() => { setMapModal(true); setClickDataSetId(dataSetId); }}>mAP</a> */}
-              <a onClick={() => openConvert(item)} disabled={convertLoading || type === 'queue'}>转换</a>
-              <a onClick={() => onClickDataSetModal(2, item)}>编辑</a>
-              <a style={{ color: 'red' }} onClick={() => delDataSet(dataSetId) }>删除</a>
+              <a onClick={() => openConvert(item)} disabled={convertLoading || type === 'queue'}>
+                {formatMessage({ id: 'dataset.typestring.dataset.convert' })}
+              </a>
+              <a onClick={() => onClickDataSetModal(2, item)}>
+                {formatMessage({ id: 'dataset.typestring.dataset.edit' })}
+              </a>
+              <a style={{ color: 'red' }} onClick={() => delDataSet(dataSetId) }>
+                {formatMessage({ id: 'dataset.typestring.dataset.delete' })}
+              </a>
             </div>
           )
         }
@@ -151,7 +157,7 @@ const DataSetTable = ({ user }) => {
     const { code, data, msg } = res;
     if (code === 0) {
       getData();
-      message.success('提交成功！');
+      message.success(formatMessage({ id: 'dataset.typestring.dataset.upload.success' }));
       setConvertModal(false);
     }
     setConvertLoading(false);
@@ -159,16 +165,16 @@ const DataSetTable = ({ user }) => {
 
   const delDataSet = async (id) => {
     confirm({
-      content: `确定要删除该数据集吗？`,
-      okText: '删除',
+      content: formatMessage({ id: 'dataset.typestring.dataset.confirm.delete' }),
+      okText: formatMessage({ id: 'dataset.typestring.dataset.confirm.okText' }),
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: formatMessage({ id: 'dataset.typestring.dataset.confirm.cancelText' }),
       icon: <ExclamationCircleOutlined />,
       onOk: async () => {
         const res = await deleteDataSet(projectId, id);
         const { code, msg } = res;
         if (code === 0) {
-          message.success('删除成功！')
+          message.success(formatMessage({ id: 'dataset.typestring.dataset.message.delete.success' }))
           getData();
         }
       },
@@ -186,7 +192,7 @@ const DataSetTable = ({ user }) => {
     form.validateFields(['name', 'info', 'type', 'sourceId', 'isPrivate']).then(async (values) => {
       setBtnLoading(true);
       if (dataSetModalType == 2 && !selectedCategoryList.length) {
-        message.error('请确定选择的对象类型！');
+        message.error(formatMessage({ id: 'dataset.typestring.dataset.message.error.select.item.type' }));
         setBtnLoading(false);
         return;
       }
@@ -205,7 +211,7 @@ const DataSetTable = ({ user }) => {
       if (res && res.code === 0) {
         setDataSetFormModal(false);
         getData();
-        message.success('新增成功！');
+        message.success(formatMessage({ id: 'dataset.message.create.success' }));
       }
       setBtnLoading(false);
     })
@@ -264,12 +270,14 @@ const DataSetTable = ({ user }) => {
        <PageHeader
         ghost={false}
         onBack={() => history.push(`/project?projectId=${projectId}`)}
-        title="数据集列表"
+        title={formatMessage({ id: 'dataset.list.title' })}
       >
-        {!onlyImageLabel && <Button type="primary" onClick={() => onClickDataSetModal(1)}>新增数据集</Button>}
+        {!onlyImageLabel && <Button type="primary" onClick={() => onClickDataSetModal(1)}>
+          {formatMessage({ id: 'dataset.list.create.dataset' })}
+          </Button>}
         <div className={styles.serachWrap}>
-          <Search placeholder="请输入数据集名称查询" enterButton onSearch={() => setPageParams({ ...pageParams, page: 1 })} onChange={e => setName(e.target.value)} />
-          <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
+          <Search placeholder={formatMessage({ id: 'dataset.list.form.search.dataset' })} enterButton onSearch={() => setPageParams({ ...pageParams, page: 1 })} onChange={e => setName(e.target.value)} />
+          <Button onClick={() => getData(formatMessage({ id: 'dataset.list.get.data.success' }))} icon={<SyncOutlined />} />
         </div>
         <Table 
           columns={columns} 
@@ -280,7 +288,7 @@ const DataSetTable = ({ user }) => {
           pagination={{
             total: dataset.total, 
             showQuickJumper: true,
-            showTotal: total => `共 ${total} 条`,
+            showTotal: total => `${formatMessage({ id: 'dataset.list.table.total.left' })} ${total} ${formatMessage({ id: 'dataset.list.table.total.right' })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
@@ -291,27 +299,31 @@ const DataSetTable = ({ user }) => {
       </PageHeader>
       {mapModal && <Modal
         visible={mapModal}
-        title="mAP 概览"
+        title={formatMessage({ id: 'dataset.list.mAP.overview' })}
         maskClosable={false}
         width={1000}
         onCancel={() => setMapModal(false)}
         footer={[
-          <Button onClick={() => setMapModal(false)}>关闭</Button>
+          <Button onClick={() => setMapModal(false)}>{formatMessage({ id: 'dataset.list.close' })}</Button>
         ]}
       >
         <MapTable dataSetId={clickData.dataSetId} projectId={projectId} />
       </Modal>}
       {dataSetFormModal && <Modal
         visible={dataSetFormModal}
-        title={`${dataSetModalType == 1 ? '新增' : '编辑'}数据集`}
+        title={`${dataSetModalType == 1 ? formatMessage({ id: 'dataset.list.modal.create' }) : formatMessage({ id: 'dataset.list.modal.edit' })}${formatMessage({ id: 'dataset.list.modal.dataset' })}`}
         width={660}
         className="add_modal"
         destroyOnClose
         maskClosable={false}
         onCancel={onCancel}
         footer={[
-          <Button onClick={onCancel}>取消</Button>,
-          <Button type="primary" loading={btnLoading} onClick={onSubmit}>提交</Button>,
+          <Button onClick={onCancel}>
+            {formatMessage({ id: 'dataset.list.button.cancel' })}
+          </Button>,
+          <Button type="primary" loading={btnLoading} onClick={onSubmit}>
+            {formatMessage({ id: 'dataset.list.modal.button.confirm' })}
+          </Button>,
         ]}
       >
         <DataSetModalForm
@@ -324,17 +336,21 @@ const DataSetTable = ({ user }) => {
       </Modal>}
       {convertModal && <Modal
         visible={convertModal}
-        title="转换目标数据格式"
+        title={formatMessage({ id: 'dataset.list.modal.convert.title' })}
         destroyOnClose
         width={360}
         maskClosable={false}
         onCancel={() => setConvertModal(false)}
         footer={[
-          <Button onClick={() => setConvertModal(false)}>取消</Button>,
-          <Button type="primary" loading={convertLoading} onClick={handleConvert}>转换</Button>,
+          <Button onClick={() => setConvertModal(false)}>
+            {formatMessage({ id: 'dataset.list.button.cancel' })}
+          </Button>,
+          <Button type="primary" loading={convertLoading} onClick={handleConvert}>
+            {formatMessage({ id: 'dataset.list.button.confirm' })}
+          </Button>,
         ]}
       >
-        <Select placeholder="请选择转换目标数据格式" className="convertSelect" value={convertTarget} onChange={v => setConvertTarget(v)}>
+        <Select placeholder={formatMessage({ id: 'dataset.list.modal.select.placeholder' })} className="convertSelect" value={convertTarget} onChange={v => setConvertTarget(v)}>
           {convertOptions.length > 0 && convertOptions.map(i => <Option value={i}>{i}</Option>)}
         </Select>
       </Modal>}

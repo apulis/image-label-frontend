@@ -5,6 +5,7 @@ import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import project from './en-US/pages/project';
+import dataset from './en-US/pages/dataset';
 
 export default {
   'navBar.lang': 'Languages',
@@ -20,5 +21,6 @@ export default {
   ...settings,
   ...pwa,
   ...component,
-  ...project
+  ...project,
+  ...dataset,
 };
