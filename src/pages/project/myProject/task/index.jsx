@@ -73,7 +73,7 @@ const TaskList = () => {
                 cover={<img alt="example" src={`${IMAGE_BASE_URL}${dataSetId}/images/${id}`} />} key={i}
                 onClick={() => history.push(`/project/dataSet/taskList/detail?taskId=${encodeURIComponent(id)}&projectId=${projectId}&dataSetId=${dataSetId}&lastId=${encodeURIComponent(lastId)}&firstId=${encodeURIComponent(firstId)}`)}
               >
-                <Meta title={`${formatMessage({ id: 'imageList.total' })}${page > 1 ? (page - 1) * size + i + 1 : i + 1}${formatMessage({ id: 'imageList.item' })} ${id}`} />
+                <Meta title={`${formatMessage({ id: 'imageList.Number' })}${page > 1 ? (page - 1) * size + i + 1 : i + 1} ${id}`} />
               </Card>
             )
           }) : <Empty />}
@@ -83,7 +83,7 @@ const TaskList = () => {
             showQuickJumper
             current={pageParams.page}
             pageSize={pageParams.size}
-            showTotal={total => `${formatMessage({ id: 'imageList.total' })} ${total} ${formatMessage({ id: 'imageList.item' })}`}
+            showTotal={total => `${formatMessage({ id: 'imageList.Number' })} ${total} ${formatMessage({ id: 'imageList.item' })}`}
             onChange={pageParamsChange}
             onShowSizeChange={pageParamsChange}
             current={pageParams.page}
