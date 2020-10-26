@@ -51,7 +51,7 @@ class SecurityLayout extends React.Component {
 
   render() {
     const { isReady } = this.state;
-    const { children, loading } = this.props;
+    const { children, loading, settings } = this.props;
     const token = localStorage.token;
     if ((loading) || !isReady) {
       return <PageLoading />;
@@ -62,15 +62,19 @@ class SecurityLayout extends React.Component {
         <LoginPage />
       )
     }
+    let language = localStorage.language || localStorage.umi_locale || navigator.language;
+    if (!['zh-CN', 'en-US'].includes(language)) {
+      language = navigator.language;
+    }
 
     return (
-      <ConfigProvider locale={zhCN}>
+      <ConfigProvider locale={language}>
         {children}
       </ConfigProvider>
     )
   }
 }
 
-export default connect(({ user }) => ({
-  user
+export default connect(({ user, settings }) => ({
+  user, settings
 }))(SecurityLayout);
