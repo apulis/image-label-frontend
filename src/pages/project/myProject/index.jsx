@@ -2,7 +2,7 @@ import { message, Table, Modal, Form, Input, Button, PageHeader } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { getProject, deleteProject, submitProject, editProject } from './service';
 import { PAGEPARAMS, sortText } from '@/utils/const';
-import { Link } from 'umi';
+import { Link, formatMessage } from 'umi';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import styles from './index.less';
 import { connect } from 'dva';
@@ -53,16 +53,16 @@ const ProjectTable = ({ user }) => {
 
   const handleRemove = id => {
     confirm({
-      title: '确定删除改项目吗？',
+      title: formatMessage({ id: 'project.my.project.confirm.title' }),
       icon: <ExclamationCircleOutlined />,
-      okText: '删除',
+      okText: formatMessage({ id: 'project.my.project.confirm.okText' }),
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: formatMessage({ id: 'project.my.project.confirm.cancenText' }),
       onOk: async () => {
         const res = await deleteProject(id);
         const { code, msg } = res;
         if (code === 0) {
-          message.success('删除成功！')
+          message.success(formatMessage({ id: 'project.my.project.message.delete.success' }))
           getData();
         }
       },
@@ -81,44 +81,48 @@ const ProjectTable = ({ user }) => {
       } else if (modalType === 'edit') {
         await editProject(editProjectId, values);
       }
-      message.success('提交成功！');
+      message.success(formatMessage({ id: 'project.my.project.message.upload.success' }));
       resetModal(false);
       getData();
     })
     .catch(info => {
-      message.error('提交失败！');
+      message.error(formatMessage({ id: 'project.my.project.message.upload.failed' }));
       console.log('Validate Failed:', info);
     });
   }
 
   const columns = [
     {
-      title: '项目ID',
+      title: formatMessage({ id: 'project.my.project.project.id' }),
       dataIndex: 'projectId',
       render: id => <Link style={{fontFamily: 'Consolas'}} to={`/project/dataSetList?projectId=${id}`}>{id}</Link>
     },
     {
-      title: '项目名称',
+      title: formatMessage({ id: 'project.my.project.project.name' }),
       dataIndex: 'name',
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order
     }, 
     {
-      title: '简介',
+      title: formatMessage({ id: 'project.my.project.info' }),
       dataIndex: 'info',
       ellipsis: true,
     },
     {
-      title: onlyImageLabel ? '' : '操作',
+      title: onlyImageLabel ? '' : formatMessage({ id: 'project.my.project.action' }),
       render: item => {
         if (onlyImageLabel) {
           return null;
         } else {
           return (
             <div>
-              <a onClick={() => onEditClick(item)}>编辑</a>
-              <a style={{ color: 'red', marginLeft: 10 }} onClick={() => handleRemove(item.projectId)}>删除</a>
+              <a onClick={() => onEditClick(item)}>
+                {formatMessage({ id: 'project.my.project.edit' })}
+              </a>
+              <a style={{ color: 'red', marginLeft: 10 }} onClick={() => handleRemove(item.projectId)}>
+                {formatMessage({ id: 'project.my.project.delete' })}
+              </a>
             </div>
           )
         }
@@ -153,11 +157,12 @@ const ProjectTable = ({ user }) => {
     <div className={styles.project}>
       <PageHeader
         ghost={false}
-        title="项目列表"
+        title={formatMessage({ id: 'project.my.project.list' })}
       >
         <div style={{ marginBottom: 16 }}>
-          {!onlyImageLabel && <Button type="primary" onClick={() => { setModalType('new'); resetModal(true); }}>新建项目</Button>}
-          <Search placeholder="请输入项目名称查询" enterButton onSearch={onSearchChange} />
+          {!onlyImageLabel && <Button type="primary" onClick={() => { setModalType('new'); resetModal(true); }}>
+            {formatMessage({ id: 'project.my.project.new' })}</Button>}
+          <Search placeholder={formatMessage({ id: 'project.my.project.search.placeholder' })} enterButton onSearch={onSearchChange} />
         </div>
         <Table 
           columns={columns} 
@@ -167,7 +172,7 @@ const ProjectTable = ({ user }) => {
           pagination={{
             total: project.total,
             showQuickJumper: true,
-            showTotal: total => `共 ${total} 条`,
+            showTotal: total => `${formatMessage({ 'id': 'project.my.project.total.left' })} ${total} ${formatMessage({ id: 'project.my.project.total.left' })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
@@ -178,20 +183,23 @@ const ProjectTable = ({ user }) => {
         />
       </PageHeader>
       {modalFlag && <Modal
-          title={`${modalType === 'edit' ? '编辑' : '新增'} 项目`}
+          title={`${modalType === 'edit' ? formatMessage({ id: 'project.my.project.modal.title.edit' }) : formatMessage({ id: 'project.my.project.modal.title.new' })} ${formatMessage({ id: 'project.my.project.modal.title.project' })}`}
           visible={modalFlag}
           onOk={onSubmit}
           onCancel={() => resetModal(false)}
-          okText="提交"
+          okText={formatMessage({ id: 'project.my.project.modal.okText' })}
           destroyOnClose
         >
           <Form form={form} className={styles.projectModal}>
-            <Form.Item label="项目名称" name="name" rules={[{ required: true, message: '请输入项目名称！' }, { max: 15 }]}>
-              <Input placeholder="请输入项目名称" />
+            <Form.Item
+              label={formatMessage({ id: 'project.my.project.form.project.name.label' })}
+              name="name"
+              rules={[{ required: true, message: formatMessage({ id: 'project.my.project.form.project.name.required' }) }, { max: 15 }]}>
+              <Input placeholder={formatMessage({ id: 'project.my.project.form.project.name.placeholder' })} />
             </Form.Item>
-            <Form.Item label="简介" name="info" 
-              rules={[{ required: true, message: '请输入简介！' }, { min: 10, max: 50 }]}>
-              <Input.TextArea placeholder="请输入简介" autoSize={{ minRows: 4 }} />
+            <Form.Item label={formatMessage({ id: 'project.my.project.form.info.label' })} name="info" 
+              rules={[{ required: true, message: formatMessage({ id: 'project.my.project.form.info.required.message' }) }, { min: 10, max: 50 }]}>
+              <Input.TextArea placeholder={formatMessage({ id: 'project.my.project.form.info.placeholder' })} autoSize={{ minRows: 4 }} />
             </Form.Item>
           </Form>
         </Modal>}
