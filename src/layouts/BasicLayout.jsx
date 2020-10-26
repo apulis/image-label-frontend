@@ -53,7 +53,12 @@ const BasicLayout = props => {
       dispatch({
         type: 'user/fetchCurrent',
       });
+      dispatch({
+        type: 'settings/changeSetting',
+        payload: {...settings, title: formatMessage({ id: 'document.title' })},
+      })
     }
+    
   }, []);
   /**
    * init variables

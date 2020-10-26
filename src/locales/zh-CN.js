@@ -10,6 +10,7 @@ import imageList from './zh-CN/pages/imageList';
 import label from './zh-CN/pages/label';
 
 export default {
+  'document.title': '数据标注平台',
   'navBar.lang': '语言',
   'layout.user.link.help': '帮助',
   'layout.user.link.privacy': '隐私',

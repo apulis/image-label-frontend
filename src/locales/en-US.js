@@ -10,6 +10,7 @@ import imageList from './en-US/pages/imageList';
 import label from './en-US/pages/label';
 
 export default {
+  'document.title': 'Labeling Platform',
   'navBar.lang': 'Languages',
   'layout.user.link.help': 'Help',
   'layout.user.link.privacy': 'Privacy',
