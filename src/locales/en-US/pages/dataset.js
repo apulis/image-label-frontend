@@ -8,7 +8,7 @@ export default {
   'dataset.typestring.dataset.id': 'Dataset ID',
   'dataset.typestring.dataset.name': 'Dataset Name',
   'dataset.typestring.dataset.type': 'Type',
-  'dataset.typestring.dataset.info': 'Info',
+  'dataset.typestring.dataset.info': 'Brief Introduction',
   'dataset.typestring.dataset.status': 'Convert Status',
   'dataset.typestring.dataset.path': 'Convert Path',
   'dataset.typestring.dataset.action': 'Action',

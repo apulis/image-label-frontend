@@ -7,7 +7,7 @@ export default {
   'project.my.project.message.upload.failed': 'Submit failed',
   'project.my.project.project.id': 'Project ID',
   'project.my.project.project.name': 'Project Name',
-  'project.my.project.info': 'Info',
+  'project.my.project.info': 'Brief Introduction',
   'project.my.project.action': 'Action',
   'project.my.project.edit': 'Edit',
   'project.my.project.delete': 'Delete',
