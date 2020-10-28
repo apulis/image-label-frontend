@@ -25,7 +25,7 @@ export default {
 
   'dataset.list.title': 'Dataset List',
   'dataset.list.create.dataset': 'Create Dataset',
-  'dataset.list.form.search.dataset': 'Seach dataset name',
+  'dataset.list.form.search.dataset': 'Search dataset name',
   'dataset.list.get.data.success': 'Success',
   'dataset.list.table.total.left': 'Total',
   'dataset.list.table.total.right': '',

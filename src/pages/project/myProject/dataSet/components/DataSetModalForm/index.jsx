@@ -35,8 +35,8 @@ const DataSetModalForm = (props, ref) => {
   const getData = async () => {
     const { dataSetModalType, dataSetId, projectId } = props;
     let plainOptions = [
-      {label: '选择已有对象类型', value: 1, disabled: true}, 
-      {label: '自定义对象类型', value: 2}
+      {label: formatMessage({ id: 'dataset.datasetmodalform.haved.object.type' }), value: 1, disabled: true}, 
+      {label: formatMessage({ id: 'dataset.datasetmodalform.custom.object.type' }), value: 2}
     ]
     if (dataSetModalType == 2 && dataSetId) {
       setLoading(true);
@@ -191,7 +191,7 @@ const DataSetModalForm = (props, ref) => {
             </Select>
           </Form.Item>
           <Button onClick={addNewDataSetCategory}>
-            {formatMessage()}
+            {formatMessage({ id: 'dataset.datasetmodalform.form.button.confirm' })}
           </Button>
         </div>}
         <ul>

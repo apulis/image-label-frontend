@@ -4,7 +4,7 @@ import DocumentMeta from 'react-document-meta';
 import LabelingApp from '../../../../../components/LabelUtilsComponents/LabelingApp/index';
 import { message } from 'antd';
 import { getUpDownData, getAnnotations, submitDetail, getTasks } from '../../service';
-import { connect } from 'umi';
+import { connect, formatMessage } from 'umi';
 import { getPageQuery } from '@/utils/utils';
 import { history } from 'umi';
 import { PageLoading } from '@ant-design/pro-layout';
@@ -196,7 +196,7 @@ class TaskDetail extends React.Component {
     this.setState({ btnLoading: true });
     const { code } = await submitDetail(projectId, dataSetId, taskId, this.tansformToCocoFormat());
     if (code === 0) {
-      message.success('提交成功！');
+      message.success(formatMessage({ id: 'dataset.typestring.dataset.upload.success' }));
       if (getPageQuery().lastId === taskId) {
         history.push(
           `/project/dataSet/taskList?projectId=${projectId}&dataSetId=${dataSetId}`
