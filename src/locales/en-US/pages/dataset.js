@@ -24,7 +24,7 @@ export default {
   'dataset.message.create.success': 'Create succed',
 
   'dataset.list.title': 'Dataset List',
-  'dataset.list.create.dataset': 'Create Dataset',
+  'dataset.list.create.dataset': 'Create',
   'dataset.list.form.search.dataset': 'Search dataset name',
   'dataset.list.get.data.success': 'Success',
   'dataset.list.table.total.left': 'Total',

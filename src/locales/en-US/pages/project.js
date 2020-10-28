@@ -17,7 +17,7 @@ export default {
   'project.my.project.total.left': 'Total',
   'project.my.project.total.right': ' ',
   'project.my.project.modal.title.edit': 'Edit',
-  'project.my.project.modal.title.new': 'New',
+  'project.my.project.modal.title.new': 'Create',
   'project.my.project.modal.title.project': 'Project',
   'project.my.project.modal.okText': 'Submit',
   'project.my.project.form.project.name.label': 'Project Name',
