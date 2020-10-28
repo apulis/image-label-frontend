@@ -69,6 +69,7 @@ export default {
   'dataset.datasetmodalform.form.father.label': 'Custom father object type',
   'dataset.datasetmodalform.form.father.required': 'Please select custom object type',
   'dataset.datasetmodalform.form.father.placeholder': 'Custom object type',
+  'dataset.datasetmodalform.form.object.type.input.required': 'Please input object type!',
   'dataset.datasetmodalform.form.object.type.placeholder': 'Please input object type',
   'dataset.datasetmodalform.haved.object.type': 'Existed object type',
   'dataset.datasetmodalform.haved.difined.object.type': 'Defined object type',

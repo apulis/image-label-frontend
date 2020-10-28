@@ -180,7 +180,7 @@ const DataSetModalForm = (props, ref) => {
             <Input style={{ width: 140 }} placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.father.placeholder' })} />
           </Form.Item>
           <Form.Item className={styles.speItem} name="category1"
-            rules={[{ required: true, message: formatMessage({ id: '' }) }]}>
+            rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.object.type.input.required' }) }]}>
             <Input style={{ width: 140 }} placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.object.type.placeholder' })} />
           </Form.Item>
           <Form.Item className={styles.speItem} name="labelType1"

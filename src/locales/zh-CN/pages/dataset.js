@@ -69,6 +69,7 @@ export default {
   'dataset.datasetmodalform.form.father.label': '自定义对象类型',
   'dataset.datasetmodalform.form.father.required': '请填写对象父类型！',
   'dataset.datasetmodalform.form.father.placeholder': '自定义对象类型',
+  'dataset.datasetmodalform.form.object.type.input.required': '请填写对象类型！',
   'dataset.datasetmodalform.form.object.type.placeholder': '请填写对象类型',
   'dataset.datasetmodalform.haved.object.type': '已有对象类型',
   'dataset.datasetmodalform.haved.difined.object.type': '已定义对象类型',
