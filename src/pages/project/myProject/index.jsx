@@ -172,7 +172,7 @@ const ProjectTable = ({ user }) => {
           pagination={{
             total: project.total,
             showQuickJumper: true,
-            showTotal: total => `${formatMessage({ 'id': 'project.my.project.total.left' })} ${total} ${formatMessage({ id: 'project.my.project.total.left' })}`,
+            showTotal: total => `${formatMessage({ 'id': 'project.my.project.total.left' })} ${total} ${formatMessage({ id: 'project.my.project.total.right' })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,

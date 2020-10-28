@@ -28,7 +28,7 @@ export default {
   'dataset.list.form.search.dataset': 'Search dataset name',
   'dataset.list.get.data.success': 'Success',
   'dataset.list.table.total.left': 'Total',
-  'dataset.list.table.total.right': '',
+  'dataset.list.table.total.right': ' ',
   'dataset.list.mAP.overview': 'mAP overview',
   'dataset.list.close': 'Close',
   'dataset.list.modal.create': 'Create ',
