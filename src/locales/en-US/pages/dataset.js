@@ -43,7 +43,7 @@ export default {
   // DataSetModalForm
   'dataset.datasetmodalform.haved.object.type': 'Choose object type',
   'dataset.datasetmodalform.custom.object.type': 'Custom object type',
-  'dataset.datasetmodalform.already.has': ' already exised',
+  'dataset.datasetmodalform.already.has': ' already existed',
   'dataset.datasetmodalform.project.id': 'Project ID: ',
   'dataset.datasetmodalform.dataset.id': 'Dataset Id: ',
   'dataset.datasetmodalform.form.datasetname.label': 'Dataset Name',
