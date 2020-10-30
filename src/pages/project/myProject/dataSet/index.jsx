@@ -40,7 +40,7 @@ const DataSetTable = ({ user }) => {
   });
 
   const typeString = {
-    'queue': formatMessage({ id: 'formatMessage' }),
+    'queue': formatMessage({ id: 'dataset.typestring.queue' }),
     'finished': formatMessage({ id: 'dataset.typestring.finished' }),
     'error': formatMessage({ id: 'dataset.typestring.error' }),
     'image': formatMessage({ id: 'dataset.typestring.image' }),
@@ -312,7 +312,7 @@ const DataSetTable = ({ user }) => {
       {dataSetFormModal && <Modal
         visible={dataSetFormModal}
         title={`${dataSetModalType == 1 ? formatMessage({ id: 'dataset.list.modal.create' }) : formatMessage({ id: 'dataset.list.modal.edit' })}${formatMessage({ id: 'dataset.list.modal.dataset' })}`}
-        width={660}
+        width={800}
         className="add_modal"
         destroyOnClose
         maskClosable={false}
