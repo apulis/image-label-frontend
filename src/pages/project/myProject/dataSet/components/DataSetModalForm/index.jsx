@@ -98,6 +98,10 @@ const DataSetModalForm = (props, ref) => {
       setSelectedCategoryList(_selectedCategoryList);
     });
   }
+  const layout = {
+    labelCol: { span: 5 },
+    wrapperCol: { span: 14 },
+  };
   return (
     <div className={styles.dataSetModalFormWrap}>
       <div className={styles.idWrap}>
@@ -112,16 +116,16 @@ const DataSetModalForm = (props, ref) => {
         labelType1: 'polygon',
         isPrivate: detail.isPrivate || isPrivate
       }}>
-        <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.datasetname.label' })} name="name" 
+        <Form.Item {...layout} label={formatMessage({ id: 'dataset.datasetmodalform.form.datasetname.label' })} name="name" 
           rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.datasetname.required' }) }]}> 
           <Input placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.datasetname.placeholder' })} />
         </Form.Item>
-        <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.datasetinfo.label' })} name="info"
+        <Form.Item {...layout} label={formatMessage({ id: 'dataset.datasetmodalform.form.datasetinfo.label' })} name="info"
           rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.datasetinfo.required' }) }]}>
           <Input.TextArea  placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.datasetinfo.placeholder' })} />
         </Form.Item>
         {type === 1 && <>
-          <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.data.private.label' })} rules={[{ required: true }]} name="isPrivate">
+          <Form.Item {...layout} label={formatMessage({ id: 'dataset.datasetmodalform.form.data.private.label' })} rules={[{ required: true }]} name="isPrivate">
             <Radio.Group onChange={e => setIsPrivate(e.target.value)}>
               <Radio value={true}>
                 {formatMessage({ id: 'dataset.datasetmodalform.form.data.private.radio.1' })}
@@ -131,14 +135,14 @@ const DataSetModalForm = (props, ref) => {
               </Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.datasource.label' })} name="sourceId"
+          <Form.Item {...layout} label={formatMessage({ id: 'dataset.datasetmodalform.form.datasource.label' })} name="sourceId"
             rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.datasource.required' }) }]}>
             <Select placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.datasource.placeholder' })}>
               {sourceOptions.length > 0 ? sourceOptions.map(i => <Option value={i.id}>{i.name}</Option>) : null}
             </Select>
           </Form.Item>
         </>}
-        <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.dataset.type.label' })} name="type"
+        <Form.Item {...layout} label={formatMessage({ id: 'dataset.datasetmodalform.form.dataset.type.label' })} name="type"
           rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.dataset.type.required' }) }]}>
           <Select placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.dataset.type.placeholder' })} style={{ width: 180 }}>
             <Option value="image">
@@ -150,14 +154,14 @@ const DataSetModalForm = (props, ref) => {
         </Form.Item>
         {type === 2 &&
         <div className={styles.diyWrap}>
-          <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.object.type.label' })} name="category2" className={styles.speItem}
+          <Form.Item {...layout} label={formatMessage({ id: 'dataset.datasetmodalform.form.object.type.label' })} name="category2" className={styles.speItem}
             rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.object.type.required' }) }]}>
               <Cascader
                 options={cascaderOptions}
                 placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.select.label.type' })}
               />
           </Form.Item>
-          <Form.Item name="labelType2" className={styles.speItem}
+          <Form.Item {...layout} name="labelType2" className={styles.speItem}
             rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.select.label.type' }) }]}>
             <Select style={{ width: 100 }}>
               <Option value="polygon">polygon</Option>
@@ -175,7 +179,7 @@ const DataSetModalForm = (props, ref) => {
         </div>
         {checkedList.indexOf(2) > -1 && 
         <div className={styles.diyWrap}>
-          <Form.Item label={formatMessage({ id: 'dataset.datasetmodalform.form.father.label' })} name="fatherType" className={styles.speItem}
+          <Form.Item label={ formatMessage({ id: 'dataset.datasetmodalform.form.father.label' })} name="fatherType" className={styles.speItem}
             rules={[{ required: true, message: formatMessage({ id: 'dataset.datasetmodalform.form.father.required' }) }]}>
             <Input style={{ width: 140 }} placeholder={formatMessage({ id: 'dataset.datasetmodalform.form.father.placeholder' })} />
           </Form.Item>
