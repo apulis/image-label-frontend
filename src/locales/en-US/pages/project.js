@@ -14,6 +14,7 @@ export default {
   'project.my.project.new': 'New',
   'project.my.project.list': 'Project List',
   'project.my.project.search.placeholder': 'Search project name',
+  'project.my.project.No.Data': 'No Data',
   'project.my.project.total.left': 'Total',
   'project.my.project.total.right': ' ',
   'project.my.project.modal.title.edit': 'Edit',

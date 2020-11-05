@@ -169,6 +169,9 @@ const ProjectTable = ({ user }) => {
           dataSource={project.data}
           rowKey={r => r.projectId}
           onChange={onSortChange}
+          locale={{
+            emptyText: formatMessage({ id: 'project.my.project.No.Data' })
+          }}
           pagination={{
             total: project.total,
             showQuickJumper: true,
@@ -188,6 +191,7 @@ const ProjectTable = ({ user }) => {
           onOk={onSubmit}
           onCancel={() => resetModal(false)}
           okText={formatMessage({ id: 'project.my.project.modal.okText' })}
+          cancelText={formatMessage({ id: 'label.labelingApp.delete.confirm.cancelText' })}
           destroyOnClose
         >
           <Form form={form} className={styles.projectModal}>

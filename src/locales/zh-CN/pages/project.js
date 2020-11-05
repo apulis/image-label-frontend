@@ -14,6 +14,7 @@ export default {
   'project.my.project.new': '新建项目',
   'project.my.project.list': '项目列表',
   'project.my.project.search.placeholder': '请输入项目名称查询',
+  'project.my.project.No.Data': '暂无数据',
   'project.my.project.total.left': '共',
   'project.my.project.total.right': '条',
   'project.my.project.modal.title.edit': '编辑',
