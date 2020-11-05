@@ -169,9 +169,6 @@ const ProjectTable = ({ user }) => {
           dataSource={project.data}
           rowKey={r => r.projectId}
           onChange={onSortChange}
-          locale={{
-            emptyText: formatMessage({ id: 'project.my.project.No.Data' })
-          }}
           pagination={{
             total: project.total,
             showQuickJumper: true,

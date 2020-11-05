@@ -4,6 +4,7 @@ import { Redirect, connect } from 'umi';
 import { stringify } from 'querystring';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
+import enUS from 'antd/es/locale/en_US';
 import LoginPage from '@/pages/exception/401';
 
 class SecurityLayout extends React.Component {
@@ -66,9 +67,18 @@ class SecurityLayout extends React.Component {
     if (!['zh-CN', 'en-US'].includes(language)) {
       language = navigator.language;
     }
-
+    console.log(language)
+    const locale = () => {
+      if (language === 'zh-CN') {
+        return zhCN;
+      }
+      if (language === 'en-US') {
+        return enUS;
+      }
+      return enUS;
+    }
     return (
-      <ConfigProvider locale={language}>
+      <ConfigProvider locale={locale()}>
         {children}
       </ConfigProvider>
     )
