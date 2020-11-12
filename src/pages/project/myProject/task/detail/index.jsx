@@ -246,7 +246,7 @@ class TaskDetail extends React.Component {
   }
 
   render() {
-    const title = `标注工具`;
+    const title = formatMessage({ id: 'label.labelingApp.sidebar.label.tool' });
     const { global } = this.props;
     const { project, image, isOCR, loading, btnLoading, projectId, dataSetId, taskId } = this.state;
     const props = {
