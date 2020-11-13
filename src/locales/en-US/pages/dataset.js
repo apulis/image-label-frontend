@@ -11,7 +11,7 @@ export default {
   'dataset.typestring.dataset.info': 'Brief Introduction',
   'dataset.typestring.dataset.status': 'Convert Status',
   'dataset.typestring.dataset.path': 'Convert Path',
-  'dataset.typestring.dataset.action': 'Action',
+  'dataset.typestring.dataset.action': 'Operations',
   'dataset.typestring.dataset.convert': 'Convert',
   'dataset.typestring.dataset.edit': 'Edit',
   'dataset.typestring.dataset.delete': 'Delete',
