@@ -199,7 +199,7 @@ const ProjectTable = ({ user }) => {
               <Input placeholder={formatMessage({ id: 'project.my.project.form.project.name.placeholder' })} />
             </Form.Item>
             <Form.Item label={formatMessage({ id: 'project.my.project.form.info.label' })} name="info" 
-              rules={[{ required: true, message: formatMessage({ id: 'project.my.project.form.info.required.message' }) }, { min: 10, max: 50 }]}>
+              rules={[{ required: true, message: formatMessage({ id: 'project.my.project.form.info.required.message' }) }, { max: 50 }]}>
               <Input.TextArea placeholder={formatMessage({ id: 'project.my.project.form.info.placeholder' })} autoSize={{ minRows: 4 }} />
             </Form.Item>
           </Form>

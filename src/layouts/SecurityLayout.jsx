@@ -67,7 +67,9 @@ class SecurityLayout extends React.Component {
     if (!['zh-CN', 'en-US'].includes(language)) {
       language = navigator.language;
     }
-    console.log(language)
+    if (localStorage.umi_locale !== localStorage.language) {
+      localStorage.umi_locale = language;
+    }
     const locale = () => {
       if (language === 'zh-CN') {
         return zhCN;
