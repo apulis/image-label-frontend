@@ -312,7 +312,7 @@ const DataSetTable = ({ user }) => {
       {dataSetFormModal && <Modal
         visible={dataSetFormModal}
         title={`${dataSetModalType == 1 ? formatMessage({ id: 'dataset.list.modal.create' }) : formatMessage({ id: 'dataset.list.modal.edit' })}${formatMessage({ id: 'dataset.list.modal.dataset' })}`}
-        width={1000}
+        width="67%"
         className="add_modal"
         destroyOnClose
         maskClosable={false}
